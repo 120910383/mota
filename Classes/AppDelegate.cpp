@@ -1,4 +1,5 @@
 ﻿#include "AppDelegate.h"
+#include "FloorMapLayer.h"
 
 USING_NS_CC;
 using namespace std;
@@ -28,13 +29,14 @@ bool AppDelegate::applicationDidFinishLaunching()
 
     director->setOpenGLView(glview);
 
-    glview->setDesignResolutionSize(768, 1024, ResolutionPolicy::SHOW_ALL);
     glview->setFrameSize(1080, 1920);
+    glview->setDesignResolutionSize(650, 900, ResolutionPolicy::FIXED_WIDTH);
+    
 
     director->setDisplayStats(true);
     director->setAnimationInterval(1.0 / 60);
 
-    director->runWithScene(Scene::create());
+    director->runWithScene(FloorMapLayer::scene());
     return true;
 }
 

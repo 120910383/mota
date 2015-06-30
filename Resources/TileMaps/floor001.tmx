@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="10" height="12" tilewidth="75" tileheight="75" nextobjectid="1">
+ <tileset firstgid="1" name="area" tilewidth="75" tileheight="75" spacing="2" margin="2">
+  <image source="area.png" width="1927" height="79"/>
+ </tileset>
+ <layer name="floor" width="10" height="12">
+  <data encoding="base64" compression="zlib">
+   eJxjZGBgYCQRMxOhhokMfcSYS677sLmHGMxEBTNIxSx43IJLDhcGAIPsAIw=
+  </data>
+ </layer>
+ <layer name="wall" width="10" height="12">
+  <data encoding="base64" compression="zlib">
+   eJwTZ2Bg4EDC4mh8EJYAYlEGVIDOBwExHOLEqMNnHgeUD3OfEJKYEBnmYVMnQaR5YnjME4Xqx6WOE+puISQ5GJ8Dh73YAEgdcjxxIpkNwsJQDPITAMytBDI=
+  </data>
+ </layer>
+</map>
