@@ -18,6 +18,9 @@
     <ClInclude Include="..\Classes\FloorMapLayer.h">
       <Filter>Classes</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\AStar.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -27,6 +30,9 @@
       <Filter>Classes</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\FloorMapLayer.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\AStar.cpp">
       <Filter>Classes</Filter>
     </ClCompile>
   </ItemGroup>

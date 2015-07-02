@@ -88,11 +88,13 @@ xcopy "$(OutDir)..\*.dll" "$(OutDir)" /D /Y</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h" />
+    <ClInclude Include="..\Classes\AStar.h" />
     <ClInclude Include="..\Classes\FloorMapLayer.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
+    <ClCompile Include="..\Classes\AStar.cpp" />
     <ClCompile Include="..\Classes\FloorMapLayer.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
