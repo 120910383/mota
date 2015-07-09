@@ -35,6 +35,120 @@ bool FloorMapLayer::init()
         _warrior->setPosition(Vec2(62.5f, 62.5f));
         this->addChild(_warrior);
     }
+
+    auto inside_bg = Sprite::create("Images/bg_top2.png");
+    auto outside_bg = Sprite::create("Images/bg_top_1.png");
+    if (nullptr != outside_bg && nullptr != inside_bg)
+    {
+        auto win_size = Director::getInstance()->getWinSize();
+        outside_bg->setScale(inside_bg->getContentSize().width / outside_bg->getContentSize().width);
+        outside_bg->setPosition(Vec2(win_size.width / 2, 1092.0f));
+        this->addChild(outside_bg);
+
+        inside_bg->setPosition(Vec2(win_size.width / 2, 1076.0f));
+        this->addChild(inside_bg);
+    }
+
+    auto player_node = Node::create();
+    if (nullptr != player_node)
+    {
+        player_node->setPosition(Vec2(0.0f, 825.0f));
+        this->addChild(player_node);
+
+        auto player_bg = Sprite::create("Images/ui_bg.png");
+        if (nullptr != player_bg)
+        {
+            player_bg->setAnchorPoint(Vec2::ZERO);
+            player_bg->setPosition(Vec2::ZERO);
+            player_node->addChild(player_bg);
+        }
+
+        auto player_eye1 = Sprite::create("Images/tou_eye1.png");
+        if (nullptr != player_eye1)
+        {
+            player_eye1->setPosition(Vec2(86.0f, 100.0f));
+            player_node->addChild(player_eye1);
+        }
+
+        auto player_eye2 = Sprite::create("Images/tou_eye2.png");
+        if (nullptr != player_eye2)
+        {
+            player_eye2->setPosition(Vec2(86.0f, 100.0f));
+            player_node->addChild(player_eye2);
+        }
+
+        auto player_head = Sprite::create("Images/tou_base.png");
+        if (nullptr != player_head)
+        {
+            player_head->setPosition(Vec2(86.0f, 100.0f));
+            player_node->addChild(player_head);
+        }
+
+        auto player_attack_icon = Sprite::create("Images/ui_attack.png");
+        if (nullptr != player_attack_icon)
+        {
+            player_attack_icon->setPosition(Vec2(180.0f, 140.0f));
+            player_node->addChild(player_attack_icon);
+
+            auto attack_num = LabelAtlas::create("23965", "Images/ps_num_shared.png", 21, 29, '0');
+            if (nullptr != attack_num)
+            {
+                attack_num->setScaleX(0.8f);
+                attack_num->setAnchorPoint(Vec2(0.0f, 0.5f));
+                attack_num->setPosition(Vec2(40.0f, player_attack_icon->getContentSize().height / 2));
+                player_attack_icon->addChild(attack_num);
+            }
+        }
+
+        auto player_defend_icon = Sprite::create("Images/ui_defend.png");
+        if (nullptr != player_defend_icon)
+        {
+            player_defend_icon->setPosition(Vec2(330.0f, 140.0f));
+            player_node->addChild(player_defend_icon);
+
+            auto defend_num = LabelAtlas::create("13432", "Images/ps_num_shared.png", 21, 29, '0');
+            if (nullptr != defend_num)
+            {
+                defend_num->setScaleX(0.8f);
+                defend_num->setAnchorPoint(Vec2(0.0f, 0.5f));
+                defend_num->setPosition(Vec2(40.0f, player_defend_icon->getContentSize().height / 2));
+                player_defend_icon->addChild(defend_num);
+            }
+        }
+
+        auto player_jb_icon = Sprite::create("Images/ui_jb.png");
+        if (nullptr != player_jb_icon)
+        {
+            player_jb_icon->setPosition(Vec2(180.0f, 90.0f));
+            player_node->addChild(player_jb_icon);
+
+            auto jb_num = LabelAtlas::create("33123", "Images/ps_num_shared.png", 21, 29, '0');
+            if (nullptr != jb_num)
+            {
+                jb_num->setScaleX(0.8f);
+                jb_num->setAnchorPoint(Vec2(0.0f, 0.5f));
+                jb_num->setPosition(Vec2(40.0f, player_jb_icon->getContentSize().height / 2));
+                player_jb_icon->addChild(jb_num);
+            }
+        }
+
+        auto player_hun_icon = Sprite::create("Images/ui_hun.png");
+        if (nullptr != player_hun_icon)
+        {
+            player_hun_icon->setPosition(Vec2(330.0f, 90.0f));
+            player_node->addChild(player_hun_icon);
+
+            auto hun_num = LabelAtlas::create("21012", "Images/ps_num_shared.png", 21, 29, '0');
+            if (nullptr != hun_num)
+            {
+                hun_num->setScaleX(0.8f);
+                hun_num->setAnchorPoint(Vec2(0.0f, 0.5f));
+                hun_num->setPosition(Vec2(40.0f, player_hun_icon->getContentSize().height / 2));
+                player_hun_icon->addChild(hun_num);
+            }
+        }
+    }
+    
     return true;
 }
 

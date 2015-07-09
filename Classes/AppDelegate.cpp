@@ -1,5 +1,6 @@
 ﻿#include "AppDelegate.h"
 #include "FloorMapLayer.h"
+#include "Player.h"
 
 USING_NS_CC;
 using namespace std;
@@ -20,6 +21,9 @@ void AppDelegate::initGLContextAttrs()
 
 bool AppDelegate::applicationDidFinishLaunching()
 {
+    // 初始化游戏单例
+    Player::NewInstance();
+
     // 初始化Director
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
