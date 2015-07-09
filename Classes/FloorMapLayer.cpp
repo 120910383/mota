@@ -3,6 +3,8 @@
 #include "AStar.h"
 
 USING_NS_CC;
+static const float MOVE_SPEED = 200.0f;
+
 
 Scene* FloorMapLayer::scene()
 {
@@ -25,6 +27,13 @@ bool FloorMapLayer::init()
     {
         _tiled_map->setPosition(Vec2(-50.0f, -50.0f));
         this->addChild(_tiled_map);
+    }
+
+    _road_node = Node::create();
+    if (nullptr != _road_node)
+    {
+        _road_node->setPosition(Vec2::ZERO);
+        this->addChild(_road_node);
     }
 
     _warrior = spine::SkeletonAnimation::createWithFile("Spine/raptor.json", "Spine/raptor.atlas", 1.0f);
@@ -220,8 +229,9 @@ void FloorMapLayer::onTouchEnded(Touch *touch, Event *e)
     AStar astar(10, 12);
     astar.set_start_and_end(start_pt, end_pt);
     astar.set_blocks(blocks);
+    vector<node_t> paths = astar.get_path();
     vector<node_t> turns;
-    AStar::translate_path_to_turns(astar.get_path(), turns);
+    AStar::translate_path_to_turns(paths, turns);
 
     _warrior->setTimeScale(2.0f);
     _warrior->setAnimation(0, "walk", true);
@@ -243,20 +253,39 @@ void FloorMapLayer::onTouchEnded(Touch *touch, Event *e)
 
         if (i == 1) {
             auto distance = abs((cur_turn.x + 0.5f) * 75.0f - start_pos.x) + abs((cur_turn.y + 0.5f) * 75.0f - start_pos.y);
-            actions.pushBack(MoveTo::create(distance / 200.0f, Vec2((cur_turn.x + 0.5f) * 75.0f - 50.0f, (cur_turn.y + 0.5f) * 75.0f - 50.0f)));
+            actions.pushBack(MoveTo::create(distance / MOVE_SPEED, Vec2((cur_turn.x + 0.5f) * 75.0f - 50.0f, (cur_turn.y + 0.5f) * 75.0f - 50.0f)));
         } else {
             auto distance = (abs(cur_turn.x - pre_turn.x) + abs(cur_turn.y - pre_turn.y)) * 75.0f;
-            actions.pushBack(MoveTo::create(distance / 200.0f, Vec2((cur_turn.x + 0.5f) * 75.0f - 50.0f, (cur_turn.y + 0.5f) * 75.0f - 50.0f)));
+            actions.pushBack(MoveTo::create(distance / MOVE_SPEED, Vec2((cur_turn.x + 0.5f) * 75.0f - 50.0f, (cur_turn.y + 0.5f) * 75.0f - 50.0f)));
         }
     }
     
     actions.pushBack(CallFunc::create([&](){
         _warrior->setAnimation(0, "gungrab", false);
+        _road_node->removeAllChildren();
+        _road_node->unschedule("road");
         _arrow_node->setVisible(false);
     }));
     auto action = Sequence::create(actions);
     _warrior->stopAllActions();
     _warrior->runAction(action);
+
+    uint32_t index = 0;
+    _road_node->unschedule("road");
+    _road_node->removeAllChildren();
+    for (auto node : paths)
+    {
+        auto pos = Vec2((node.x + 0.5f) * 75.0f - 50.0f, (node.y + 0.5f) * 75.0f - 50.0f);
+        auto res = "Images/diban" + String::createWithFormat("%d", index % 22)->_string + ".png";
+        auto sprite = Sprite::create(res);
+        sprite->setPosition(pos);
+        _road_node->addChild(sprite);
+        ++index;
+    }
+    
+    _road_node->removeChild(_road_node->getChildren().at(0));
+    _road_node->schedule([&](float delay) { _road_node->removeChild(_road_node->getChildren().at(0)); }, 75.0f / MOVE_SPEED, "road");
+
     _arrow_node->setVisible(true);
     _arrow_node->setPosition(Vec2((end_pt.x + 0.5f) * 75.0f - 50.0f, (end_pt.y + 0.5f) * 75.0f - 50.0f));
 }

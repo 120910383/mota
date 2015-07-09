@@ -22,4 +22,5 @@ private:
     cocos2d::experimental::TMXTiledMap* _tiled_map;
     spine::SkeletonAnimation* _warrior;
     Node* _arrow_node;
+    Node* _road_node;
 };
