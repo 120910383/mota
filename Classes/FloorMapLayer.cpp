@@ -230,24 +230,28 @@ void FloorMapLayer::onTouchEnded(Touch *touch, Event *e)
     astar.set_start_and_end(start_pt, end_pt);
     astar.set_blocks(blocks);
     vector<node_t> paths = astar.get_path();
-    vector<node_t> turns;
-    AStar::translate_path_to_turns(paths, turns);
 
     _warrior->setTimeScale(2.0f);
     _warrior->setAnimation(0, "walk", true);
     Vector<FiniteTimeAction*> actions;
-    for (int i = 0; i < turns.size(); ++i)
+    for (int i = 0; i < paths.size(); ++i)
     {
         if (i == 0) {
             continue;
         }
         
-        auto pre_turn = turns[i - 1];
-        auto cur_turn = turns[i];
+        auto pre_turn = paths[i - 1];
+        auto cur_turn = paths[i];
 
-        actions.pushBack(CallFunc::create([&, pre_turn, cur_turn](){
-            if (cur_turn.x != pre_turn.x) {
+        actions.pushBack(CallFunc::create([&, i, pre_turn, cur_turn](){
+            if (cur_turn.x != pre_turn.x)
+            {
                 _warrior->setScaleX(cur_turn.x > pre_turn.x ? 0.1f : -0.1f);
+            }
+            auto child = dynamic_cast<Node*>(_road_node->getChildren().at(i - 1));
+            if (nullptr != child)
+            {
+                child->runAction(FadeOut::create(0.2f));
             }
         }));
 
@@ -263,7 +267,6 @@ void FloorMapLayer::onTouchEnded(Touch *touch, Event *e)
     actions.pushBack(CallFunc::create([&](){
         _warrior->setAnimation(0, "gungrab", false);
         _road_node->removeAllChildren();
-        _road_node->unschedule("road");
         _arrow_node->setVisible(false);
     }));
     auto action = Sequence::create(actions);
@@ -271,7 +274,6 @@ void FloorMapLayer::onTouchEnded(Touch *touch, Event *e)
     _warrior->runAction(action);
 
     uint32_t index = 0;
-    _road_node->unschedule("road");
     _road_node->removeAllChildren();
     for (auto node : paths)
     {
@@ -282,9 +284,6 @@ void FloorMapLayer::onTouchEnded(Touch *touch, Event *e)
         _road_node->addChild(sprite);
         ++index;
     }
-    
-    _road_node->removeChild(_road_node->getChildren().at(0));
-    _road_node->schedule([&](float delay) { _road_node->removeChild(_road_node->getChildren().at(0)); }, 75.0f / MOVE_SPEED, "road");
 
     _arrow_node->setVisible(true);
     _arrow_node->setPosition(Vec2((end_pt.x + 0.5f) * 75.0f - 50.0f, (end_pt.y + 0.5f) * 75.0f - 50.0f));
