@@ -27,6 +27,9 @@
     <ClInclude Include="..\Classes\Singleton.h">
       <Filter>Classes</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\PopupLayer.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -42,6 +45,9 @@
       <Filter>Classes</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Player.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\PopupLayer.cpp">
       <Filter>Classes</Filter>
     </ClCompile>
   </ItemGroup>

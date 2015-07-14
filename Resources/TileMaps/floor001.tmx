@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" renderorder="right-down" width="10" height="12" tilewidth="75" tileheight="75" nextobjectid="1">
- <tileset firstgid="1" name="area" tilewidth="75" tileheight="75" spacing="2" margin="2">
-  <image source="area.png" width="1927" height="79"/>
- </tileset>
+ <tileset firstgid="1" source="area.tsx"/>
  <layer name="floor" width="10" height="12">
   <data encoding="base64" compression="zlib">
    eJxjZGBgYCQRMxOhhokMfcSYS677sLmHGMxEBTNIxSx43IJLDhcGAIPsAIw=
@@ -11,6 +9,11 @@
  <layer name="wall" width="10" height="12">
   <data encoding="base64" compression="zlib">
    eJwTZ2Bg4EDC4mh8EJYAYlEGVIDOBwExHOLEqMNnHgeUD3OfEJKYEBnmYVMnQaR5YnjME4Xqx6WOE+puISQ5GJ8Dh73YAEgdcjxxIpkNwsJQDPITAMytBDI=
+  </data>
+ </layer>
+ <layer name="npc" width="10" height="12">
+  <data encoding="base64" compression="zlib">
+   eJxjYCAdSCGxpYFYDojlkcQUoHxkdTC1CgTMQ1ZLSyBLhBpi3aCOQ60S8c7BCmQo1A8CAE5KAfQ=
   </data>
  </layer>
 </map>
