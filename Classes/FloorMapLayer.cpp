@@ -133,7 +133,7 @@ bool FloorMapLayer::init()
             player_attack_icon->setPosition(Vec2(180.0f, 140.0f));
             player_node->addChild(player_attack_icon);
 
-            auto attack_num = LabelAtlas::create("23965", "Images/ps_num_shared.png", 21, 29, '0');
+            auto attack_num = LabelAtlas::create("10", "Images/ps_num_shared.png", 21, 29, '0');
             if (nullptr != attack_num)
             {
                 attack_num->setScaleX(0.8f);
@@ -149,7 +149,7 @@ bool FloorMapLayer::init()
             player_defend_icon->setPosition(Vec2(330.0f, 140.0f));
             player_node->addChild(player_defend_icon);
 
-            auto defend_num = LabelAtlas::create("13432", "Images/ps_num_shared.png", 21, 29, '0');
+            auto defend_num = LabelAtlas::create("10", "Images/ps_num_shared.png", 21, 29, '0');
             if (nullptr != defend_num)
             {
                 defend_num->setScaleX(0.8f);
@@ -165,7 +165,7 @@ bool FloorMapLayer::init()
             player_jb_icon->setPosition(Vec2(180.0f, 90.0f));
             player_node->addChild(player_jb_icon);
 
-            auto jb_num = LabelAtlas::create("33123", "Images/ps_num_shared.png", 21, 29, '0');
+            auto jb_num = LabelAtlas::create("0", "Images/ps_num_shared.png", 21, 29, '0');
             if (nullptr != jb_num)
             {
                 jb_num->setScaleX(0.8f);
@@ -181,7 +181,7 @@ bool FloorMapLayer::init()
             player_hun_icon->setPosition(Vec2(330.0f, 90.0f));
             player_node->addChild(player_hun_icon);
 
-            auto hun_num = LabelAtlas::create("21012", "Images/ps_num_shared.png", 21, 29, '0');
+            auto hun_num = LabelAtlas::create("0", "Images/ps_num_shared.png", 21, 29, '0');
             if (nullptr != hun_num)
             {
                 hun_num->setScaleX(0.8f);
@@ -203,6 +203,17 @@ bool FloorMapLayer::onTouchBegan(Touch *touch, Event *e)
 void FloorMapLayer::onTouchEnded(Touch *touch, Event *e)
 {
     auto wall_layer = _tiled_map->getLayer("wall");
+
+    auto end_vec2 = _tiled_map->convertTouchToNodeSpace(touch) / 75.0f;
+    auto end_pt = node_t(end_vec2.x, end_vec2.y);
+    if (!_paths.empty() && _paths.back() == end_pt)
+    {
+        return;
+    }
+    
+    auto start_vec2 = _tiled_map->convertToNodeSpace(_warrior->getPosition()) / 75.0f;
+    auto start_pt = node_t(start_vec2.x, start_vec2.y);
+
     auto wall_layer_size = wall_layer->getLayerSize();
     auto pos = touch->getLocation();
     auto tiles = wall_layer->getTiles();
@@ -218,64 +229,24 @@ void FloorMapLayer::onTouchEnded(Touch *touch, Event *e)
         }
     }
 
-    auto end_pos = _tiled_map->convertTouchToNodeSpace(touch);
-    auto end_pt = node_t(end_pos.x / 75.0f, end_pos.y / 75.0f);
     if (std::find(blocks.begin(), blocks.end(), end_pt) != blocks.end() || end_pt.x >= 10 || end_pt.y >= 12)
     {
         return;
     }
-    auto start_pos = _tiled_map->convertToNodeSpace(_warrior->getPosition());
-    auto start_pt = node_t(start_pos.x / 75.0f, start_pos.y / 75.0f);
+    
     AStar astar(10, 12);
     astar.set_start_and_end(start_pt, end_pt);
     astar.set_blocks(blocks);
-    vector<node_t> paths = astar.get_path();
+    _paths = astar.get_path();
 
-    _warrior->setTimeScale(2.0f);
-    _warrior->setAnimation(0, "walk", true);
-    Vector<FiniteTimeAction*> actions;
-    for (int i = 0; i < paths.size(); ++i)
-    {
-        if (i == 0) {
-            continue;
-        }
-        
-        auto pre_turn = paths[i - 1];
-        auto cur_turn = paths[i];
+    // 箭头
+    _arrow_node->setVisible(true);
+    _arrow_node->setPosition(Vec2((end_pt.x + 0.5f) * 75.0f - 50.0f, (end_pt.y + 0.5f) * 75.0f - 50.0f));
 
-        actions.pushBack(CallFunc::create([&, i, pre_turn, cur_turn](){
-            if (cur_turn.x != pre_turn.x)
-            {
-                _warrior->setScaleX(cur_turn.x > pre_turn.x ? 0.1f : -0.1f);
-            }
-            auto child = dynamic_cast<Node*>(_road_node->getChildren().at(i - 1));
-            if (nullptr != child)
-            {
-                child->runAction(FadeOut::create(0.2f));
-            }
-        }));
-
-        if (i == 1) {
-            auto distance = abs((cur_turn.x + 0.5f) * 75.0f - start_pos.x) + abs((cur_turn.y + 0.5f) * 75.0f - start_pos.y);
-            actions.pushBack(MoveTo::create(distance / MOVE_SPEED, Vec2((cur_turn.x + 0.5f) * 75.0f - 50.0f, (cur_turn.y + 0.5f) * 75.0f - 50.0f)));
-        } else {
-            auto distance = (abs(cur_turn.x - pre_turn.x) + abs(cur_turn.y - pre_turn.y)) * 75.0f;
-            actions.pushBack(MoveTo::create(distance / MOVE_SPEED, Vec2((cur_turn.x + 0.5f) * 75.0f - 50.0f, (cur_turn.y + 0.5f) * 75.0f - 50.0f)));
-        }
-    }
-    
-    actions.pushBack(CallFunc::create([&](){
-        _warrior->setAnimation(0, "gungrab", false);
-        _road_node->removeAllChildren();
-        _arrow_node->setVisible(false);
-    }));
-    auto action = Sequence::create(actions);
-    _warrior->stopAllActions();
-    _warrior->runAction(action);
-
+    // 路线
     uint32_t index = 0;
     _road_node->removeAllChildren();
-    for (auto node : paths)
+    for (auto node : _paths)
     {
         auto pos = Vec2((node.x + 0.5f) * 75.0f - 50.0f, (node.y + 0.5f) * 75.0f - 50.0f);
         auto res = "Images/diban" + String::createWithFormat("%d", index % 22)->_string + ".png";
@@ -285,6 +256,52 @@ void FloorMapLayer::onTouchEnded(Touch *touch, Event *e)
         ++index;
     }
 
-    _arrow_node->setVisible(true);
-    _arrow_node->setPosition(Vec2((end_pt.x + 0.5f) * 75.0f - 50.0f, (end_pt.y + 0.5f) * 75.0f - 50.0f));
+    // 勇士
+    _warrior->setTimeScale(2.0f);
+    _warrior->setAnimation(0, "walk", true);
+    _warrior->stopAllActions();
+    step();
+}
+
+void FloorMapLayer::step()
+{
+    if (_paths.size() > 1)
+    {
+        auto current_pos = _warrior->getPosition();
+        auto start_pt = _paths[0];
+        auto start_pos = Vec2((start_pt.x + 0.5f) * 75.0f - 50.0f, (start_pt.y + 0.5f) * 75.0f - 50.0f);
+        auto end_pt = _paths[1];
+        auto end_pos = Vec2((end_pt.x + 0.5f) * 75.0f - 50.0f, (end_pt.y + 0.5f) * 75.0f - 50.0f);
+
+        auto road_children = _road_node->getChildren();
+        auto child = dynamic_cast<Node*>(road_children.at(road_children.size() - _paths.size()));
+        if (nullptr != child)
+        {
+            child->runAction(FadeOut::create(0.2f));
+        }
+
+        if (current_pos.x != end_pos.x)
+        {
+            _warrior->setScaleX(end_pos.x > current_pos.x ? 0.1f : -0.1f);
+        }
+        
+        if (current_pos.distance(end_pos) > start_pos.distance(end_pos))
+        {
+            _warrior->runAction(Sequence::create(MoveTo::create(current_pos.distance(start_pos) / MOVE_SPEED, start_pos), MoveTo::create(start_pos.distance(end_pos) / MOVE_SPEED, end_pos),
+                CallFunc::create(CC_CALLBACK_0(FloorMapLayer::step, this)), nullptr));
+        }
+        else
+        {
+            _warrior->runAction(Sequence::createWithTwoActions(MoveTo::create(current_pos.distance(end_pos) / MOVE_SPEED, end_pos),
+                CallFunc::create(CC_CALLBACK_0(FloorMapLayer::step, this))));
+        }
+
+        _paths.erase(_paths.begin());
+    }
+    else
+    {
+        _road_node->removeAllChildren();
+        _warrior->setAnimation(0, "gungrab", false);
+        _arrow_node->setVisible(false);
+    }
 }
