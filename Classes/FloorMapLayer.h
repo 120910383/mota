@@ -2,9 +2,11 @@
 
 #include "cocos2d.h"
 #include "AStar.h"
+#include "Player.h"
 
 namespace spine { class SkeletonAnimation; }
-class FloorMapLayer : public cocos2d::Layer
+namespace cocos2d { class LabelAtlas; }
+class FloorMapLayer : public cocos2d::Layer, public PlayerDelegate
 {
 public:
     static cocos2d::Scene* scene();
@@ -15,6 +17,8 @@ public:
 public:
     virtual bool onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *e) override;
     virtual void onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *e) override;
+
+    virtual void on_player_attr_changed();
 
 private:
     void confirm_attack(Node* node);
@@ -40,4 +44,12 @@ private:
         bool operator == (const npc_t& npc) const { return x == npc.x && y == npc.y; }
     };
     vector<npc_t> _npcs;
+
+    cocos2d::LabelAtlas* _attack_num;
+    cocos2d::LabelAtlas* _defend_num;
+    cocos2d::LabelAtlas* _jb_num;
+    cocos2d::LabelAtlas* _hun_num;
+    cocos2d::LabelAtlas* _key_red_num;
+    cocos2d::LabelAtlas* _key_blue_num;
+    cocos2d::LabelAtlas* _key_yellow_num;
 };

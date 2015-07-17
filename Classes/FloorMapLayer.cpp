@@ -2,6 +2,7 @@
 #include "spine/spine-cocos2dx.h"
 #include "AStar.h"
 #include "PopupLayer.h"
+#include "Player.h"
 
 USING_NS_CC;
 static const float MOVE_SPEED = 200.0f;
@@ -98,7 +99,7 @@ bool FloorMapLayer::init()
     auto player_node = Node::create();
     if (nullptr != player_node)
     {
-        player_node->setPosition(Vec2(0.0f, 825.0f));
+        player_node->setPosition(Vec2(-10.0f, 825.0f));
         this->addChild(player_node);
 
         auto player_bg = Sprite::create("Images/ui_bg.png");
@@ -136,13 +137,13 @@ bool FloorMapLayer::init()
             player_attack_icon->setPosition(Vec2(180.0f, 140.0f));
             player_node->addChild(player_attack_icon);
 
-            auto attack_num = LabelAtlas::create("10", "Images/ps_num_shared.png", 21, 29, '0');
-            if (nullptr != attack_num)
+            _attack_num = LabelAtlas::create("10", "Images/ps_num_shared.png", 21, 29, '0');
+            if (nullptr != _attack_num)
             {
-                attack_num->setScaleX(0.8f);
-                attack_num->setAnchorPoint(Vec2(0.0f, 0.5f));
-                attack_num->setPosition(Vec2(40.0f, player_attack_icon->getContentSize().height / 2));
-                player_attack_icon->addChild(attack_num);
+                _attack_num->setScaleX(0.8f);
+                _attack_num->setAnchorPoint(Vec2(0.0f, 0.5f));
+                _attack_num->setPosition(Vec2(40.0f, player_attack_icon->getContentSize().height / 2));
+                player_attack_icon->addChild(_attack_num);
             }
         }
 
@@ -152,13 +153,13 @@ bool FloorMapLayer::init()
             player_defend_icon->setPosition(Vec2(330.0f, 140.0f));
             player_node->addChild(player_defend_icon);
 
-            auto defend_num = LabelAtlas::create("10", "Images/ps_num_shared.png", 21, 29, '0');
-            if (nullptr != defend_num)
+            _defend_num = LabelAtlas::create("10", "Images/ps_num_shared.png", 21, 29, '0');
+            if (nullptr != _defend_num)
             {
-                defend_num->setScaleX(0.8f);
-                defend_num->setAnchorPoint(Vec2(0.0f, 0.5f));
-                defend_num->setPosition(Vec2(40.0f, player_defend_icon->getContentSize().height / 2));
-                player_defend_icon->addChild(defend_num);
+                _defend_num->setScaleX(0.8f);
+                _defend_num->setAnchorPoint(Vec2(0.0f, 0.5f));
+                _defend_num->setPosition(Vec2(40.0f, player_defend_icon->getContentSize().height / 2));
+                player_defend_icon->addChild(_defend_num);
             }
         }
 
@@ -168,13 +169,13 @@ bool FloorMapLayer::init()
             player_jb_icon->setPosition(Vec2(180.0f, 90.0f));
             player_node->addChild(player_jb_icon);
 
-            auto jb_num = LabelAtlas::create("0", "Images/ps_num_shared.png", 21, 29, '0');
-            if (nullptr != jb_num)
+            _jb_num = LabelAtlas::create("0", "Images/ps_num_shared.png", 21, 29, '0');
+            if (nullptr != _jb_num)
             {
-                jb_num->setScaleX(0.8f);
-                jb_num->setAnchorPoint(Vec2(0.0f, 0.5f));
-                jb_num->setPosition(Vec2(40.0f, player_jb_icon->getContentSize().height / 2));
-                player_jb_icon->addChild(jb_num);
+                _jb_num->setScaleX(0.8f);
+                _jb_num->setAnchorPoint(Vec2(0.0f, 0.5f));
+                _jb_num->setPosition(Vec2(40.0f, player_jb_icon->getContentSize().height / 2));
+                player_jb_icon->addChild(_jb_num);
             }
         }
 
@@ -184,18 +185,100 @@ bool FloorMapLayer::init()
             player_hun_icon->setPosition(Vec2(330.0f, 90.0f));
             player_node->addChild(player_hun_icon);
 
-            auto hun_num = LabelAtlas::create("0", "Images/ps_num_shared.png", 21, 29, '0');
-            if (nullptr != hun_num)
+            _hun_num = LabelAtlas::create("0", "Images/ps_num_shared.png", 21, 29, '0');
+            if (nullptr != _hun_num)
             {
-                hun_num->setScaleX(0.8f);
-                hun_num->setAnchorPoint(Vec2(0.0f, 0.5f));
-                hun_num->setPosition(Vec2(40.0f, player_hun_icon->getContentSize().height / 2));
-                player_hun_icon->addChild(hun_num);
+                _hun_num->setScaleX(0.8f);
+                _hun_num->setAnchorPoint(Vec2(0.0f, 0.5f));
+                _hun_num->setPosition(Vec2(40.0f, player_hun_icon->getContentSize().height / 2));
+                player_hun_icon->addChild(_hun_num);
+            }
+        }
+
+        const auto LENGHT = 266.0f;
+        auto progress_bg = Node::create();
+        if (nullptr != progress_bg)
+        {
+            progress_bg->setPosition(Vec2(160.0f, 34.0f));
+            player_node->addChild(progress_bg);
+
+            auto head = Sprite::create("Images/ui_hp_bg_a.png");
+            auto tail = Sprite::create("Images/ui_hp_bg_a.png");
+            auto body = Sprite::create("Images/ui_hp_bg_b.png");
+            head->setAnchorPoint(Vec2::ZERO);
+            head->setPosition(Vec2::ZERO);
+            progress_bg->addChild(head);
+            body->setScaleX(LENGHT / body->getContentSize().width);
+            body->setAnchorPoint(Vec2::ZERO);
+            body->setPosition(Vec2(head->getContentSize().width, 0));
+            progress_bg->addChild(body);
+            tail->setFlippedX(true);
+            tail->setAnchorPoint(Vec2::ZERO);
+            tail->setPosition(Vec2(head->getContentSize().width + body->getBoundingBox().size.width, 0));
+            progress_bg->addChild(tail);
+        }
+
+        for (int32_t i = 0; i < 3; ++i)
+        {
+            auto key_bg = Sprite::create("Images/ui_btn2.png");
+            if (nullptr != key_bg)
+            {
+                key_bg->setAnchorPoint(Vec2(0, 0.5f));
+                key_bg->setPosition(Vec2(456.0f + i * 66.0f, 142.0f));
+                player_node->addChild(key_bg);
+
+                auto key_res = "Images/key" + String::createWithFormat("%d", i)->_string + ".png";
+                auto key_sprite = Sprite::create(key_res);
+                key_sprite->setScale(0.6f);
+                key_sprite->setPosition(Vec2(key_bg->getContentSize().width / 2, key_bg->getContentSize().height / 2));
+                key_bg->addChild(key_sprite);
+            }
+        }
+
+        _key_red_num = LabelAtlas::create("0", "Images/ps_num_key.png", 17, 22, '0');
+        if (_key_red_num)
+        {
+            _key_red_num->setPosition(Vec2(490.0f, 120.0f));
+            player_node->addChild(_key_red_num);
+        }
+        _key_blue_num = LabelAtlas::create("0", "Images/ps_num_key.png", 17, 22, '0');
+        if (_key_blue_num)
+        {
+            _key_blue_num->setPosition(Vec2(556.0f, 120.0f));
+            player_node->addChild(_key_blue_num);
+        }
+        _key_yellow_num = LabelAtlas::create("0", "Images/ps_num_key.png", 17, 22, '0');
+        if (_key_yellow_num)
+        {
+            _key_yellow_num->setPosition(Vec2(622.0f, 120.0f));
+            player_node->addChild(_key_yellow_num);
+        }
+
+        for (int32_t i = 0; i < 2; ++i)
+        {
+            auto daoju_bg = Sprite::create("Images/ui_btn.png");
+            if (nullptr != daoju_bg)
+            {
+                daoju_bg->setAnchorPoint(Vec2(0, 0.5f));
+                daoju_bg->setPosition(Vec2(466.0f + i * 94.0f, 76.0f));
+                player_node->addChild(daoju_bg);
             }
         }
     }
     
     return true;
+}
+
+void FloorMapLayer::on_player_attr_changed()
+{
+    const auto& player_info = Player::GetInstance()->get_player_info();
+    _attack_num->setString(String::createWithFormat("%d", player_info.attack)->_string);
+    _defend_num->setString(String::createWithFormat("%d", player_info.defence)->_string);
+    _jb_num->setString(String::createWithFormat("%d", player_info.gold)->_string);
+    _hun_num->setString(String::createWithFormat("%d", player_info.hun)->_string);
+    _key_red_num->setString(String::createWithFormat("%d", player_info.key_red)->_string);
+    _key_blue_num->setString(String::createWithFormat("%d", player_info.key_blue)->_string);
+    _key_yellow_num->setString(String::createWithFormat("%d", player_info.key_yellow)->_string);
 }
 
 bool FloorMapLayer::onTouchBegan(Touch *touch, Event *e)
@@ -205,6 +288,12 @@ bool FloorMapLayer::onTouchBegan(Touch *touch, Event *e)
 
 void FloorMapLayer::onTouchEnded(Touch *touch, Event *e)
 {
+    // 暂时bug修正，如果对话框已弹出，就不再执行以下代码，这种情况是在对话框弹出前，touchbegan就已经触发的情况下发生，随后重构时应该不会有这个问题
+    if (nullptr != this->getChildByTag(999))
+    {
+        return;
+    }
+
     // 获取起始点
     auto end_vec2 = _tiled_map->convertTouchToNodeSpace(touch) / 75.0f;
     auto end_pt = node_t(end_vec2.x, end_vec2.y);
@@ -215,6 +304,11 @@ void FloorMapLayer::onTouchEnded(Touch *touch, Event *e)
     
     auto start_vec2 = _tiled_map->convertToNodeSpace(_warrior->getPosition()) / 75.0f;
     auto start_pt = node_t(start_vec2.x, start_vec2.y);
+    if (start_pt == end_pt)
+    {
+        return;
+    }
+
 
     // 获取阻碍点
     auto wall_layer = _tiled_map->getLayer("wall");
@@ -325,7 +419,70 @@ void FloorMapLayer::step()
             {
                 auto npc_layer = _tiled_map->getLayer("npc");
                 auto key = npc_layer->getTileAt(Vec2(npc.x, 11 - npc.y));
-                key->runAction(Sequence::create(MoveTo::create(0.5f, Vec2(550.0f, 1000.0f)), nullptr));
+                auto start_pos = this->convertToNodeSpace(key->getParent()->convertToWorldSpace(key->getPosition()));
+                key->retain();
+                key->removeFromParentAndCleanup(false);
+                key->setPosition(start_pos);
+                this->addChild(key);
+                key->release();
+
+                auto color = get_tile_prop(npc.gid, "color").asInt();
+                switch (color)
+                {
+                case 0:
+                    {
+                        auto target_pos = this->convertToNodeSpace(_key_blue_num->getParent()->convertToWorldSpace(_key_blue_num->getPosition()));
+                        target_pos -= Vec2(26.0f, 0);
+                        auto duration = key->getPosition().distance(target_pos) / 1000.0f;
+                        key->runAction(Sequence::create(
+                            Spawn::createWithTwoActions(MoveTo::create(duration, target_pos), ScaleTo::create(duration, 0.6f)),
+                            CallFunc::create([key]() {
+                                key->removeFromParentAndCleanup(true);
+                                PlayerDelegate::add_key(1, 1, 1);
+                        }), nullptr));
+                    }
+                    break;
+                    case 1:
+                    {
+                        auto target_pos = this->convertToNodeSpace(_key_red_num->getParent()->convertToWorldSpace(_key_red_num->getPosition()));
+                        target_pos -= Vec2(26.0f, 0);
+                        auto duration = key->getPosition().distance(target_pos) / 1000.0f;
+                        key->runAction(Sequence::create(
+                            Spawn::createWithTwoActions(MoveTo::create(duration, target_pos), ScaleTo::create(duration, 0.6f)),
+                            CallFunc::create([key]() {
+                                key->removeFromParentAndCleanup(true);
+                                PlayerDelegate::add_key(1, 0, 0);
+                        }), nullptr));
+                    }
+                    break;
+                case 2:
+                    {
+                        auto target_pos = this->convertToNodeSpace(_key_blue_num->getParent()->convertToWorldSpace(_key_blue_num->getPosition()));
+                        target_pos -= Vec2(26.0f, 0);
+                        auto duration = key->getPosition().distance(target_pos) / 1000.0f;
+                        key->runAction(Sequence::create(
+                            Spawn::createWithTwoActions(MoveTo::create(duration, target_pos), ScaleTo::create(duration, 0.6f)),
+                            CallFunc::create([key]() {
+                                key->removeFromParentAndCleanup(true);
+                                PlayerDelegate::add_key(0, 1, 0);
+                        }), nullptr));
+                    }
+                    break;
+                case 3:
+                    {
+                        auto target_pos = this->convertToNodeSpace(_key_yellow_num->getParent()->convertToWorldSpace(_key_yellow_num->getPosition()));
+                        target_pos -= Vec2(26.0f, 0);
+                        auto duration = key->getPosition().distance(target_pos) / 1000.0f;
+                        key->runAction(Sequence::create(
+                            Spawn::createWithTwoActions(MoveTo::create(duration, target_pos), ScaleTo::create(duration, 0.6f)),
+                            CallFunc::create([key]() {
+                                key->removeFromParentAndCleanup(true);
+                                PlayerDelegate::add_key(0, 0, 1);
+                        }), nullptr));
+                    }
+                    break;
+                }
+                
             }
             break;
             default:
@@ -374,6 +531,7 @@ void FloorMapLayer::step()
                     walk_pause = true;
                     _warrior->setAnimation(0, "gungrab", false);
                     auto dialog = PopupLayer::create("Images/UI_shared_bg.png", Size(600, 300));
+                    dialog->setTag(999);
                     dialog->setTitle("confirm");
                     dialog->setContentText("Do you wang to attack this guy?");
                     dialog->setCallbackFunc(this, CC_CALLFUNCN_SELECTOR(FloorMapLayer::confirm_attack));

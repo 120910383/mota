@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include <cassert>
+
 ///	单体模板
 template<typename T>
 class Singleton 
