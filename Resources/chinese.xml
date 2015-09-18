@@ -1,0 +1,938 @@
+﻿<plist>
+<dict>
+	<key>enemy0</key>
+	<string>绿头蝇</string>
+	<key>enemy1</key>
+	<string>蓝头蝇</string>
+	<key>enemy2</key>
+	<string>小史莱姆</string>
+	<key>enemy3</key>
+	<string>红头蝇</string>
+	<key>enemy4</key>
+	<string>骨头人</string>
+	<key>enemy5</key>
+	<string>骨头士兵</string>
+	<key>enemy6</key>
+	<string>小蝙蝠</string>
+	<key>enemy7</key>
+	<string>六翅蝙蝠</string>
+	<key>enemy8</key>
+	<string>大史莱姆</string>
+	<key>enemy9</key>
+	<string>史莱姆王</string>
+	<key>enemy10</key>
+	<string>灵武者</string>
+	<key>enemy11</key>
+	<string>灵卫兵</string>
+	<key>enemy12</key>
+	<string>灵法师</string>
+	<key>enemy13</key>
+	<string>米诺斯</string>
+	<key>enemy14</key>
+	<string>犀甲守卫</string>
+	<key>enemy15</key>
+	<string>犀甲将军</string>
+	<key>enemy16</key>
+	<string>骨头队长</string>
+	<key>enemy17</key>
+	<string>鬼法师</string>
+	<key>enemy18</key>
+	<string>冥武者</string>
+	<key>enemy19</key>
+	<string>牛魔王</string>
+	<key>enemy20</key>
+	<string>冥法师</string>
+	<key>enemy21</key>
+	<string>冥卫兵</string>
+	<key>enemy22</key>
+	<string>狂卫兵</string>
+	<key>enemy23</key>
+	<string>暗术士</string>
+	<key>enemy24</key>
+	<string>狂术士</string>
+	<key>enemy25</key>
+	<string>血蝙蝠</string>
+	<key>enemy26</key>
+	<string>石像鬼</string>
+	<key>enemy27</key>
+	<string>犀甲战士</string>
+	<key>enemy28</key>
+	<string>鬼卫兵</string>
+	<key>enemy29</key>
+	<string>鬼武者</string>
+	<key>enemy30</key>
+	<string>狂武者</string>
+	<key>enemy31</key>
+	<string>影牙</string>
+	<key>enemy32</key>
+	<string>鬼牙</string>
+	<key>enemy33</key>
+	<string>鬼蝇</string>
+	<key>enemy34</key>
+	<string>魔化史莱姆</string>
+	<key>enemy35</key>
+	<string>鬼蝠王</string>
+	<key>enemy36</key>
+	<string>骨头将军</string>
+	<key>enemy37</key>
+	<string>鬼术士</string>
+	<key>enemy38</key>
+	<string>魔岩王</string>
+	<key>enemy39</key>
+	<string>美杜莎</string>
+	<key>enemy40</key>
+	<string>魔卫兵</string>
+	<key>enemy41</key>
+	<string>未命名</string>
+	<key>enemy42</key>
+	<string>未命名</string>
+	<key>enemy43</key>
+	<string>未命名</string>
+	<key>enemy44</key>
+	<string>小蘑菇</string>
+	<key>enemy45</key>
+	<string>独眼木</string>
+	<key>enemy46</key>
+	<string>小独角</string>
+	<key>enemy47</key>
+	<string>兵蜂</string>
+	<key>enemy48</key>
+	<string>赤眼岩人</string>
+	<key>enemy49</key>
+	<string>盗盗鸟</string>
+	<key>enemy50</key>
+	<string>月野兔</string>
+	<key>enemy51</key>
+	<string>大牙菇</string>
+	<key>enemy52</key>
+	<string>佐佐木</string>
+	<key>enemy53</key>
+	<string>刀角</string>
+	<key>enemy54</key>
+	<string>赤间蜂</string>
+	<key>enemy55</key>
+	<string>独角岩人</string>
+	<key>enemy56</key>
+	<string>隼兵卫</string>
+	<key>enemy57</key>
+	<string>兔兵卫</string>
+	<key>enemy58</key>
+	<string>大木博士</string>
+	<key>enemy59</key>
+	<string>希尔娜娜斯</string>
+	<key>enemy60</key>
+	<string>希尔莉莉丝</string>
+	<key>enemy_0</key>
+	<string>绿头蝇
+眼泛绿光的苍蝇怪，最低等的魔物之一</string>
+	<key>enemy_1</key>
+	<string>蓝头蝇
+眼泛蓝光的苍蝇怪，最低等的魔物之一</string>
+	<key>enemy_2</key>
+	<string>小史莱姆
+由黏黏的细菌聚合进化出的果冻状魔物，
+最低等的魔物之一</string>
+	<key>enemy_3</key>
+	<string>红头蝇
+眼泛红光的苍蝇怪，最低等的魔物之一</string>
+	<key>enemy_4</key>
+	<string>骨头人
+带怨念的低等残魂附于尸骨上形成的魔物</string>
+	<key>enemy_5</key>
+	<string>骨头士兵
+带怨念的士兵残魂附于尸骨上形成的魔物</string>
+	<key>enemy_6</key>
+	<string>小蝙蝠
+小蝙蝠通过修炼进化而成的魔物</string>
+	<key>enemy_7</key>
+	<string>六翅蝙蝠
+吸血蝙蝠在吸取灵力较强生物的血液后，变异而成的魔物</string>
+	<key>enemy_8</key>
+	<string>大史莱姆
+黏黏的细菌聚合进化成的大果冻状魔物，最低等的魔物之一</string>
+	<key>enemy_9</key>
+	<string>史莱姆王
+黏黏的细菌聚合进化成的凶猛的果冻状魔物，最低等的魔物之一</string>
+	<key>enemy_10</key>
+	<string>灵武者
+生前为武痴，好勇斗狠，死后执念更深</string>
+	<key>enemy_11</key>
+	<string>灵卫兵
+尽忠职守的卫兵亡灵</string>
+	<key>enemy_12</key>
+	<string>鬼法师
+战死沙场的法师，因恨意深重无法轮回，
+被大魔王利用而收至塔内</string>
+	<key>enemy_13</key>
+	<string>米诺斯
+强横无匹的牛头人，以人为食，
+大魔王以助他化人为条件把其拉拢至麾下</string>
+	<key>enemy_14</key>
+	<string>犀甲守卫
+皮坚肉厚的魔化犀牛，
+脑子不好使</string>
+	<key>enemy_15</key>
+	<string>犀甲将军
+皮坚肉厚的魔化犀牛，
+成魔日子稍长所以力量较强</string>
+	<key>enemy_16</key>
+	<string>骨头队长
+带有怨念的高阶士兵残魂附于尸骨上形成的魔物</string>
+	<key>enemy_17</key>
+	<string>冥法师
+法力无匹的宗师级法师，
+对生前成就地位执念太深而成魔</string>
+	<key>enemy_18</key>
+	<string>冥武者
+生前为武痴，自立门派，死后执念更深</string>
+	<key>enemy_19</key>
+	<string>牛魔王
+东方大陆上最具威名的牛头人身魔兽，
+冷血而自视甚高</string>
+	<key>enemy_20</key>
+	<string>灵法师
+生前没有得到重用，郁郁而终的法师之灵</string>
+	<key>enemy_21</key>
+	<string>冥卫兵
+高阶卫兵亡灵，对大魔王忠心耿耿</string>
+	<key>enemy_22</key>
+	<string>狂卫兵
+对大魔王有着狂热信仰的卫兵亡灵，
+唯一存在意义是忠实的执行任务</string>
+	<key>enemy_23</key>
+	<string>暗术士
+精通黑暗方术的术士，以自身为媒招魂引魄，
+久而久之反被侵蚀迷失自我</string>
+	<key>enemy_24</key>
+	<string>狂术士
+狂热的黑暗方术研究者，
+不择手段，乃至入魔</string>
+	<key>enemy_25</key>
+	<string>血蝙蝠
+吸血蝙蝠通过修炼进化而成的魔物</string>
+	<key>enemy_26</key>
+	<string>石像鬼
+能通过石化本体抵御日光的稍高级的恶魔</string>
+	<key>enemy_27</key>
+	<string>犀甲战士
+皮坚肉厚的魔化犀牛，脾气暴躁好勇斗狠</string>
+	<key>enemy_28</key>
+	<string>鬼卫兵
+尽忠职守的卫兵，死后执念更深</string>
+	<key>enemy_29</key>
+	<string>鬼武者
+生前为武痴，以武论尊，死后执念更深</string>
+	<key>enemy_30</key>
+	<string>狂武者
+生前为武痴，嗜武入魔，死后执念更深</string>
+	<key>enemy_31</key>
+	<string>影牙
+鬼牙之影魔化而成 ，
+战力一般，但神出鬼没</string>
+	<key>enemy_32</key>
+	<string>鬼牙
+魔王麾下鬼将之一，
+一双利爪犹如异兽之牙，故得其名</string>
+	<key>enemy_33</key>
+	<string>鬼蝇
+游魂以苍蝇为宿主，同化而生的异种，残留着大量怨念</string>
+	<key>enemy_34</key>
+	<string>魔化史莱姆
+黏黏的细菌与荒魂聚合进化成的狂暴的果冻状魔物</string>
+	<key>enemy_35</key>
+	<string>鬼蝠王
+吸血蝙蝠在吸取强大魔物的血液后，变异而成的恶魔</string>
+	<key>enemy_36</key>
+	<string>骨头将军
+带怨念的将军残魂附于尸骨上形成的魔物</string>
+	<key>enemy_37</key>
+	<string>鬼术士
+生前沉迷于各种邪恶实验的术士，死后堕入饿鬼道仍执迷不悟</string>
+	<key>enemy_38</key>
+	<string>魔岩王
+饱含怨念与怒火的巨型魔岩机关兽，守护着通往51层的秘道</string>
+	<key>enemy_39</key>
+	<string>美杜莎
+蛇发人身的女妖，眼神魅惑，与其对视会被石化</string>
+	<key>enemy_40</key>
+	<string>魔卫兵
+恶魔化的高阶卫兵，实力强大，不容小觑
+</string>
+	<key>enemy_44</key>
+	<string>小蘑菇
+大木博士百无聊赖时创造的小精灵之一，误食必拉！</string>
+	<key>enemy_45</key>
+	<string>独眼木
+大木博士赋予了枯木生命，和一只大眼睛，有它放哨，才能安心入睡。</string>
+	<key>enemy_46</key>
+	<string>小独角
+把这剧毒小角当成长鼻子的家伙们，从没有一个能活下来的。</string>
+	<key>enemy_47</key>
+	<string>兵蜂
+在这魑魅魍魉之地，若非有这些小家伙们合力守护，博士也早成厉鬼了。</string>
+	<key>enemy_48</key>
+	<string>赤眼岩人
+给博士放哨的小石子。石可破也，而不可夺其坚。</string>
+	<key>enemy_49</key>
+	<string>盗盗鸟
+由人类旅行者石井所发现的陆行鸟亚种，喜欢偷取旅者食物，故名盗。</string>
+	<key>enemy_50</key>
+	<string>月野兔
+在博士告诉它真相前，它一直以为自己是爱与正义的化身。</string>
+	<key>enemy_51</key>
+	<string>大牙菇
+大概是为了对抗那些常拿它充饥的饿鬼，小魔菇长出了一圈獠牙。</string>
+	<key>enemy_52</key>
+	<string>佐佐木
+魔念侵蚀，使独眼木战力大升，和长出了头发和风骚的枝丫。</string>
+	<key>enemy_53</key>
+	<string>刀角
+入魔的小毒角不仅厚甲裹身，还长出了如刀双角。</string>
+	<key>enemy_54</key>
+	<string>赤间蜂
+越是鲜艳，越是狠毒，生死一针。</string>
+	<key>enemy_55</key>
+	<string>独角岩人
+魔化小岩人，长出了坚不可摧的巨拳和赤角。</string>
+	<key>enemy_56</key>
+	<string>隼兵卫
+被魔王纳入麾下的魔化陆行鸟，奔跑速度堪比风之罗盘。</string>
+	<key>enemy_57</key>
+	<string>兔兵卫
+被魔王纳入麾下的魔化兔子，以坚硬无比的千年萝卜干为武器。</string>
+	<key>enemy_58</key>
+	<string>大木博士
+博士似乎受到了很严重的心理打击，乃至于背后长出了又长又粗的大爪爪。</string>
+	<key>enemy_59</key>
+	<string>希尔娜娜斯
+希尔莉莉丝的心魔，作为魔王最得力的爪牙之一，为魔王转生尽心尽力。</string>
+	<key>enemy_60</key>
+	<string>希尔莉莉丝
+天界风行者希尔莉莉丝任务失败后被困于魔塔，实力也大不如前。</string>
+
+	<key>HP</key>
+	<string>血</string>
+
+	<key>cannotOpen</key>
+	<string>无法打开</string>
+	<key>tip</key>
+	<string>被封印着的厚重石门，
+先往上边走边想办法吧。</string>
+	<key>tip2</key>
+	<string>置诸死地，乃成活路</string>
+	<key>tip176</key>
+	<string>道可道非恒道</string>
+	<key>tip23</key>
+	<string>取得神谕之泉，血量翻倍！</string>
+
+	<key>txt1_1</key>
+	<string>百宝小妖·弟</string>
+	<key>txt1_2</key>
+	<string>人类可真是稀客呢！！</string>
+	<key>txt1_3</key>
+	<string>（血+1000）</string>
+	<key>txt1_4</key>
+	<string>售价               x25</string>
+	<key>txt1_5</key>
+	<string>（攻+4）</string>
+	<key>txt1_6</key>
+	<string>售价               x25</string>
+	<key>txt1_7</key>
+	<string>（防+4）</string>
+	<key>txt1_8</key>
+	<string>售价               x25</string>
+
+	<key>txt2_1</key>
+	<string>弑神者·怒风</string>
+	<key>txt2_2</key>
+	<string>神外有神，魔外有魔</string>
+	<key>txt2_3</key>
+	<string>+7攻7防,1000血</string>
+	<key>txt2_4</key>
+	<string>售价               x100</string>
+	<key>txt2_5</key>
+	<string>+5攻</string>
+	<key>txt2_6</key>
+	<string>售价               x30</string>
+	<key>txt2_7</key>
+	<string>+5防</string>
+	<key>txt2_8</key>
+	<string>售价               x30</string>
+
+	<key>txt3_1</key>
+	<string>解锁者</string>
+	<key>txt3_2</key>
+	<string>先有钥匙还是先有锁？</string>
+	<key>txt3_3</key>
+	<string>黄钥匙</string>
+	<key>txt3_4</key>
+	<string>售价               x10</string>
+	<key>txt3_5</key>
+	<string>蓝钥匙</string>
+	<key>txt3_6</key>
+	<string>售价               x50</string>
+	<key>txt3_7</key>
+	<string>红钥匙</string>
+	<key>txt3_8</key>
+	<string>售价               x100</string>
+	
+	<key>txt4_1</key>
+	<string>百宝小妖·兄</string>
+	<key>txt4_2</key>
+	<string>人类的钱也是钱！！</string>
+	<key>txt4_3</key>
+	<string>（血+4000）</string>
+	<key>txt4_4</key>
+	<string>售价               x100</string>
+	<key>txt4_5</key>
+	<string>（攻+20）</string>
+	<key>txt4_6</key>
+	<string>售价               x100</string>
+	<key>txt4_7</key>
+	<string>（防+20）</string>
+	<key>txt4_8</key>
+	<string>售价               x100</string>
+
+	<key>txt5_1</key>
+	<string>噬神者·怒风</string>
+	<key>txt5_2</key>
+	<string>神爱世人，魔渡众生</string>
+	<key>txt5_3</key>
+	<string>+30攻防,3000血</string>
+	<key>txt5_4</key>
+	<string>售价               x270</string>
+	<key>txt5_5</key>
+	<string>+20攻</string>
+	<key>txt5_6</key>
+	<string>售价               x90</string>
+	<key>txt5_7</key>
+	<string>+20防</string>
+	<key>txt5_8</key>
+	<string>售价               x90</string>
+
+	<key>txt6_1</key>
+	<string>拾匙人</string>
+	<key>txt6_2</key>
+	<string>回收钥匙，只此一家</string>
+	<key>txt6_3</key>
+	<string>红钥匙</string>
+	<key>txt6_4</key>
+	<string>收购               x70</string>
+	<key>txt6_5</key>
+	<string>蓝钥匙</string>
+	<key>txt6_6</key>
+	<string>收购               x35</string>
+	<key>txt6_7</key>
+	<string>黄钥匙</string>
+	<key>txt6_8</key>
+	<string>收购               x7</string>
+
+	<key>txt7_1</key>
+	<string>屠神者·怒风</string>
+	<key>txt7_2</key>
+	<string>一步天堂，一步死亡</string>
+	<key>txt7_3</key>
+	<string>+45攻防,5000血</string>
+	<key>txt7_4</key>
+	<string>售价               x360</string>
+	<key>txt7_5</key>
+	<string>+32攻</string>
+	<key>txt7_6</key>
+	<string>售价               x120</string>
+	<key>txt7_7</key>
+	<string>+32防</string>
+	<key>txt7_8</key>
+	<string>售价               x120</string>
+
+	<key>txt8_1</key>
+	<string>百宝老妖</string>
+	<key>txt8_2</key>
+	<string>钱钱钱~！！</string>
+	<key>txt8_3</key>
+	<string>（血+7000）</string>
+	<key>txt8_4</key>
+	<string>售价               x140</string>
+	<key>txt8_5</key>
+	<string>（攻+34）</string>
+	<key>txt8_6</key>
+	<string>售价               x140</string>
+	<key>txt8_7</key>
+	<string>（防+34）</string>
+	<key>txt8_8</key>
+	<string>售价               x140</string>
+
+	<key>txt9_1</key>
+	<string>百宝妖尊</string>
+	<key>txt9_2</key>
+	<string>钱钱钱~！！</string>
+	<key>txt9_3</key>
+	<string>（血+11000）</string>
+	<key>txt9_4</key>
+	<string>售价               x210</string>
+	<key>txt9_5</key>
+	<string>（攻+62）</string>
+	<key>txt9_6</key>
+	<string>售价               x210</string>
+	<key>txt9_7</key>
+	<string>（防+62）</string>
+	<key>txt9_8</key>
+	<string>售价               x210</string>
+
+	<key>txt10_1</key>
+	<string>灭神者·怒风</string>
+	<key>txt10_2</key>
+	<string>以武入道，我行我道</string>
+	<key>txt10_3</key>
+	<string>+88攻防,8000血</string>
+	<key>txt10_4</key>
+	<string>售价               x600</string>
+	<key>txt10_5</key>
+	<string>+60攻</string>
+	<key>txt10_6</key>
+	<string>售价               x200</string>
+	<key>txt10_7</key>
+	<string>+60防</string>
+	<key>txt10_8</key>
+	<string>售价               x200</string>
+
+
+	<key>hun_1</key>
+	<string>战魂</string>
+
+	<key>openDoor</key>
+	<string>开门</string>
+	<key>rKey</key>
+	<string>【红色钥匙】</string>
+	<key>bKey</key>
+	<string>【蓝色钥匙】</string>
+	<key>yKey</key>
+	<string>【黄色钥匙】</string>
+	<key>open_msg1</key>
+	<string>是否使用</string>
+	<key>open_msg2</key>
+	<string>开启此门？</string>
+	<key>isInitData</key>
+	<string>是否要初始化全部数据</string>
+	<key>isRevive</key>
+	<string>是否要传送到死亡的层数</string>
+	<key>isAttack</key>
+	<string>是否继续攻击敌人</string>
+
+	
+	<key>_attack</key>
+	<string>攻击力</string>
+	<key>_defend</key>
+	<string>防御力</string>
+
+	<key>tip_get</key>
+	<string>获得</string>
+	<key>tip_attack_up</key>
+	<string>，攻击力提升</string>
+	<key>tip_defend_up</key>
+	<string>，防御力提升</string>
+	<key>tip_attackAndDefend_up</key>
+	<string>，攻击防御各+</string>
+	<key>rw15</key>
+	<string>黄钥匙</string>
+	<key>rw25</key>
+	<string>坚壁之盾</string>
+	<key>rw26</key>
+	<string>钢刃大剑</string>
+	<key>rw27</key>
+	<string>天空之盾</string>
+	<key>rw28</key>
+	<string>大地之剑</string>
+	<key>rw_28</key>
+	<string>百鬼巨剑</string>
+	<key>rw_27</key>
+	<string>骸骨壁垒</string>
+	<key>_rw1</key>
+	<string>天空之剑</string>
+	<key>_rw2</key>
+	<string>破魔者之剑</string>
+	<key>_rw3</key>
+	<string>大地之盾</string>
+	<key>_rw4</key>
+	<string>斩魔者之盾</string>
+	<key>rw200</key>
+	<string>凶神之刃</string>
+	<key>rw201</key>
+	<string>恶煞之盾</string>
+	<key>rw29</key>
+	<string>魔金指环</string>
+
+	<key>di</key>
+	<string>第</string>
+	<key>ceng</key>
+	<string>层</string>
+	<key>xuzhang</key>
+	<string>塔外</string>
+	<key>anCeng</key>
+	<string>54层·暗层</string>
+
+	<key>sghz_hp</key>
+	<string>血:</string>
+	<key>sghz_zh</key>
+	<string>魂:</string>
+	<key>sghz_money</key>
+	<string>金:</string>
+	<key>sghz_attack</key>
+	<string>攻:</string>
+	<key>sghz_defend</key>
+	<string>防:</string>
+	<key>sghz_cutHP</key>
+	<string>伤害</string>
+	<key>sghzGet_title</key>
+	<string>圣光徽章</string>
+	<key>sghz_tip</key>
+	<string>能实时显示当前楼层怪物属性和将对你造成的伤害。</string>
+	<key>sghz_tip2</key>
+	<string>（习惯使用圣光徽章能有效减少死亡）</string>
+	<key>mapGet_title</key>
+	<string>发现物品·破旧地图</string>
+	<key>map_tip</key>
+	<string>看起来好像是魔塔的地图，歪歪斜斜写满了看不懂的标注
+第六层那个背着大袋子的地精要找的貌似就是这东西了吧</string>
+	<key>map_tip2</key>
+	<string>（拾金不昧有好报）</string>
+
+
+	<key>getMB</key>
+	<string>发现秘宝·</string>
+	<key>fzlpGet_title</key>
+	<string>风之罗盘</string>
+	<key>fzlp_tip</key>
+	<string>能在任何曾探索过的楼层间自由移动</string>
+	<key>fzlp_tip2</key>
+	<string>（消耗魔能，可在商店补满）</string>
+
+	<key>die_title</key>
+	<string>危险提示</string>
+	<key>die_tip</key>
+	<string>当怪物脚下出现这个符文标记，证明你当前还不是他的对手。还是先找软柿子捏吧~~</string>
+	<key>die_tip2</key>
+	<string>（在获得神器圣光徽章后将不再提示）</string>
+
+	<key>no_fzlp_title</key>
+	<string>未获得风之罗盘</string>
+	<key>no_fzlp_tip</key>
+	<string>不能打开</string>
+	
+	<key>ms_emzy</key>
+	<string>恶魔之眼</string>
+	<key>ms_emzy_tip</key>
+	<string>，可以无限次存档</string>
+
+	<key>ms_cssl</key>
+	<string>重生沙漏</string>
+	<key>ms_cssl_tip</key>
+	<string>，可以无限次复活</string>
+
+	<key>ms_fzlp</key>
+	<string>风之罗盘</string>
+	<key>ms_fzlp_tip</key>
+	<string>，可以使用瞬移</string>
+
+	<key>ms_hdxie</key>
+	<string>混沌之靴</string>
+	<key>ms_hdxie_tip</key>
+	<string>，行走速度增加25%</string>
+
+	<key>getSwordTip</key>
+	<string>点击主角头像
+就能查看主角装备属性
+也能进行存档和购买秘宝哦
+</string>
+
+	<key>buyFzlpTip</key>
+	<string>你还未获得风之罗盘
+仍可继续购买此商品
+在拾取风之罗盘后将自动升级
+</string>
+
+	<key>lv40_39</key>
+	<string>楼下传来了剧烈震动。。</string>
+
+	<key>roleCutHp</key>
+	<string>公主突然发难！！ 
+始料不及，中招   
+血量减半</string>
+
+	<key>cundangTip</key>
+	<string>是否保存当前进度？</string>
+	
+	<key>save_time</key>
+	<string>时间：</string>
+	<key>save_lv</key>
+	<string>楼层：</string>
+	<key>save_HP</key>
+	<string>生命：</string>
+	<key>save_attack</key>
+	<string>攻击：</string>
+	<key>save_defend</key>
+	<string>防御：</string>
+	<key>save_wuhun</key>
+	<string>战魂：</string>
+
+	<key>fh_mn</key>
+	<string>激活重生沙漏并复活？</string>
+	<key>fh_f</key>
+	<string>使用重生生沙漏复活？</string>
+	<key>fh_less</key>
+	<string>剩余：</string>
+
+	<key>name_1_1</key>
+	<string>重生沙漏</string>
+	<key>name_2_1</key>
+	<string>风之罗盘</string>
+	<key>name_3_1</key>
+	<string>恶魔之眼</string>
+	<key>name_4_1</key>
+	<string>普通鞋子</string>
+
+	<key>end_txt0_1</key>
+	<string>疯牛米诺斯被杀
+似乎触动了某些结界
+让楼上的魔物陆续苏醒了
+你甚至能感受到
+择人而噬的魔气
+正在扩散...</string>
+	<key>end_txt0_2</key>
+	<string>但...
+你仍然选择了
+上 !!</string>
+
+	<key>end_txt1_1</key>
+	<string>鬼牙
+牛魔王
+这些以往只属于
+传说的魔物
+也现身了</string>
+	<key>end_txt1_2</key>
+	<string>要救出公主
+即使前路凶险
+不能放弃</string>
+	<key>end_txt1_3</key>
+	<string>但
+公主的表情
+似乎有些异样
+···</string>
+
+	<key>end_txt2_1</key>
+	<string>好累
+身体像要散架了一样</string>
+	<key>end_txt2_2</key>
+	<string>脑袋
+也乱的像要爆炸了</string>
+	<key>end_txt2_3</key>
+	<string>这魔塔
+比外面看起来的样子
+不知高了多少</string>
+	<key>end_txt2_4</key>
+	<string>这些魔物身后
+似乎隐藏着什么</string>
+	<key>end_txt2_5</key>
+	<string>公主到底在哪？
+谁在塔顶等着我？
+我还能离开这里么···</string>
+	
+	<key>end_txt3_1</key>
+	<string>希尔娜娜丝
+一直以来对我的帮助
+原来只是为了
+让棋子按着布局走</string>
+	<key>end_txt3_2</key>
+	<string>那么希尔莉莉丝
+会不会也…
+我该相信谁</string>
+	<key>end_txt3_3</key>
+	<string>公主身上的魔能
+越来越暴烈
+不知道她还能支撑多久
+我该怎么做...
+</string>
+	<key>end_txt3_4</key>
+	<string>也许只有找到大魔王
+才能解决这一切！</string>
+	<key>end_txt3_5</key>
+	<string>待续</string>
+	<key>end_txt3_6</key>
+	<string>塔层搭建中
+···
+制作组Q群
+253179129
+欢迎来玩</string>
+
+	<key>a_txt</key>
+	<string>[领取]表示确认第二次购买，将收费6元</string>
+	<key>firstDie</key>
+	<string>你处于游魂状态，
+跑回死亡位置并点击墓碑即可复活。</string>
+	<key>firstRevive</key>
+	<string>魔塔是个难度超高的游戏
+若感觉力不从心，定是哪里顺序错了，
+可以点击头像在设置界面重置游戏</string>
+	
+	<key>tip__wh</key>
+	<string>你的战魂不足
+试试到商店使用金币购买吧</string>
+	<key>tip__jb</key>
+	<string>你的金币不足</string>
+
+	<key>exp_1</key>
+	<string>恶魔之眼：持有者可随时随地储存和读取进度</string>
+	<key>exp_2</key>
+	<string>重生沙漏：主角死后可瞬间原地复活</string>
+	<key>exp_3</key>
+	<string>风之罗盘：让主角可在已探索过的楼层间随意瞬移</string>
+	<key>exp_4</key>
+	<string>普通战靴：主角移动速度100%</string>
+	<key>exp_5</key>
+	<string>混沌之靴：主角移动速度提高25%</string>
+
+	<key>sq_3</key>
+	<string>持有者可随时随地储存和读取进度</string>
+	<key>sq_1</key>
+	<string>持有此神器者死亡后可原地复活</string>
+	<key>sq_2</key>
+	<string>持有此神器者可在楼层间自由瞬移</string>
+	<key>sq_4</key>
+	<string>装备此神器者移动速度永久提高25%</string>
+
+	<key>yuan</key>
+	<string>元</string>
+
+	<key>buyKeyTip</key>
+	<string>钥匙不足，1元 购买？</string>
+
+	<key>rw_tip10</key>
+	<string>风之罗盘：可在已探索的楼层间随意瞬移</string>
+	<key>rw_tip11</key>
+	<string>半截残破卷轴，文字古老，未能辨识</string>
+	<key>rw_tip12</key>
+	<string>圣光徽章：可偷窥身处楼层敌物属性</string>
+	<key>rw_tip13</key>
+	<string>红钥匙：可开启塔内任意红色大门</string>
+	<key>rw_tip14</key>
+	<string>蓝钥匙：可开启塔内任意蓝色大门</string>
+	<key>rw_tip15</key>
+	<string>黄钥匙：可开启塔内任意黄色大门</string>
+	<key>rw_tip16</key>
+	<string>小红宝石：永久提升3点攻击力</string>
+	<key>rw_tip17</key>
+	<string>小蓝宝石：永久提升3点防御力</string>
+	<key>rw_tip18</key>
+	<string>小血瓶：生命恢复200点</string>
+	<key>rw_tip19</key>
+	<string>大血瓶：生命恢复500点</string>
+	<key>rw_tip20</key>
+	<string>魔金币：金币增加300</string>
+	<key>rw_tip21</key>
+	<string>真·魔力矩阵：攻+30 防+30 血+3000</string>
+	<key>rw_tip22</key>
+	<string>魔力矩阵：攻+10 防+10 血+1000</string>
+	<key>rw_tip23</key>
+	<string>神谕之泉：众神祝福过的清泉，喝下后当前血量翻倍</string>
+	<key>rw_tip24</key>
+	<string>钥匙串：红、蓝、黄钥匙各一条</string>
+	<key>rw_tip25</key>
+	<string>坚壁之盾：如壁垒般坚固的巨盾，防+10</string>
+	<key>rw_tip26</key>
+	<string>钢刃大剑：大马士革钢锻造的阔剑，攻+10</string>
+	<key>rw_tip27</key>
+	<string>天空之盾：蕴含天国之力的神秘盾牌，防+85</string>
+	<key>rw_tip28</key>
+	<string>大地之剑：散发大地气息的神秘石剑，攻+30</string>
+	<key>rw_tip28_2</key>
+	<string>剑魂玄铁：珍稀陨铁，吸魂纳魄，所铸之剑神鬼皆惧</string>
+	<key>rw_tip27_2</key>
+	<string>盾魂灵石：深海磐石，吸魂纳魄，所铸之盾仙魔俱惊</string>
+	<key>rw_tip29</key>
+	<string>散发着慑人魔力的黄金指环</string>
+	<key>rw_tip152</key>
+	<string>隐约可见刻着剑形图案的地砖</string>
+	<key>rw_tip154</key>
+	<string>隐约可见刻着盾形图案的地砖</string>
+	<key>rw_tip156</key>
+	<string>老旧的拉杆式机关，作用不明</string>
+	<key>rw_tip156_2</key>
+	<string>老旧的拉杆式机关，或可助主角脱身。</string>
+	<key>rw_tip200</key>
+	<string>凶神之刃</string>
+	<key>rw_tip201</key>
+	<string>恶煞之盾</string>
+	<key>rw_tip202</key>
+	<string>一颗灵气充盈的宝石</string>
+	<key>rw_tip203</key>
+	<string>一颗流金溢彩的宝石</string>
+	<key>rw_tip133</key>
+	<string>混沌之靴    永久增加25%移动速度。</string>
+	<key>rw_tip135</key>
+	<string>重生沙漏    死亡后可选择原地复活。</string>
+	<key>rw_tip204</key>
+	<string>圣血瓶：生命恢复2000点</string>
+	<key>rw_tip205</key>
+	<string>红宝石：永久提升10点攻击力</string>
+	<key>rw_tip206</key>
+	<string>蓝宝石：永久提升10点防御</string>
+	<key>rw_tip213</key>
+	<string>噬魂魔杖</string>
+	<key>rw_tip213_2</key>
+	<string>，属性提高1000倍</string>
+	<key>fzlp_txt</key>
+	<string>剩余使用次数</string>
+	<key>die</key>
+	<string>致命</string>
+	<key>outNet</key>
+	<string>网络无连接</string>
+
+	<key>att_1</key>
+	<string>不能攻击自己哟~</string>
+	<key>att_2</key>
+	<string>提示</string>
+
+	<key>jiguan_tip</key>
+	<string>隆隆隆隆隆~~~ 
+好像某个机关被触动了。</string>
+
+	<key>giftError</key>
+	<string>认证失败</string>
+
+	<key>checkError</key>
+	<string>信息被非法篡改</string>
+	
+	<key>ziti</key>
+	<string>方正粗圆简体</string>
+
+	<key>allTip</key>
+	<string>·小道消息，官方Q群（253179129）已开通，要求助要吐槽要剧透的赶紧加呗
+
+·下线时游戏会自动存档在当前楼层，但高手们更喜欢使用恶魔之眼随时存档
+
+·点按散落在塔内的物品，就知道是什么了
+
+·黄色钥匙很常见，蓝色钥匙较罕有，红色钥匙最珍贵
+
+·挂掉后，可使用重生沙漏原地复活，也可试试以灵魂状态游魔塔哦
+
+·每战胜一种新的怪物都能开启对应图鉴，点击你的头像，下方就有图鉴按钮
+
+·可在[设置]里取消战斗震屏，不过还是会震的更爽啦
+
+·多使用圣光徽章看看敌人的数据，就知道自己该如何加点了
+
+·很多时候开门的顺序也是有讲究的，嗯，多推敲一下吧
+
+·六楼有个被魔物们围困着的家伙，或许能帮你打开三楼的怪门
+
+·听说八楼有个不错的盾牌呢
+
+·有钱了多去光顾一下四楼卖药的小妖精，嗯，还有他哥也在十九楼卖药
+
+·有个猎魔界的老前辈被困在二十一楼呢
+
+·[魔塔]的最大特点就一个难字，好好发挥你的逻辑、判断、记忆、直觉和运气吧
+</string>
+
+</dict>
+</plist>

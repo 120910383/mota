@@ -1,8 +1,9 @@
 ﻿#include "FloorMapLayer.h"
 #include "spine/spine-cocos2dx.h"
+#include "cocostudio/CCArmature.h"
 #include "AStar.h"
-#include "PopupLayer.h"
 #include "Player.h"
+#include "ModalDialog.h"
 
 USING_NS_CC;
 static const float MOVE_SPEED = 200.0f;
@@ -38,16 +39,21 @@ bool FloorMapLayer::init()
         this->addChild(_road_node);
     }
 
-    _warrior = spine::SkeletonAnimation::createWithFile("Spine/raptor.json", "Spine/raptor.atlas", 1.0f);
-    if (nullptr != _warrior)
-    {
-        _warrior->setScale(0.1f);
-        //_warrior->setAnchorPoint(Vec2(0.5f, 0.5f));
-        _warrior->setPosition(Vec2(62.5f, 62.5f));
-        this->addChild(_warrior);
-    }
+    cocostudio::ArmatureDataManager::getInstance()->addArmatureFileInfo("spine/hero.ExportJson");
+    _warrior = cocostudio::Armature::create("hero");
+    /*cocostudio::CCBone* bone = _warrior->getBone("sheild1");
+    int index = bone->getDisplayManager()->getCurrentDisplayIndex();
+    bone->removeDisplay(1);
+    bone->changeDisplayByIndex(-1, true);
+    cocostudio::CCBone* bone2 = _warrior->getBone("sheild2");
+    index = bone2->getDisplayManager()->getCurrentDisplayIndex();
+    bone2->removeDisplay(1);
+    bone2->changeDisplayByIndex(-1, true);*/
 
-
+    _warrior->getAnimation()->play("Sstand");
+    _warrior->setScaleX(-1.0f);
+    _warrior->setPosition(Vec2(62.5f, 62.5f));
+    this->addChild(_warrior);
 
     auto inside_bg = Sprite::create("Images/bg_top2.png");
     auto outside_bg = Sprite::create("Images/bg_top_1.png");
@@ -195,7 +201,7 @@ bool FloorMapLayer::init()
             }
         }
 
-        const auto LENGHT = 266.0f;
+        const auto LENGHT = 280.0f;
         auto progress_bg = Node::create();
         if (nullptr != progress_bg)
         {
@@ -208,7 +214,8 @@ bool FloorMapLayer::init()
             head->setAnchorPoint(Vec2::ZERO);
             head->setPosition(Vec2::ZERO);
             progress_bg->addChild(head);
-            body->setScaleX(LENGHT / body->getContentSize().width);
+            auto scale = (LENGHT - 2 * head->getContentSize().width) / body->getContentSize().width;
+            body->setScaleX(scale);
             body->setAnchorPoint(Vec2::ZERO);
             body->setPosition(Vec2(head->getContentSize().width, 0));
             progress_bg->addChild(body);
@@ -216,6 +223,15 @@ bool FloorMapLayer::init()
             tail->setAnchorPoint(Vec2::ZERO);
             tail->setPosition(Vec2(head->getContentSize().width + body->getBoundingBox().size.width, 0));
             progress_bg->addChild(tail);
+
+            _hp_num = LabelAtlas::create("500", "Images/ps_num_shared.png", 21, 29, '0');
+            if (nullptr != _hp_num)
+            {
+                _hp_num->setScaleX(0.8f);
+                _hp_num->setAnchorPoint(Vec2(0.5f, 0.5f));
+                _hp_num->setPosition(Vec2(LENGHT / 2, body->getContentSize().height / 2));
+                progress_bg->addChild(_hp_num);
+            }
         }
 
         for (int32_t i = 0; i < 3; ++i)
@@ -276,6 +292,7 @@ void FloorMapLayer::on_player_attr_changed()
     _defend_num->setString(String::createWithFormat("%d", player_info.defence)->_string);
     _jb_num->setString(String::createWithFormat("%d", player_info.gold)->_string);
     _hun_num->setString(String::createWithFormat("%d", player_info.hun)->_string);
+    _hp_num->setString(String::createWithFormat("%d", player_info.hp)->_string);
     _key_red_num->setString(String::createWithFormat("%d", player_info.key_red)->_string);
     _key_blue_num->setString(String::createWithFormat("%d", player_info.key_blue)->_string);
     _key_yellow_num->setString(String::createWithFormat("%d", player_info.key_yellow)->_string);
@@ -289,10 +306,25 @@ bool FloorMapLayer::onTouchBegan(Touch *touch, Event *e)
 void FloorMapLayer::onTouchEnded(Touch *touch, Event *e)
 {
     // 暂时bug修正，如果对话框已弹出，就不再执行以下代码，这种情况是在对话框弹出前，touchbegan就已经触发的情况下发生，随后重构时应该不会有这个问题
-    if (nullptr != this->getChildByTag(999))
+    if (ModalDialogManager::GetInstance()->isShown())
     {
         return;
     }
+
+    // 正在战斗中则不允许重新走动，以免计算混乱
+    if (_warrior->getAnimation()->getCurrentMovementID() == "Sfight")
+    {
+        return;
+    }
+
+    //auto npc_layer1 = _tiled_map->getLayer("npc");
+    //auto npc_layer_size1 = npc_layer1->getLayerSize();
+    //int tilesAmount = npc_layer_size1.width * npc_layer_size1.height;
+    //uint32_t *tiles1 = (uint32_t*)malloc(tilesAmount*sizeof(uint32_t));
+    //memset(tiles1, 0, tilesAmount*sizeof(int));
+    //tiles1[85] = 30;
+    //tiles1[103] = 29;
+    //npc_layer1->setTiles(tiles1);
 
     // 获取起始点
     auto end_vec2 = _tiled_map->convertTouchToNodeSpace(touch) / 75.0f;
@@ -374,8 +406,7 @@ void FloorMapLayer::onTouchEnded(Touch *touch, Event *e)
 
     // 勇士
     _warrior->stopAllActions();
-    _warrior->setTimeScale(2.0f);
-    _warrior->setAnimation(0, "walk", true);
+    _warrior->getAnimation()->play("Srun");
     step();
 }
 
@@ -416,75 +447,152 @@ void FloorMapLayer::step()
             switch (style)
             {
             case 2: // 钥匙
-            {
-                auto npc_layer = _tiled_map->getLayer("npc");
-                auto key = npc_layer->getTileAt(Vec2(npc.x, 11 - npc.y));
-                auto start_pos = this->convertToNodeSpace(key->getParent()->convertToWorldSpace(key->getPosition()));
-                key->retain();
-                key->removeFromParentAndCleanup(false);
-                key->setPosition(start_pos);
-                this->addChild(key);
-                key->release();
-
-                auto color = get_tile_prop(npc.gid, "color").asInt();
-                switch (color)
                 {
-                case 0:
+                    auto npc_layer = _tiled_map->getLayer("npc");
+                    auto key = npc_layer->getTileAt(Vec2(npc.x, 11 - npc.y));
+                    auto start_pos = this->convertToNodeSpace(key->getParent()->convertToWorldSpace(key->getPosition()));
+                    key->retain();
+                    key->removeFromParentAndCleanup(false);
+                    key->setPosition(start_pos);
+                    this->addChild(key);
+                    key->release();
+                    // TODO.. cocos2d-x tiled bug. 如果一个Layer只剩下一个tile，设置gid为0不起作用，目前找不到解决办法
+                    npc_layer->setTileGID(999, Vec2(npc.x, 11 - npc.y));
+
+                    auto color = get_tile_prop(npc.gid, "color").asInt();
+                    switch (color)
                     {
-                        auto target_pos = this->convertToNodeSpace(_key_blue_num->getParent()->convertToWorldSpace(_key_blue_num->getPosition()));
-                        target_pos -= Vec2(26.0f, 0);
-                        auto duration = key->getPosition().distance(target_pos) / 1000.0f;
-                        key->runAction(Sequence::create(
-                            Spawn::createWithTwoActions(MoveTo::create(duration, target_pos), ScaleTo::create(duration, 0.6f)),
-                            CallFunc::create([key]() {
-                                key->removeFromParentAndCleanup(true);
-                                PlayerDelegate::add_key(1, 1, 1);
-                        }), nullptr));
-                    }
-                    break;
+                    case 0:
+                        {
+                            auto target_pos = this->convertToNodeSpace(_key_blue_num->getParent()->convertToWorldSpace(_key_blue_num->getPosition()));
+                            target_pos -= Vec2(26.0f, 0);
+                            auto duration = key->getPosition().distance(target_pos) / 1000.0f;
+                            key->runAction(Sequence::create(
+                                Spawn::createWithTwoActions(MoveTo::create(duration, target_pos), ScaleTo::create(duration, 0.6f)),
+                                CallFunc::create([key]() {
+                                    key->removeFromParentAndCleanup(true);
+                                    PlayerDelegate::add_key(1, 1, 1);
+                            }), nullptr));
+                        }
+                        break;
                     case 1:
-                    {
-                        auto target_pos = this->convertToNodeSpace(_key_red_num->getParent()->convertToWorldSpace(_key_red_num->getPosition()));
-                        target_pos -= Vec2(26.0f, 0);
-                        auto duration = key->getPosition().distance(target_pos) / 1000.0f;
-                        key->runAction(Sequence::create(
-                            Spawn::createWithTwoActions(MoveTo::create(duration, target_pos), ScaleTo::create(duration, 0.6f)),
-                            CallFunc::create([key]() {
-                                key->removeFromParentAndCleanup(true);
-                                PlayerDelegate::add_key(1, 0, 0);
-                        }), nullptr));
+                        {
+                            auto target_pos = this->convertToNodeSpace(_key_red_num->getParent()->convertToWorldSpace(_key_red_num->getPosition()));
+                            target_pos -= Vec2(26.0f, 0);
+                            auto duration = key->getPosition().distance(target_pos) / 1000.0f;
+                            key->runAction(Sequence::create(
+                                Spawn::createWithTwoActions(MoveTo::create(duration, target_pos), ScaleTo::create(duration, 0.6f)),
+                                CallFunc::create([key]() {
+                                    key->removeFromParentAndCleanup(true);
+                                    PlayerDelegate::add_key(1, 0, 0);
+                            }), nullptr));
+                        }
+                        break;
+                    case 2:
+                        {
+                            auto target_pos = this->convertToNodeSpace(_key_blue_num->getParent()->convertToWorldSpace(_key_blue_num->getPosition()));
+                            target_pos -= Vec2(26.0f, 0);
+                            auto duration = key->getPosition().distance(target_pos) / 1000.0f;
+                            key->runAction(Sequence::create(
+                                Spawn::createWithTwoActions(MoveTo::create(duration, target_pos), ScaleTo::create(duration, 0.6f)),
+                                CallFunc::create([key]() {
+                                    key->removeFromParentAndCleanup(true);
+                                    PlayerDelegate::add_key(0, 1, 0);
+                            }), nullptr));
+                        }
+                        break;
+                    case 3:
+                        {
+                            auto target_pos = this->convertToNodeSpace(_key_yellow_num->getParent()->convertToWorldSpace(_key_yellow_num->getPosition()));
+                            target_pos -= Vec2(26.0f, 0);
+                            auto duration = key->getPosition().distance(target_pos) / 1000.0f;
+                            key->runAction(Sequence::create(
+                                Spawn::createWithTwoActions(MoveTo::create(duration, target_pos), ScaleTo::create(duration, 0.6f)),
+                                CallFunc::create([key]() {
+                                    key->removeFromParentAndCleanup(true);
+                                    PlayerDelegate::add_key(0, 0, 1);
+                            }), nullptr));
+                        }
+                        break;
+                    default:
+                        break;
                     }
-                    break;
-                case 2:
-                    {
-                        auto target_pos = this->convertToNodeSpace(_key_blue_num->getParent()->convertToWorldSpace(_key_blue_num->getPosition()));
-                        target_pos -= Vec2(26.0f, 0);
-                        auto duration = key->getPosition().distance(target_pos) / 1000.0f;
-                        key->runAction(Sequence::create(
-                            Spawn::createWithTwoActions(MoveTo::create(duration, target_pos), ScaleTo::create(duration, 0.6f)),
-                            CallFunc::create([key]() {
-                                key->removeFromParentAndCleanup(true);
-                                PlayerDelegate::add_key(0, 1, 0);
-                        }), nullptr));
-                    }
-                    break;
-                case 3:
-                    {
-                        auto target_pos = this->convertToNodeSpace(_key_yellow_num->getParent()->convertToWorldSpace(_key_yellow_num->getPosition()));
-                        target_pos -= Vec2(26.0f, 0);
-                        auto duration = key->getPosition().distance(target_pos) / 1000.0f;
-                        key->runAction(Sequence::create(
-                            Spawn::createWithTwoActions(MoveTo::create(duration, target_pos), ScaleTo::create(duration, 0.6f)),
-                            CallFunc::create([key]() {
-                                key->removeFromParentAndCleanup(true);
-                                PlayerDelegate::add_key(0, 0, 1);
-                        }), nullptr));
-                    }
-                    break;
                 }
-                
-            }
-            break;
+                break;
+            case 4: // 宝石
+                {
+                    auto npc_layer = _tiled_map->getLayer("npc");
+                    auto diamond = npc_layer->getTileAt(Vec2(npc.x, 11 - npc.y));
+                    auto start_pos = this->convertToNodeSpace(diamond->getParent()->convertToWorldSpace(diamond->getPosition()));
+                    diamond->retain();
+                    diamond->removeFromParentAndCleanup(false);
+                    diamond->setPosition(start_pos);
+                    this->addChild(diamond);
+                    diamond->release();
+                    // TODO.. cocos2d-x tiled bug. 如果一个Layer只剩下一个tile，设置gid为0不起作用，目前找不到解决办法
+                    npc_layer->setTileGID(999, Vec2(npc.x, 11 - npc.y));
+
+                    auto color = get_tile_prop(npc.gid, "color").asInt();
+                    switch (color)
+                    {
+                    case 1:
+                        {
+                            auto target_pos = this->convertToNodeSpace(_attack_num->getParent()->convertToWorldSpace(_attack_num->getPosition()));
+                            target_pos -= Vec2(26.0f, 0);
+                            auto duration = diamond->getPosition().distance(target_pos) / 1000.0f;
+                            auto value = get_tile_prop(npc.gid, "value").asInt();
+                            diamond->runAction(Sequence::create(
+                                Spawn::createWithTwoActions(MoveTo::create(duration, target_pos), ScaleTo::create(duration, 0.6f)),
+                                CallFunc::create([diamond, value]() {
+                                diamond->removeFromParentAndCleanup(true);
+                                PlayerDelegate::add_attack(value);
+                            }), nullptr));
+                        }
+                        break;
+                    case 2:
+                        {
+                            auto target_pos = this->convertToNodeSpace(_defend_num->getParent()->convertToWorldSpace(_defend_num->getPosition()));
+                            target_pos -= Vec2(26.0f, 0);
+                            auto duration = diamond->getPosition().distance(target_pos) / 1000.0f;
+                            auto value = get_tile_prop(npc.gid, "value").asInt();
+                            diamond->runAction(Sequence::create(
+                                Spawn::createWithTwoActions(MoveTo::create(duration, target_pos), ScaleTo::create(duration, 0.6f)),
+                                CallFunc::create([diamond, value]() {
+                                diamond->removeFromParentAndCleanup(true);
+                                PlayerDelegate::add_defence(value);
+                            }), nullptr));
+                        }
+                        break;
+                    default:
+                        break;
+                    }
+                }
+                break;
+            case 5: // 血瓶
+                {
+                    auto npc_layer = _tiled_map->getLayer("npc");
+                    auto blood = npc_layer->getTileAt(Vec2(npc.x, 11 - npc.y));
+                    auto start_pos = this->convertToNodeSpace(blood->getParent()->convertToWorldSpace(blood->getPosition()));
+                    blood->retain();
+                    blood->removeFromParentAndCleanup(false);
+                    blood->setPosition(start_pos);
+                    this->addChild(blood);
+                    blood->release();
+                    // TODO.. cocos2d-x tiled bug. 如果一个Layer只剩下一个tile，设置gid为0不起作用，目前找不到解决办法
+                    npc_layer->setTileGID(999, Vec2(npc.x, 11 - npc.y));
+
+                    auto target_pos = this->convertToNodeSpace(_hp_num->getParent()->convertToWorldSpace(_hp_num->getPosition()));
+                    target_pos -= Vec2(26.0f, 0);
+                    auto duration = blood->getPosition().distance(target_pos) / 1000.0f;
+                    auto value = get_tile_prop(npc.gid, "value").asInt();
+                    blood->runAction(Sequence::create(
+                        Spawn::createWithTwoActions(MoveTo::create(duration, target_pos), ScaleTo::create(duration, 0.6f)),
+                        CallFunc::create([blood, value]() {
+                        blood->removeFromParentAndCleanup(true);
+                        PlayerDelegate::add_hp(value);
+                    }), nullptr));
+                }
+                break;
             default:
                 break;
             }
@@ -499,7 +607,16 @@ void FloorMapLayer::step()
         // 在没有四方向动画情况下，防止上下走动时频繁改变方向，加个判断
         if (current_pos.x != end_pos.x)
         {
-            _warrior->setScaleX(end_pos.x > current_pos.x ? 0.1f : -0.1f);
+            if (_warrior->getAnimation()->getCurrentMovementID() != "Srun")
+                _warrior->getAnimation()->play("Srun");
+            _warrior->setScaleX(end_pos.x > current_pos.x ? -1.0f : 1.0f);
+        }
+        else {
+            _warrior->setScaleX(1.0f);
+            if (end_pos.y > current_pos.y && _warrior->getAnimation()->getCurrentMovementID() != "Brun")
+                _warrior->getAnimation()->play("Brun");
+            else if (end_pos.y < current_pos.y && _warrior->getAnimation()->getCurrentMovementID() != "Frun")
+                _warrior->getAnimation()->play("Frun");
         }
 
         // 如果需要额外走一段到瓦块中心，仅仅执行这段走路
@@ -529,15 +646,14 @@ void FloorMapLayer::step()
             case 1: // 怪物
                 {
                     walk_pause = true;
-                    _warrior->setAnimation(0, "gungrab", false);
-                    auto dialog = PopupLayer::create("Images/UI_shared_bg.png", Size(600, 300));
-                    dialog->setTag(999);
-                    dialog->setTitle("confirm");
-                    dialog->setContentText("Do you wang to attack this guy?");
-                    dialog->setCallbackFunc(this, CC_CALLFUNCN_SELECTOR(FloorMapLayer::confirm_attack));
-                    dialog->addButton("Images/UI_tip_fangqi.png", "Images/UI_tip_fangqi.png", "", 0);
-                    dialog->addButton("Images/UI_tip_queding.png", "Images/UI_tip_queding.png", "", 1);
-                    this->addChild(dialog);
+                    _warrior->getAnimation()->play("Sstand");
+                    auto dict = Dictionary::createWithContentsOfFile("chinese.xml");
+                    auto text = (static_cast<String*>(dict->objectForKey("isAttack")))->getCString();
+                    auto name = (static_cast<String*>(dict->objectForKey(get_tile_prop(npc.gid, "name").asString())))->getCString();
+                    auto info = std::string(text) + " " + name;
+                    auto dialog = OKCancelDialog::create("", info);
+                    dialog->setCallback(std::bind(&FloorMapLayer::confirm_attack, this, std::placeholders::_1, npc));
+                    ModalDialogManager::GetInstance()->pushDialog(dialog);
                 }
                 break;
             case 3: // 门
@@ -560,26 +676,74 @@ void FloorMapLayer::step()
     else
     {
         _road_node->removeAllChildren();
-        _warrior->setAnimation(0, "gungrab", false);
+        _warrior->getAnimation()->play("Sstand");
         _arrow_node->setVisible(false);
     }
 }
 
-void FloorMapLayer::confirm_attack(Node* node)
+void FloorMapLayer::confirm_attack(OKCancelDialog::RETURN_TYPE type, const npc_t& npc)
 {
-    if (node->getTag() == 0)
+    if (type == OKCancelDialog::CANCEL)
     {
         _road_node->removeAllChildren();
-        _warrior->setAnimation(0, "gungrab", false);
+        _warrior->getAnimation()->play("Sstand");
         _arrow_node->setVisible(false);
+        _paths.clear();
     }
     else
     {
-        _warrior->setAnimation(1, "gungrab", false);
-        _warrior->setEndListener([&](int trackIndex) {
-            if (trackIndex == 1)
+        static int attack_count = 3;
+        attack_count = 3;
+        _warrior->getAnimation()->play("Sfight");
+        auto function = [&, npc](cocostudio::Armature *armature, cocostudio::MovementEventType movementType, const std::string& movementID) {
+            if (movementID == "Sfight" && movementType == cocostudio::LOOP_COMPLETE && --attack_count == 0)
             {
-                _warrior->setAnimation(0, "walk", true);
+                auto life = get_tile_prop(npc.gid, "life").asInt();
+                auto hun = get_tile_prop(npc.gid, "hun").asInt();
+                auto gold = get_tile_prop(npc.gid, "gold").asInt();
+                auto defence = get_tile_prop(npc.gid, "defence").asInt();
+                auto attack = get_tile_prop(npc.gid, "attack").asInt();
+
+                auto player_info = Player::GetInstance()->get_player_info();
+                auto attack_damage = std::max(0, player_info.attack - defence);
+                auto damage = std::max(0, attack - player_info.defence);
+                if (attack_damage == 0 || (life + attack_damage - 1) / attack_damage * damage >= player_info.hp) // 只要攻击不够无论防御多高都打不过
+                {
+                    auto dict = Dictionary::createWithContentsOfFile("chinese.xml");
+                    auto text = (static_cast<String*>(dict->objectForKey("txt7_2")))->getCString();
+                    PromptDialog::show(text);
+                    _road_node->removeAllChildren();
+                    _warrior->getAnimation()->play("Sstand");
+                    _arrow_node->setVisible(false);
+                    _paths.clear();
+                    return;
+                }
+                
+                auto blood = (life + attack_damage - 1) / attack_damage * damage;
+
+                auto npc_layer = _tiled_map->getLayer("npc");
+                auto monster = npc_layer->getTileAt(Vec2(npc.x, 11 - npc.y));
+                auto start_pos = this->convertToNodeSpace(monster->getParent()->convertToWorldSpace(monster->getPosition()));
+                monster->retain();
+                monster->removeFromParentAndCleanup(false);
+                monster->setPosition(start_pos);
+                this->addChild(monster);
+                monster->release();
+                // TODO.. cocos2d-x tiled bug. 如果一个Layer只剩下一个tile，设置gid为0不起作用，目前找不到解决办法
+                npc_layer->setTileGID(999, Vec2(npc.x, 11 - npc.y));
+
+                auto target_pos = this->convertToNodeSpace(_hun_num->getParent()->convertToWorldSpace(_hun_num->getPosition()));
+                target_pos -= Vec2(26.0f, 0);
+                auto duration = monster->getPosition().distance(target_pos) / 1000.0f;
+                monster->runAction(Sequence::create(
+                    Spawn::createWithTwoActions(MoveTo::create(duration, target_pos), ScaleTo::create(duration, 0.6f)),
+                    CallFunc::create([monster, blood, gold, hun]() {
+                    monster->removeFromParentAndCleanup(true);
+                    PlayerDelegate::add_hp(-blood);
+                    PlayerDelegate::add_gold_hun(gold, hun);
+                }), nullptr));
+
+                _warrior->getAnimation()->play("Srun");
                 auto current_pos = _warrior->getPosition();
                 auto end_pt = _paths[1];
                 auto end_pos = Vec2((end_pt.x + 0.5f) * 75.0f - 50.0f, (end_pt.y + 0.5f) * 75.0f - 50.0f);
@@ -587,6 +751,7 @@ void FloorMapLayer::confirm_attack(Node* node)
                     CallFunc::create(CC_CALLBACK_0(FloorMapLayer::step, this))));
                 _paths.erase(_paths.begin());
             }
-        });
+        };
+        _warrior->getAnimation()->setMovementEventCallFunc(function);
     }
 }

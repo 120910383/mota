@@ -13,7 +13,7 @@
  </layer>
  <layer name="npc" width="10" height="12">
   <data encoding="base64" compression="zlib">
-   eJxjYCAdSCGxpYFYDojlkcQUoHxkdTC1CgTMQ1ZLSyBLhBpi3aCOQ60S8c7BCmQo1A8CAE5KAfQ=
+   eJxjYCAeyAOxChBLI4mB2DJALIskpgZVi6wOplYOia+AQx0DDjFCQAoJUwPAzFHCIQ4D6jjsBOlToZJbyAUAh80C7A==
   </data>
  </layer>
 </map>
