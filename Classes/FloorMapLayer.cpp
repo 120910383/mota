@@ -647,10 +647,13 @@ void FloorMapLayer::step()
                 {
                     walk_pause = true;
                     _warrior->getAnimation()->play("Sstand");
-                    auto dict = Dictionary::createWithContentsOfFile("chinese.xml");
-                    auto text = (static_cast<String*>(dict->objectForKey("isAttack")))->getCString();
-                    auto name = (static_cast<String*>(dict->objectForKey(get_tile_prop(npc.gid, "name").asString())))->getCString();
-                    auto info = std::string(text) + " " + name;
+                    //auto dict = Dictionary::createWithContentsOfFile("chinese.xml");
+                    //auto text = (static_cast<String*>(dict->objectForKey("isAttack")))->getCString();
+                    //auto name = (static_cast<String*>(dict->objectForKey(get_tile_prop(npc.gid, "name").asString())))->getCString();
+					auto dict = FileUtils::getInstance()->getValueMapFromFile("chinese.xml");
+					auto text = dict["isAttack"].asString();
+					auto name = dict[get_tile_prop(npc.gid, "name").asString()].asString();
+					auto info = text + " " + name;
                     auto dialog = OKCancelDialog::create("", info);
                     dialog->setCallback(std::bind(&FloorMapLayer::confirm_attack, this, std::placeholders::_1, npc));
                     ModalDialogManager::GetInstance()->pushDialog(dialog);
