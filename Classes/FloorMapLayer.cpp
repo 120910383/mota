@@ -39,8 +39,7 @@ bool FloorMapLayer::init()
         this->addChild(_road_node);
     }
 
-    cocostudio::ArmatureDataManager::getInstance()->addArmatureFileInfo("spine/hero.ExportJson");
-    _warrior = cocostudio::Armature::create("hero");
+    _warrior = WarriorNode::create();
     /*cocostudio::CCBone* bone = _warrior->getBone("sheild1");
     int index = bone->getDisplayManager()->getCurrentDisplayIndex();
     bone->removeDisplay(1);
@@ -50,8 +49,6 @@ bool FloorMapLayer::init()
     bone2->removeDisplay(1);
     bone2->changeDisplayByIndex(-1, true);*/
 
-    _warrior->getAnimation()->play("Sstand");
-    _warrior->setScaleX(-1.0f);
     _warrior->setPosition(Vec2(62.5f, 62.5f));
     this->addChild(_warrior);
 
@@ -312,7 +309,7 @@ void FloorMapLayer::onTouchEnded(Touch *touch, Event *e)
     }
 
     // 正在战斗中则不允许重新走动，以免计算混乱
-    if (_warrior->getAnimation()->getCurrentMovementID() == "Sfight")
+    if (_warrior->is_fighting())
     {
         return;
     }
@@ -406,7 +403,6 @@ void FloorMapLayer::onTouchEnded(Touch *touch, Event *e)
 
     // 勇士
     _warrior->stopAllActions();
-    _warrior->getAnimation()->play("Srun");
     step();
 }
 
@@ -604,26 +600,10 @@ void FloorMapLayer::step()
         auto end_pt = _paths[1];
         auto end_pos = Vec2((end_pt.x + 0.5f) * 75.0f - 50.0f, (end_pt.y + 0.5f) * 75.0f - 50.0f);
 
-        // 在没有四方向动画情况下，防止上下走动时频繁改变方向，加个判断
-        if (current_pos.x != end_pos.x)
-        {
-            if (_warrior->getAnimation()->getCurrentMovementID() != "Srun")
-                _warrior->getAnimation()->play("Srun");
-            _warrior->setScaleX(end_pos.x > current_pos.x ? -1.0f : 1.0f);
-        }
-        else {
-            _warrior->setScaleX(1.0f);
-            if (end_pos.y > current_pos.y && _warrior->getAnimation()->getCurrentMovementID() != "Brun")
-                _warrior->getAnimation()->play("Brun");
-            else if (end_pos.y < current_pos.y && _warrior->getAnimation()->getCurrentMovementID() != "Frun")
-                _warrior->getAnimation()->play("Frun");
-        }
-
         // 如果需要额外走一段到瓦块中心，仅仅执行这段走路
         if (current_pos.distance(end_pos) > start_pos.distance(end_pos))
         {
-            _warrior->runAction(Sequence::create(MoveTo::create(current_pos.distance(start_pos) / MOVE_SPEED, start_pos),
-                CallFunc::create(CC_CALLBACK_0(FloorMapLayer::step, this)), nullptr));
+            _warrior->move_to(start_pos, CC_CALLBACK_0(FloorMapLayer::step, this));
             return;
         }
 
@@ -646,7 +626,7 @@ void FloorMapLayer::step()
             case 1: // 怪物
                 {
                     walk_pause = true;
-                    _warrior->getAnimation()->play("Sstand");
+                    _warrior->turn_to(end_pos);
                     //auto dict = Dictionary::createWithContentsOfFile("chinese.xml");
                     //auto text = (static_cast<String*>(dict->objectForKey("isAttack")))->getCString();
                     //auto name = (static_cast<String*>(dict->objectForKey(get_tile_prop(npc.gid, "name").asString())))->getCString();
@@ -671,15 +651,14 @@ void FloorMapLayer::step()
         
         if (!walk_pause)
         {
-            _warrior->runAction(Sequence::createWithTwoActions(MoveTo::create(current_pos.distance(end_pos) / MOVE_SPEED, end_pos),
-                CallFunc::create(CC_CALLBACK_0(FloorMapLayer::step, this))));
+            _warrior->move_to(end_pos, CC_CALLBACK_0(FloorMapLayer::step, this));
             _paths.erase(_paths.begin());
         }
     }
     else
     {
         _road_node->removeAllChildren();
-        _warrior->getAnimation()->play("Sstand");
+        _warrior->stand_auto();
         _arrow_node->setVisible(false);
     }
 }
@@ -689,7 +668,7 @@ void FloorMapLayer::confirm_attack(OKCancelDialog::RETURN_TYPE type, const npc_t
     if (type == OKCancelDialog::CANCEL)
     {
         _road_node->removeAllChildren();
-        _warrior->getAnimation()->play("Sstand");
+        _warrior->stand_auto();
         _arrow_node->setVisible(false);
         _paths.clear();
     }
@@ -697,64 +676,60 @@ void FloorMapLayer::confirm_attack(OKCancelDialog::RETURN_TYPE type, const npc_t
     {
         static int attack_count = 3;
         attack_count = 3;
-        _warrior->getAnimation()->play("Sfight");
-        auto function = [&, npc](cocostudio::Armature *armature, cocostudio::MovementEventType movementType, const std::string& movementID) {
-            if (movementID == "Sfight" && movementType == cocostudio::LOOP_COMPLETE && --attack_count == 0)
-            {
-                auto life = get_tile_prop(npc.gid, "life").asInt();
-                auto hun = get_tile_prop(npc.gid, "hun").asInt();
-                auto gold = get_tile_prop(npc.gid, "gold").asInt();
-                auto defence = get_tile_prop(npc.gid, "defence").asInt();
-                auto attack = get_tile_prop(npc.gid, "attack").asInt();
-
-                auto player_info = Player::GetInstance()->get_player_info();
-                auto attack_damage = std::max(0, player_info.attack - defence);
-                auto damage = std::max(0, attack - player_info.defence);
-                if (attack_damage == 0 || (life + attack_damage - 1) / attack_damage * damage >= player_info.hp) // 只要攻击不够无论防御多高都打不过
-                {
-                    auto dict = Dictionary::createWithContentsOfFile("chinese.xml");
-                    auto text = (static_cast<String*>(dict->objectForKey("txt7_2")))->getCString();
-                    PromptDialog::show(text);
-                    _road_node->removeAllChildren();
-                    _warrior->getAnimation()->play("Sstand");
-                    _arrow_node->setVisible(false);
-                    _paths.clear();
-                    return;
-                }
-                
-                auto blood = (life + attack_damage - 1) / attack_damage * damage;
-
-                auto npc_layer = _tiled_map->getLayer("npc");
-                auto monster = npc_layer->getTileAt(Vec2(npc.x, 11 - npc.y));
-                auto start_pos = this->convertToNodeSpace(monster->getParent()->convertToWorldSpace(monster->getPosition()));
-                monster->retain();
-                monster->removeFromParentAndCleanup(false);
-                monster->setPosition(start_pos);
-                this->addChild(monster);
-                monster->release();
-                // TODO.. cocos2d-x tiled bug. 如果一个Layer只剩下一个tile，设置gid为0不起作用，目前找不到解决办法
-                npc_layer->setTileGID(999, Vec2(npc.x, 11 - npc.y));
-
-                auto target_pos = this->convertToNodeSpace(_hun_num->getParent()->convertToWorldSpace(_hun_num->getPosition()));
-                target_pos -= Vec2(26.0f, 0);
-                auto duration = monster->getPosition().distance(target_pos) / 1000.0f;
-                monster->runAction(Sequence::create(
-                    Spawn::createWithTwoActions(MoveTo::create(duration, target_pos), ScaleTo::create(duration, 0.6f)),
-                    CallFunc::create([monster, blood, gold, hun]() {
-                    monster->removeFromParentAndCleanup(true);
-                    PlayerDelegate::add_hp(-blood);
-                    PlayerDelegate::add_gold_hun(gold, hun);
-                }), nullptr));
-
-                _warrior->getAnimation()->play("Srun");
-                auto current_pos = _warrior->getPosition();
-                auto end_pt = _paths[1];
-                auto end_pos = Vec2((end_pt.x + 0.5f) * 75.0f - 50.0f, (end_pt.y + 0.5f) * 75.0f - 50.0f);
-                _warrior->runAction(Sequence::createWithTwoActions(MoveTo::create(current_pos.distance(end_pos) / MOVE_SPEED, end_pos),
-                    CallFunc::create(CC_CALLBACK_0(FloorMapLayer::step, this))));
-                _paths.erase(_paths.begin());
-            }
-        };
-        _warrior->getAnimation()->setMovementEventCallFunc(function);
+        _warrior->fight_auto(3, std::bind(&FloorMapLayer::confirm_attack_impl, this, npc));
     }
+}
+
+void FloorMapLayer::confirm_attack_impl(const npc_t& npc)
+{
+    auto life = get_tile_prop(npc.gid, "life").asInt();
+    auto hun = get_tile_prop(npc.gid, "hun").asInt();
+    auto gold = get_tile_prop(npc.gid, "gold").asInt();
+    auto defence = get_tile_prop(npc.gid, "defence").asInt();
+    auto attack = get_tile_prop(npc.gid, "attack").asInt();
+
+    auto player_info = Player::GetInstance()->get_player_info();
+    auto attack_damage = std::max(0, player_info.attack - defence);
+    auto damage = std::max(0, attack - player_info.defence);
+    if (attack_damage == 0 || (life + attack_damage - 1) / attack_damage * damage >= player_info.hp) // 只要攻击不够无论防御多高都打不过
+    {
+        auto dict = Dictionary::createWithContentsOfFile("chinese.xml");
+        auto text = (static_cast<String*>(dict->objectForKey("txt7_2")))->getCString();
+        PromptDialog::show(text);
+        _road_node->removeAllChildren();
+        _warrior->stand_auto();
+        _arrow_node->setVisible(false);
+        _paths.clear();
+        return;
+    }
+
+    auto blood = (life + attack_damage - 1) / attack_damage * damage;
+
+    auto npc_layer = _tiled_map->getLayer("npc");
+    auto monster = npc_layer->getTileAt(Vec2(npc.x, 11 - npc.y));
+    auto start_pos = this->convertToNodeSpace(monster->getParent()->convertToWorldSpace(monster->getPosition()));
+    monster->retain();
+    monster->removeFromParentAndCleanup(false);
+    monster->setPosition(start_pos);
+    this->addChild(monster);
+    monster->release();
+    // TODO.. cocos2d-x tiled bug. 如果一个Layer只剩下一个tile，设置gid为0不起作用，目前找不到解决办法
+    npc_layer->setTileGID(999, Vec2(npc.x, 11 - npc.y));
+
+    auto target_pos = this->convertToNodeSpace(_hun_num->getParent()->convertToWorldSpace(_hun_num->getPosition()));
+    target_pos -= Vec2(26.0f, 0);
+    auto duration = monster->getPosition().distance(target_pos) / 1000.0f;
+    monster->runAction(Sequence::create(
+        Spawn::createWithTwoActions(MoveTo::create(duration, target_pos), ScaleTo::create(duration, 0.6f)),
+        CallFunc::create([monster, blood, gold, hun]() {
+        monster->removeFromParentAndCleanup(true);
+        PlayerDelegate::add_hp(-blood);
+        PlayerDelegate::add_gold_hun(gold, hun);
+    }), nullptr));
+
+    auto current_pos = _warrior->getPosition();
+    auto end_pt = _paths[1];
+    auto end_pos = Vec2((end_pt.x + 0.5f) * 75.0f - 50.0f, (end_pt.y + 0.5f) * 75.0f - 50.0f);
+    _warrior->move_to(end_pos, CC_CALLBACK_0(FloorMapLayer::step, this));
+    _paths.erase(_paths.begin());
 }

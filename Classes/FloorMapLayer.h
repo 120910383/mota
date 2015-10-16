@@ -4,9 +4,9 @@
 #include "AStar.h"
 #include "Player.h"
 #include "ModalDialog.h"
+#include "Warrior.h"
 
 enum OKCancelDialog::RETURN_TYPE;
-namespace cocostudio { class Armature; }
 namespace cocos2d { class LabelAtlas; }
 class FloorMapLayer : public cocos2d::Layer, public PlayerDelegate
 {
@@ -25,12 +25,13 @@ public:
 private:
     struct npc_t;
     void confirm_attack(OKCancelDialog::RETURN_TYPE type, const npc_t& npc);
+    void confirm_attack_impl(const npc_t& npc);
     cocos2d::Value get_tile_prop(int32_t gid, const string& key);
     void step();
 
 private:
     cocos2d::experimental::TMXTiledMap* _tiled_map;
-    cocostudio::Armature* _warrior;
+    WarriorNode* _warrior;
     Node* _arrow_node;
     Node* _road_node;
     vector<node_t> _paths;

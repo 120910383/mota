@@ -93,6 +93,7 @@ xcopy "$(OutDir)..\*.dll" "$(OutDir)" /D /Y</Command>
     <ClInclude Include="..\Classes\ModalDialog.h" />
     <ClInclude Include="..\Classes\Player.h" />
     <ClInclude Include="..\Classes\Singleton.h" />
+    <ClInclude Include="..\Classes\Warrior.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>
   <ItemGroup>
@@ -101,6 +102,7 @@ xcopy "$(OutDir)..\*.dll" "$(OutDir)" /D /Y</Command>
     <ClCompile Include="..\Classes\FloorMapLayer.cpp" />
     <ClCompile Include="..\Classes\ModalDialog.cpp" />
     <ClCompile Include="..\Classes\Player.cpp" />
+    <ClCompile Include="..\Classes\Warrior.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
