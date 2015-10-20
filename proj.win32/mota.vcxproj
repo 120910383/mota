@@ -88,6 +88,7 @@ xcopy "$(OutDir)..\*.dll" "$(OutDir)" /D /Y</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h" />
+    <ClInclude Include="..\Classes\ArrowNode.h" />
     <ClInclude Include="..\Classes\AStar.h" />
     <ClInclude Include="..\Classes\FloorMapLayer.h" />
     <ClInclude Include="..\Classes\ModalDialog.h" />
@@ -99,6 +100,7 @@ xcopy "$(OutDir)..\*.dll" "$(OutDir)" /D /Y</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
+    <ClCompile Include="..\Classes\ArrowNode.cpp" />
     <ClCompile Include="..\Classes\AStar.cpp" />
     <ClCompile Include="..\Classes\FloorMapLayer.cpp" />
     <ClCompile Include="..\Classes\ModalDialog.cpp" />

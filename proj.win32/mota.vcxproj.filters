@@ -36,6 +36,9 @@
     <ClInclude Include="..\Classes\WarriorInfoPanel.h">
       <Filter>Classes</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\ArrowNode.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -60,6 +63,9 @@
       <Filter>Classes</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\WarriorInfoPanel.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\ArrowNode.cpp">
       <Filter>Classes</Filter>
     </ClCompile>
   </ItemGroup>

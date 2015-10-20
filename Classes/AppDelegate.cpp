@@ -40,7 +40,7 @@ bool AppDelegate::applicationDidFinishLaunching()
     
 
     director->setDisplayStats(true);
-    director->setAnimationInterval(1.0 / 60);
+    director->setAnimationInterval(1.0f / 60);
 
     director->runWithScene(FloorMapLayer::scene());
     return true;

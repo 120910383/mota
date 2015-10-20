@@ -6,6 +6,7 @@
 #include "ModalDialog.h"
 #include "Warrior.h"
 #include "WarriorInfoPanel.h"
+#include "ArrowNode.h"
 
 USING_NS_CC;
 static const float MOVE_SPEED = 200.0f;
@@ -38,6 +39,7 @@ bool FloorMapLayer::init()
         this->addChild(_tiled_map);
     }
 
+    // 路径节点
     _road_node = Node::create();
     if (nullptr != _road_node)
     {
@@ -45,6 +47,7 @@ bool FloorMapLayer::init()
         this->addChild(_road_node);
     }
 
+    // 勇士骨骼动画节点
     _warrior = WarriorNode::create();
     /*cocostudio::CCBone* bone = _warrior->getBone("sheild1");
     int index = bone->getDisplayManager()->getCurrentDisplayIndex();
@@ -54,10 +57,10 @@ bool FloorMapLayer::init()
     index = bone2->getDisplayManager()->getCurrentDisplayIndex();
     bone2->removeDisplay(1);
     bone2->changeDisplayByIndex(-1, true);*/
-
     _warrior->setPosition(Vec2(62.5f, 62.5f));
     this->addChild(_warrior);
 
+    // 上方背景
     auto inside_bg = Sprite::create("Images/bg_top2.png");
     auto outside_bg = Sprite::create("Images/bg_top_1.png");
     if (nullptr != outside_bg && nullptr != inside_bg)
@@ -71,40 +74,16 @@ bool FloorMapLayer::init()
         this->addChild(inside_bg);
     }
 
-    _arrow_node = Node::create();
+    // 点击箭头节点
+    _arrow_node = ArrowNode::create();
     if (nullptr != _arrow_node)
     {
         _arrow_node->setPosition(Vec2::ZERO);
         _arrow_node->setVisible(false);
         this->addChild(_arrow_node);
-
-        auto a5 = Sprite::create("Images/a5.png");
-        if (nullptr != a5)
-        {
-            a5->setPosition(Vec2::ZERO);
-            _arrow_node->addChild(a5);
-        }
-        auto a11 = Sprite::create("Images/a11.png");
-        if (nullptr != a11)
-        {
-            a11->setPosition(Vec2::ZERO);
-            a11->setScale(0.6f);
-            auto fade = Sequence::createWithTwoActions(FadeOut::create(1.0f), FadeIn::create(0.0f));
-            auto scale = Sequence::createWithTwoActions(ScaleTo::create(1.0f, 2.0f), ScaleTo::create(0.0f, 0.6f));
-            a11->runAction(RepeatForever::create(Spawn::createWithTwoActions(fade, scale)));
-            _arrow_node->addChild(a11);
-        }
-        auto arrow = Sprite::create("Images/goal_jian.png");
-        if (nullptr != arrow)
-        {
-            arrow->setScale(0.5f);
-            arrow->setAnchorPoint(Vec2(0.5f, 0.0f));
-            arrow->setPosition(Vec2::ZERO);
-            arrow->runAction(RepeatForever::create(Sequence::createWithTwoActions(MoveBy::create(0.5f, Vec2(0, 10.0f)), MoveBy::create(0.5f, Vec2(0, -10.0f)))));
-            _arrow_node->addChild(arrow);
-        }
     }
 
+    // 勇士属性面板
     _info_panel = WarriorInfoPanel::create();
     if (nullptr != _info_panel)
     {
@@ -122,7 +101,8 @@ bool FloorMapLayer::onTouchBegan(Touch *touch, Event *e)
 
 void FloorMapLayer::onTouchEnded(Touch *touch, Event *e)
 {
-    // 暂时bug修正，如果对话框已弹出，就不再执行以下代码，这种情况是在对话框弹出前，touchbegan就已经触发的情况下发生，随后重构时应该不会有这个问题
+    // bugfix: 如果对话框已弹出，就不再执行以下代码，这种情况是在对话框弹出前，touchbegan就已经触发的情况下发生
+    // 重现方法: 控制勇士经过怪物，然后鼠标按下等待勇士到达怪物处，弹出提示对话框后，松开鼠标继续弹出
     if (ModalDialogManager::GetInstance()->isShown())
     {
         return;
@@ -133,15 +113,6 @@ void FloorMapLayer::onTouchEnded(Touch *touch, Event *e)
     {
         return;
     }
-
-    //auto npc_layer1 = _tiled_map->getLayer("npc");
-    //auto npc_layer_size1 = npc_layer1->getLayerSize();
-    //int tilesAmount = npc_layer_size1.width * npc_layer_size1.height;
-    //uint32_t *tiles1 = (uint32_t*)malloc(tilesAmount*sizeof(uint32_t));
-    //memset(tiles1, 0, tilesAmount*sizeof(int));
-    //tiles1[85] = 30;
-    //tiles1[103] = 29;
-    //npc_layer1->setTiles(tiles1);
 
     // 获取起始点
     auto end_vec2 = _tiled_map->convertTouchToNodeSpace(touch) / 75.0f;
@@ -241,6 +212,99 @@ Value FloorMapLayer::get_tile_prop(int32_t gid, const string& key)
     return Value();
 }
 
+void FloorMapLayer::pick_up_item_impl(const npc_t& npc, const cocos2d::Vec2& target_pos, const std::function<void()>& callback)
+{
+    auto npc_layer = _tiled_map->getLayer("npc");
+    auto item = npc_layer->getTileAt(Vec2(npc.x, 11 - npc.y));
+    auto start_pos = this->convertToNodeSpace(item->getParent()->convertToWorldSpace(item->getPosition()));
+    item->retain();
+    item->removeFromParentAndCleanup(false);
+    item->setPosition(start_pos);
+    this->addChild(item);
+    item->release();
+
+    // TODO.. cocos2d-x tiled bug. 如果一个Layer只剩下一个tile，设置gid为0不起作用，目前找不到解决办法
+    npc_layer->setTileGID(999, Vec2(npc.x, 11 - npc.y));
+
+    auto duration = item->getPosition().distance(target_pos) / 1000.0f;
+    item->runAction(Sequence::create(
+        Spawn::createWithTwoActions(MoveTo::create(duration, target_pos), ScaleTo::create(duration, 0.6f)),
+        CallFunc::create([item, callback]() {
+        item->removeFromParentAndCleanup(true);
+        callback();
+    }), nullptr));
+}
+
+void FloorMapLayer::pick_up_item(const npc_t& npc)
+{
+    std::function<void()> callback;
+    WarriorInfoPanel::node_type type;
+
+    bool need_pick = true;
+    auto style = get_tile_prop(npc.gid, "style").asInt();
+    switch (style)
+    {
+    case 2: // 钥匙
+        {
+            auto color = get_tile_prop(npc.gid, "color").asInt();
+            if (0 == color) // 钥匙串
+            {
+                type = WarriorInfoPanel::key_blue;
+                callback = std::bind(&PlayerDelegate::add_key, 1, 1, 1);
+            }
+            else if (1 == color) // 红钥匙
+            {
+                type = WarriorInfoPanel::key_red;
+                callback = std::bind(&PlayerDelegate::add_key, 1, 0, 0);
+            }
+            else if (2 == color) // 蓝钥匙
+            {
+                type = WarriorInfoPanel::key_blue;
+                callback = std::bind(&PlayerDelegate::add_key, 0, 1, 0);
+            }
+            else if (3 == color) // 黄钥匙
+            {
+                type = WarriorInfoPanel::key_yellow;
+                callback = std::bind(&PlayerDelegate::add_key, 0, 0, 1);
+            }
+        }
+        break;
+    case 4: // 宝石
+        {
+            auto color = get_tile_prop(npc.gid, "color").asInt();
+            auto value = get_tile_prop(npc.gid, "value").asInt();
+            if (1 == color) // 红宝石，攻击
+            {
+                type = WarriorInfoPanel::attack;
+                callback = std::bind(&PlayerDelegate::add_attack, value);
+            }
+            else if (2 == color) // 蓝宝石，防御
+            {
+                type = WarriorInfoPanel::defend;
+                callback = std::bind(&PlayerDelegate::add_defence, value);
+            }
+        }
+        break;
+    case 5: // 血瓶
+        {
+            auto value = get_tile_prop(npc.gid, "value").asInt();
+            type = WarriorInfoPanel::hp;
+            callback = std::bind(&PlayerDelegate::add_hp, value);
+        }
+        break;
+    default:
+        need_pick = false;
+        break;
+    }
+
+    if (need_pick)
+    {
+        auto target_pos = this->convertToNodeSpace(_info_panel->get_node_position_in_world(type));
+        target_pos -= Vec2(26.0f, 0);
+        pick_up_item_impl(npc, target_pos, callback);
+    }
+}
+
 void FloorMapLayer::step()
 {
     if (_paths.empty())
@@ -259,168 +323,17 @@ void FloorMapLayer::step()
         if (npc_iter != _npcs.end())
         {
             const auto& npc = *npc_iter;
-            auto style = get_tile_prop(npc.gid, "style").asInt();
-            switch (style)
-            {
-            case 2: // 钥匙
-                {
-                    auto npc_layer = _tiled_map->getLayer("npc");
-                    auto key = npc_layer->getTileAt(Vec2(npc.x, 11 - npc.y));
-                    auto start_pos = this->convertToNodeSpace(key->getParent()->convertToWorldSpace(key->getPosition()));
-                    key->retain();
-                    key->removeFromParentAndCleanup(false);
-                    key->setPosition(start_pos);
-                    this->addChild(key);
-                    key->release();
-                    // TODO.. cocos2d-x tiled bug. 如果一个Layer只剩下一个tile，设置gid为0不起作用，目前找不到解决办法
-                    npc_layer->setTileGID(999, Vec2(npc.x, 11 - npc.y));
-
-                    auto color = get_tile_prop(npc.gid, "color").asInt();
-                    switch (color)
-                    {
-                    case 0:
-                        {
-                            auto target_pos = this->convertToNodeSpace(_info_panel->get_node_position_in_world(WarriorInfoPanel::key_blue));
-                            target_pos -= Vec2(26.0f, 0);
-                            auto duration = key->getPosition().distance(target_pos) / 1000.0f;
-                            key->runAction(Sequence::create(
-                                Spawn::createWithTwoActions(MoveTo::create(duration, target_pos), ScaleTo::create(duration, 0.6f)),
-                                CallFunc::create([key]() {
-                                    key->removeFromParentAndCleanup(true);
-                                    PlayerDelegate::add_key(1, 1, 1);
-                            }), nullptr));
-                        }
-                        break;
-                    case 1:
-                        {
-                            auto target_pos = this->convertToNodeSpace(_info_panel->get_node_position_in_world(WarriorInfoPanel::key_red));
-                            target_pos -= Vec2(26.0f, 0);
-                            auto duration = key->getPosition().distance(target_pos) / 1000.0f;
-                            key->runAction(Sequence::create(
-                                Spawn::createWithTwoActions(MoveTo::create(duration, target_pos), ScaleTo::create(duration, 0.6f)),
-                                CallFunc::create([key]() {
-                                    key->removeFromParentAndCleanup(true);
-                                    PlayerDelegate::add_key(1, 0, 0);
-                            }), nullptr));
-                        }
-                        break;
-                    case 2:
-                        {
-                            auto target_pos = this->convertToNodeSpace(_info_panel->get_node_position_in_world(WarriorInfoPanel::key_blue));
-                            target_pos -= Vec2(26.0f, 0);
-                            auto duration = key->getPosition().distance(target_pos) / 1000.0f;
-                            key->runAction(Sequence::create(
-                                Spawn::createWithTwoActions(MoveTo::create(duration, target_pos), ScaleTo::create(duration, 0.6f)),
-                                CallFunc::create([key]() {
-                                    key->removeFromParentAndCleanup(true);
-                                    PlayerDelegate::add_key(0, 1, 0);
-                            }), nullptr));
-                        }
-                        break;
-                    case 3:
-                        {
-                            auto target_pos = this->convertToNodeSpace(_info_panel->get_node_position_in_world(WarriorInfoPanel::key_yellow));
-                            target_pos -= Vec2(26.0f, 0);
-                            auto duration = key->getPosition().distance(target_pos) / 1000.0f;
-                            key->runAction(Sequence::create(
-                                Spawn::createWithTwoActions(MoveTo::create(duration, target_pos), ScaleTo::create(duration, 0.6f)),
-                                CallFunc::create([key]() {
-                                    key->removeFromParentAndCleanup(true);
-                                    PlayerDelegate::add_key(0, 0, 1);
-                            }), nullptr));
-                        }
-                        break;
-                    default:
-                        break;
-                    }
-                }
-                break;
-            case 4: // 宝石
-                {
-                    auto npc_layer = _tiled_map->getLayer("npc");
-                    auto diamond = npc_layer->getTileAt(Vec2(npc.x, 11 - npc.y));
-                    auto start_pos = this->convertToNodeSpace(diamond->getParent()->convertToWorldSpace(diamond->getPosition()));
-                    diamond->retain();
-                    diamond->removeFromParentAndCleanup(false);
-                    diamond->setPosition(start_pos);
-                    this->addChild(diamond);
-                    diamond->release();
-                    // TODO.. cocos2d-x tiled bug. 如果一个Layer只剩下一个tile，设置gid为0不起作用，目前找不到解决办法
-                    npc_layer->setTileGID(999, Vec2(npc.x, 11 - npc.y));
-
-                    auto color = get_tile_prop(npc.gid, "color").asInt();
-                    switch (color)
-                    {
-                    case 1:
-                        {
-                            auto target_pos = this->convertToNodeSpace(_info_panel->get_node_position_in_world(WarriorInfoPanel::attack));
-                            target_pos -= Vec2(26.0f, 0);
-                            auto duration = diamond->getPosition().distance(target_pos) / 1000.0f;
-                            auto value = get_tile_prop(npc.gid, "value").asInt();
-                            diamond->runAction(Sequence::create(
-                                Spawn::createWithTwoActions(MoveTo::create(duration, target_pos), ScaleTo::create(duration, 0.6f)),
-                                CallFunc::create([diamond, value]() {
-                                diamond->removeFromParentAndCleanup(true);
-                                PlayerDelegate::add_attack(value);
-                            }), nullptr));
-                        }
-                        break;
-                    case 2:
-                        {
-                            auto target_pos = this->convertToNodeSpace(_info_panel->get_node_position_in_world(WarriorInfoPanel::defend));
-                            target_pos -= Vec2(26.0f, 0);
-                            auto duration = diamond->getPosition().distance(target_pos) / 1000.0f;
-                            auto value = get_tile_prop(npc.gid, "value").asInt();
-                            diamond->runAction(Sequence::create(
-                                Spawn::createWithTwoActions(MoveTo::create(duration, target_pos), ScaleTo::create(duration, 0.6f)),
-                                CallFunc::create([diamond, value]() {
-                                diamond->removeFromParentAndCleanup(true);
-                                PlayerDelegate::add_defence(value);
-                            }), nullptr));
-                        }
-                        break;
-                    default:
-                        break;
-                    }
-                }
-                break;
-            case 5: // 血瓶
-                {
-                    auto npc_layer = _tiled_map->getLayer("npc");
-                    auto blood = npc_layer->getTileAt(Vec2(npc.x, 11 - npc.y));
-                    auto start_pos = this->convertToNodeSpace(blood->getParent()->convertToWorldSpace(blood->getPosition()));
-                    blood->retain();
-                    blood->removeFromParentAndCleanup(false);
-                    blood->setPosition(start_pos);
-                    this->addChild(blood);
-                    blood->release();
-                    // TODO.. cocos2d-x tiled bug. 如果一个Layer只剩下一个tile，设置gid为0不起作用，目前找不到解决办法
-                    npc_layer->setTileGID(999, Vec2(npc.x, 11 - npc.y));
-
-                    auto target_pos = this->convertToNodeSpace(_info_panel->get_node_position_in_world(WarriorInfoPanel::hp));
-                    target_pos -= Vec2(26.0f, 0);
-                    auto duration = blood->getPosition().distance(target_pos) / 1000.0f;
-                    auto value = get_tile_prop(npc.gid, "value").asInt();
-                    blood->runAction(Sequence::create(
-                        Spawn::createWithTwoActions(MoveTo::create(duration, target_pos), ScaleTo::create(duration, 0.6f)),
-                        CallFunc::create([blood, value]() {
-                        blood->removeFromParentAndCleanup(true);
-                        PlayerDelegate::add_hp(value);
-                    }), nullptr));
-                }
-                break;
-            default:
-                break;
-            }
+            pick_up_item(npc);
         }
     }
     
+    // 未走到路径末尾，继续处理下一步行走
     if (_paths.size() > 1)
     {
         auto end_pt = _paths[1];
         auto end_pos = Vec2((end_pt.x + 0.5f) * 75.0f - 50.0f, (end_pt.y + 0.5f) * 75.0f - 50.0f);
 
-        // 如果需要额外走一段到瓦块中心，仅仅执行这段走路
+        // 如果需要额外走一段到瓦块中心，仅仅执行这段走路，仅在走到块间时重新改变行走路径时有效
         if (current_pos.distance(end_pos) > start_pos.distance(end_pos))
         {
             _warrior->move_to(start_pos, CC_CALLBACK_0(FloorMapLayer::step, this));
@@ -440,33 +353,7 @@ void FloorMapLayer::step()
         if (npc_iter != _npcs.end())
         {
             const auto& npc = *npc_iter;
-            auto style = get_tile_prop(npc.gid, "style").asInt();
-            switch (style)
-            {
-            case 1: // 怪物
-                {
-                    walk_pause = true;
-                    _warrior->turn_to(end_pos);
-                    //auto dict = Dictionary::createWithContentsOfFile("chinese.xml");
-                    //auto text = (static_cast<String*>(dict->objectForKey("isAttack")))->getCString();
-                    //auto name = (static_cast<String*>(dict->objectForKey(get_tile_prop(npc.gid, "name").asString())))->getCString();
-					auto dict = FileUtils::getInstance()->getValueMapFromFile("chinese.xml");
-					auto text = dict["isAttack"].asString();
-					auto name = dict[get_tile_prop(npc.gid, "name").asString()].asString();
-					auto info = text + " " + name;
-                    auto dialog = OKCancelDialog::create("", info);
-                    dialog->setCallback(std::bind(&FloorMapLayer::confirm_attack, this, std::placeholders::_1, npc));
-                    ModalDialogManager::GetInstance()->pushDialog(dialog);
-                }
-                break;
-            case 3: // 门
-                {
-
-                }
-                break;
-            default:
-                break;
-            }
+            walk_pause = interact_item(npc);
         }
         
         if (!walk_pause)
@@ -475,12 +362,54 @@ void FloorMapLayer::step()
             _paths.erase(_paths.begin());
         }
     }
-    else
+    else // 走到寻路最后一个节点，清理工作
     {
         _road_node->removeAllChildren();
         _warrior->stand_auto();
         _arrow_node->setVisible(false);
     }
+}
+
+bool FloorMapLayer::interact_item(const npc_t& npc)
+{
+    bool walk_pause = false;
+    auto style = get_tile_prop(npc.gid, "style").asInt();
+    switch (style)
+    {
+    case 1: // 怪物
+    {
+        walk_pause = true;
+        auto end_pos = Vec2((npc.x + 0.5f) * 75.0f - 50.0f, (npc.y + 0.5f) * 75.0f - 50.0f);
+        _warrior->turn_to(end_pos);
+
+        if (_paths.size() > 2) // 怪物为行走路径的最后一个节点，不提示对话框，直接开打
+        {
+            auto dict = FileUtils::getInstance()->getValueMapFromFile("chinese.xml");
+            auto text = dict["isAttack"].asString();
+            auto name = dict[get_tile_prop(npc.gid, "name").asString()].asString();
+            auto info = text + " " + name;
+            auto dialog = OKCancelDialog::create("", info);
+            dialog->setCallback(std::bind(&FloorMapLayer::confirm_attack, this, std::placeholders::_1, npc));
+            ModalDialogManager::GetInstance()->pushDialog(dialog);
+        }
+        else
+        {
+            assert(_paths.size() == 2); // 和npc交互时路径肯定还有至少两个节点，一个自己的，一个对方的
+            if (_paths.size() == 2)
+                confirm_attack(OKCancelDialog::OK, npc);
+        }
+    }
+    break;
+    case 3: // 门
+    {
+
+    }
+    break;
+    default:
+        break;
+    }
+
+    return walk_pause;
 }
 
 void FloorMapLayer::confirm_attack(OKCancelDialog::RETURN_TYPE type, const npc_t& npc)
@@ -525,27 +454,12 @@ void FloorMapLayer::confirm_attack_impl(const npc_t& npc)
 
     auto blood = (life + attack_damage - 1) / attack_damage * damage;
 
-    auto npc_layer = _tiled_map->getLayer("npc");
-    auto monster = npc_layer->getTileAt(Vec2(npc.x, 11 - npc.y));
-    auto start_pos = this->convertToNodeSpace(monster->getParent()->convertToWorldSpace(monster->getPosition()));
-    monster->retain();
-    monster->removeFromParentAndCleanup(false);
-    monster->setPosition(start_pos);
-    this->addChild(monster);
-    monster->release();
-    // TODO.. cocos2d-x tiled bug. 如果一个Layer只剩下一个tile，设置gid为0不起作用，目前找不到解决办法
-    npc_layer->setTileGID(999, Vec2(npc.x, 11 - npc.y));
-
     auto target_pos = this->convertToNodeSpace(_info_panel->get_node_position_in_world(WarriorInfoPanel::hun));
     target_pos -= Vec2(26.0f, 0);
-    auto duration = monster->getPosition().distance(target_pos) / 1000.0f;
-    monster->runAction(Sequence::create(
-        Spawn::createWithTwoActions(MoveTo::create(duration, target_pos), ScaleTo::create(duration, 0.6f)),
-        CallFunc::create([monster, blood, gold, hun]() {
-        monster->removeFromParentAndCleanup(true);
+    pick_up_item_impl(npc, target_pos, [blood, gold, hun]() {
         PlayerDelegate::add_hp(-blood);
         PlayerDelegate::add_gold_hun(gold, hun);
-    }), nullptr));
+    });
 
     auto current_pos = _warrior->getPosition();
     auto end_pt = _paths[1];
