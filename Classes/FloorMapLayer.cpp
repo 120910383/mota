@@ -278,7 +278,7 @@ void FloorMapLayer::step()
                     {
                     case 0:
                         {
-                            auto target_pos = this->convertToNodeSpace(_info_panel->_key_blue_num->getParent()->convertToWorldSpace(_info_panel->_key_blue_num->getPosition()));
+                            auto target_pos = this->convertToNodeSpace(_info_panel->get_node_position_in_world(WarriorInfoPanel::key_blue));
                             target_pos -= Vec2(26.0f, 0);
                             auto duration = key->getPosition().distance(target_pos) / 1000.0f;
                             key->runAction(Sequence::create(
@@ -291,7 +291,7 @@ void FloorMapLayer::step()
                         break;
                     case 1:
                         {
-                            auto target_pos = this->convertToNodeSpace(_info_panel->_key_red_num->getParent()->convertToWorldSpace(_info_panel->_key_red_num->getPosition()));
+                            auto target_pos = this->convertToNodeSpace(_info_panel->get_node_position_in_world(WarriorInfoPanel::key_red));
                             target_pos -= Vec2(26.0f, 0);
                             auto duration = key->getPosition().distance(target_pos) / 1000.0f;
                             key->runAction(Sequence::create(
@@ -304,7 +304,7 @@ void FloorMapLayer::step()
                         break;
                     case 2:
                         {
-                            auto target_pos = this->convertToNodeSpace(_info_panel->_key_blue_num->getParent()->convertToWorldSpace(_info_panel->_key_blue_num->getPosition()));
+                            auto target_pos = this->convertToNodeSpace(_info_panel->get_node_position_in_world(WarriorInfoPanel::key_blue));
                             target_pos -= Vec2(26.0f, 0);
                             auto duration = key->getPosition().distance(target_pos) / 1000.0f;
                             key->runAction(Sequence::create(
@@ -317,7 +317,7 @@ void FloorMapLayer::step()
                         break;
                     case 3:
                         {
-                            auto target_pos = this->convertToNodeSpace(_info_panel->_key_yellow_num->getParent()->convertToWorldSpace(_info_panel->_key_yellow_num->getPosition()));
+                            auto target_pos = this->convertToNodeSpace(_info_panel->get_node_position_in_world(WarriorInfoPanel::key_yellow));
                             target_pos -= Vec2(26.0f, 0);
                             auto duration = key->getPosition().distance(target_pos) / 1000.0f;
                             key->runAction(Sequence::create(
@@ -351,7 +351,7 @@ void FloorMapLayer::step()
                     {
                     case 1:
                         {
-                            auto target_pos = this->convertToNodeSpace(_info_panel->_attack_num->getParent()->convertToWorldSpace(_info_panel->_attack_num->getPosition()));
+                            auto target_pos = this->convertToNodeSpace(_info_panel->get_node_position_in_world(WarriorInfoPanel::attack));
                             target_pos -= Vec2(26.0f, 0);
                             auto duration = diamond->getPosition().distance(target_pos) / 1000.0f;
                             auto value = get_tile_prop(npc.gid, "value").asInt();
@@ -365,7 +365,7 @@ void FloorMapLayer::step()
                         break;
                     case 2:
                         {
-                            auto target_pos = this->convertToNodeSpace(_info_panel->_defend_num->getParent()->convertToWorldSpace(_info_panel->_defend_num->getPosition()));
+                            auto target_pos = this->convertToNodeSpace(_info_panel->get_node_position_in_world(WarriorInfoPanel::defend));
                             target_pos -= Vec2(26.0f, 0);
                             auto duration = diamond->getPosition().distance(target_pos) / 1000.0f;
                             auto value = get_tile_prop(npc.gid, "value").asInt();
@@ -395,7 +395,7 @@ void FloorMapLayer::step()
                     // TODO.. cocos2d-x tiled bug. 如果一个Layer只剩下一个tile，设置gid为0不起作用，目前找不到解决办法
                     npc_layer->setTileGID(999, Vec2(npc.x, 11 - npc.y));
 
-                    auto target_pos = this->convertToNodeSpace(_info_panel->_hp_num->getParent()->convertToWorldSpace(_info_panel->_hp_num->getPosition()));
+                    auto target_pos = this->convertToNodeSpace(_info_panel->get_node_position_in_world(WarriorInfoPanel::hp));
                     target_pos -= Vec2(26.0f, 0);
                     auto duration = blood->getPosition().distance(target_pos) / 1000.0f;
                     auto value = get_tile_prop(npc.gid, "value").asInt();
@@ -534,7 +534,7 @@ void FloorMapLayer::confirm_attack_impl(const npc_t& npc)
     // TODO.. cocos2d-x tiled bug. 如果一个Layer只剩下一个tile，设置gid为0不起作用，目前找不到解决办法
     npc_layer->setTileGID(999, Vec2(npc.x, 11 - npc.y));
 
-    auto target_pos = this->convertToNodeSpace(_info_panel->_hun_num->getParent()->convertToWorldSpace(_info_panel->_hun_num->getPosition()));
+    auto target_pos = this->convertToNodeSpace(_info_panel->get_node_position_in_world(WarriorInfoPanel::hun));
     target_pos -= Vec2(26.0f, 0);
     auto duration = monster->getPosition().distance(target_pos) / 1000.0f;
     monster->runAction(Sequence::create(

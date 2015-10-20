@@ -12,7 +12,10 @@ public:
     bool init();
     virtual void on_player_attr_changed() override;
 
-public:
+    enum node_type { attack, defend, jb, hun, hp, key_red, key_blue, key_yellow };
+    cocos2d::Vec2 get_node_position_in_world(node_type type);
+
+private:
     cocos2d::LabelAtlas* _attack_num;
     cocos2d::LabelAtlas* _defend_num;
     cocos2d::LabelAtlas* _jb_num;

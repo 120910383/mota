@@ -191,3 +191,38 @@ void WarriorInfoPanel::on_player_attr_changed()
     _key_blue_num->setString(String::createWithFormat("%d", player_info.key_blue)->_string);
     _key_yellow_num->setString(String::createWithFormat("%d", player_info.key_yellow)->_string);
 }
+
+cocos2d::Vec2 WarriorInfoPanel::get_node_position_in_world(node_type type)
+{
+    Vec2 position;
+    switch (type)
+    {
+    case WarriorInfoPanel::attack:
+        position = _attack_num->getParent()->convertToWorldSpace(_attack_num->getPosition());
+        break;
+    case WarriorInfoPanel::defend:
+        position = _defend_num->getParent()->convertToWorldSpace(_defend_num->getPosition());
+        break;
+    case WarriorInfoPanel::jb:
+        position = _jb_num->getParent()->convertToWorldSpace(_jb_num->getPosition());
+        break;
+    case WarriorInfoPanel::hun:
+        position = _hun_num->getParent()->convertToWorldSpace(_hun_num->getPosition());
+        break;
+    case WarriorInfoPanel::hp:
+        position = _hp_num->getParent()->convertToWorldSpace(_hp_num->getPosition());
+        break;
+    case WarriorInfoPanel::key_red:
+        position = _key_red_num->getParent()->convertToWorldSpace(_key_red_num->getPosition());
+        break;
+    case WarriorInfoPanel::key_blue:
+        position = _key_blue_num->getParent()->convertToWorldSpace(_key_blue_num->getPosition());
+        break;
+    case WarriorInfoPanel::key_yellow:
+        position = _key_yellow_num->getParent()->convertToWorldSpace(_key_yellow_num->getPosition());
+        break;
+    default:
+        break;
+    }
+    return position;
+}
