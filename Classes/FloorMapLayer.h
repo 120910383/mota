@@ -9,7 +9,7 @@ enum OKCancelDialog::RETURN_TYPE;
 namespace cocos2d { class LabelAtlas; }
 class WarriorNode;
 class WarriorInfoPanel;
-class FloorMapLayer : public cocos2d::Layer
+class FloorMapLayer : public cocos2d::Node
 {
 public:
     static cocos2d::Scene* scene();
@@ -18,8 +18,8 @@ public:
     CREATE_FUNC(FloorMapLayer);
 
 public:
-    virtual bool onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *e) override;
-    virtual void onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *e) override;
+    bool onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *e);
+    void onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *e);
 
 private:
     struct npc_t;

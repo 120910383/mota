@@ -21,12 +21,16 @@ Scene* FloorMapLayer::scene()
 
 bool FloorMapLayer::init()
 {
-    if (!Layer::init())
-    {
-        return false;
-    }
-    setTouchMode(Touch::DispatchMode::ONE_BY_ONE);
-    setTouchEnabled(true);
+    // 由于直接继承自node，需要做一些处理，现在layer的功能全被废弃了，无意义
+    setContentSize(Director::getInstance()->getWinSize());
+
+    auto listener = EventListenerTouchOneByOne::create();
+    listener->setSwallowTouches(true);
+    listener->onTouchBegan = CC_CALLBACK_2(FloorMapLayer::onTouchBegan, this);
+    listener->onTouchEnded = CC_CALLBACK_2(FloorMapLayer::onTouchEnded, this);
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+
+    // 加载地图编辑器文件
     _tiled_map = cocos2d::experimental::TMXTiledMap::create("TileMaps/floor001.tmx");
     if (nullptr != _tiled_map)
     {
@@ -110,8 +114,6 @@ bool FloorMapLayer::init()
     
     return true;
 }
-
-
 
 bool FloorMapLayer::onTouchBegan(Touch *touch, Event *e)
 {
@@ -511,8 +513,8 @@ void FloorMapLayer::confirm_attack_impl(const npc_t& npc)
     auto damage = std::max(0, attack - player_info.defence);
     if (attack_damage == 0 || (life + attack_damage - 1) / attack_damage * damage >= player_info.hp) // 只要攻击不够无论防御多高都打不过
     {
-        auto dict = Dictionary::createWithContentsOfFile("chinese.xml");
-        auto text = (static_cast<String*>(dict->objectForKey("txt7_2")))->getCString();
+        auto dict = FileUtils::getInstance()->getValueMapFromFile("chinese.xml");
+        auto text = dict["txt7_2"].asString();
         PromptDialog::show(text);
         _road_node->removeAllChildren();
         _warrior->stand_auto();
