@@ -121,4 +121,6 @@ void WarriorNode::update_ui()
 
     if (_current_direction == left || _current_direction == right)
         setScaleX(_current_direction == right ? -1.0f : 1.0f);
+    else
+        setScaleX(1.0f);
 }

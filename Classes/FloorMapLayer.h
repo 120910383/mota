@@ -25,11 +25,14 @@ private:
     struct npc_t;
     void confirm_attack(OKCancelDialog::RETURN_TYPE type, const npc_t& npc);
     void confirm_attack_impl(const npc_t& npc);
+    void confirm_open(OKCancelDialog::RETURN_TYPE type, const npc_t& npc);
+    void confirm_open_impl(const npc_t& npc);
     cocos2d::Value get_tile_prop(int32_t gid, const string& key);
     void step();
     void pick_up_item_impl(const npc_t& npc, const cocos2d::Vec2& target_pos, const std::function<void()>& callback);
     void pick_up_item(const npc_t& npc);
     bool interact_item(const npc_t& npc);   // 与npc交互，返回值为是否停下来交互，如开门，打斗，对话框提示等
+    void stop_and_clear();
 
 private:
     cocos2d::experimental::TMXTiledMap* _tiled_map;

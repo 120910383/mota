@@ -8,12 +8,12 @@
  </layer>
  <layer name="wall" width="10" height="12">
   <data encoding="base64" compression="zlib">
-   eJwTZ2Bg4EDC4mh8EJYAYlEGVIDOBwExHOLEqMNnHgeUD3OfEJKYEBnmYVMnQaR5YnjME4Xqx6WOE+puISQ5GJ8Dh73YAEgdcjxxIpkNwsJQDPITAMytBDI=
+   eJyNkQ0KQCEIgz2Jvn7uf8YKHA0xeYMPUoa5GiKiztgY1WBumlx9kqsHH6v57Mz3OsOnXmNHpZ497s32qHzz57xezIsZo88IiHvV+8Uc+KuKk2kBv0UIWw==
   </data>
  </layer>
  <layer name="npc" width="10" height="12">
   <data encoding="base64" compression="zlib">
-   eJxjYCAeyAOxChBLI4mB2DJALIskpgZVi6wOplYOia+AQx0DDjFCQAoJUwPAzFHCIQ4D6jjsBOlToZJbyAUAh80C7A==
+   eJxjYCAe6EBpIQaGBhCtDuVro6nThNLCQHW8eMzTQmLrAjFMLTY9gkSI6eGxCxnootmvRqQ6ZIBNDAY4iVBDDNCgUD8IAADZXAP0
   </data>
  </layer>
 </map>

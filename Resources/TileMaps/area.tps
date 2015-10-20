@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>3</int>
         <key>texturePackerVersion</key>
-        <string>3.9.1</string>
+        <string>3.9.4</string>
         <key>fileName</key>
         <string>D:/develop.cocos/mota/Resources/TileMaps/area.tps</string>
         <key>autoSDSettings</key>
@@ -88,9 +88,9 @@
         <key>maxTextureSize</key>
         <QSize>
             <key>width</key>
-            <int>600</int>
+            <int>700</int>
             <key>height</key>
-            <int>512</int>
+            <int>700</int>
         </QSize>
         <key>fixedTextureSize</key>
         <QSize>

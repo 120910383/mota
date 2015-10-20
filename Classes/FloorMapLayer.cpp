@@ -199,7 +199,7 @@ void FloorMapLayer::onTouchEnded(Touch *touch, Event *e)
 
 Value FloorMapLayer::get_tile_prop(int32_t gid, const string& key)
 {
-    Value properties = _tiled_map->getPropertiesForGID(gid);
+    Value properties = _tiled_map->getPropertiesForGID(gid & kTMXFlippedMask);
     if (!properties.isNull())
     {
         auto tile_props = properties.asValueMap();
@@ -216,6 +216,7 @@ void FloorMapLayer::pick_up_item_impl(const npc_t& npc, const cocos2d::Vec2& tar
 {
     auto npc_layer = _tiled_map->getLayer("npc");
     auto item = npc_layer->getTileAt(Vec2(npc.x, 11 - npc.y));
+    npc_layer->setupTileSprite(item, Vec2(npc.x, 11 - npc.y), npc.gid);
     auto start_pos = this->convertToNodeSpace(item->getParent()->convertToWorldSpace(item->getPosition()));
     item->retain();
     item->removeFromParentAndCleanup(false);
@@ -223,7 +224,7 @@ void FloorMapLayer::pick_up_item_impl(const npc_t& npc, const cocos2d::Vec2& tar
     this->addChild(item);
     item->release();
 
-    // TODO.. cocos2d-x tiled bug. 如果一个Layer只剩下一个tile，设置gid为0不起作用，目前找不到解决办法
+    // TODO.. cocos2d-x tiled bug. 如果一个Layer只剩下一个tile，getTileAt内部设置gid为0不起作用，目前找不到解决办法
     npc_layer->setTileGID(999, Vec2(npc.x, 11 - npc.y));
 
     auto duration = item->getPosition().distance(target_pos) / 1000.0f;
@@ -364,9 +365,7 @@ void FloorMapLayer::step()
     }
     else // 走到寻路最后一个节点，清理工作
     {
-        _road_node->removeAllChildren();
-        _warrior->stand_auto();
-        _arrow_node->setVisible(false);
+        stop_and_clear();
     }
 }
 
@@ -401,10 +400,32 @@ bool FloorMapLayer::interact_item(const npc_t& npc)
     }
     break;
     case 3: // 门
-    {
+        {
+            walk_pause = true;
+            auto end_pos = Vec2((npc.x + 0.5f) * 75.0f - 50.0f, (npc.y + 0.5f) * 75.0f - 50.0f);
+            _warrior->turn_to(end_pos);
 
-    }
-    break;
+            auto color = get_tile_prop(npc.gid, "color").asInt();
+            const auto& player = Player::GetInstance()->get_player_info();
+            if (1 == color && player.key_red < 1 || 2 == color && player.key_blue < 1 || 3 == color && player.key_yellow < 1)
+            {
+                auto dict = FileUtils::getInstance()->getValueMapFromFile("chinese.xml");
+                auto text = dict["buyKeyTip"].asString();
+                PromptDialog::show(text);
+                stop_and_clear();
+                break;
+            }
+
+            auto dict = FileUtils::getInstance()->getValueMapFromFile("chinese.xml");
+            auto prefix = dict["open_msg1"].asString();
+            auto sufix = dict["open_msg2"].asString();
+            auto textkey = 1 == color ? "rKey" : (2 == color ? "bKey" : "yKey");
+            auto info = prefix + dict[textkey].asString() + sufix;
+            auto dialog = OKCancelDialog::create("", info);
+            dialog->setCallback(std::bind(&FloorMapLayer::confirm_open, this, std::placeholders::_1, npc));
+            ModalDialogManager::GetInstance()->pushDialog(dialog);
+        }
+        break;
     default:
         break;
     }
@@ -412,14 +433,52 @@ bool FloorMapLayer::interact_item(const npc_t& npc)
     return walk_pause;
 }
 
+void FloorMapLayer::confirm_open(OKCancelDialog::RETURN_TYPE type, const npc_t& npc)
+{
+    if (type == OKCancelDialog::CANCEL)
+    {
+        stop_and_clear();
+    }
+    else
+    {
+        _warrior->stand_auto();
+        auto npc_layer = _tiled_map->getLayer("npc");
+        auto door = npc_layer->getTileAt(Vec2(npc.x, 11 - npc.y));
+        npc_layer->setupTileSprite(door, Vec2(npc.x, 11 - npc.y), npc.gid);
+        door->runAction(CCSequence::create(FadeOut::create(1.0f), RemoveSelf::create(),
+            CCCallFunc::create(std::bind(&FloorMapLayer::confirm_open_impl, this, npc)), nullptr));
+
+        // 如果是竖门需要将其上方的附加节点一并去除
+        auto uplink = get_tile_prop(npc.gid, "uplink").asInt();
+        if (1 == uplink)
+        {
+            auto npc_iter = find(_npcs.begin(), _npcs.end(), npc_t(npc.x, npc.y + 1, 0));
+            if (npc_iter != _npcs.end())
+            {
+                const auto& npc_up = *npc_iter;
+                auto door_up = npc_layer->getTileAt(Vec2(npc_up.x, 11 - npc_up.y));
+                npc_layer->setupTileSprite(door_up, Vec2(npc_up.x, 11 - npc_up.y), npc_up.gid);
+                door_up->runAction(CCSequence::create(FadeOut::create(1.0f), RemoveSelf::create(), nullptr));
+            }
+        }
+    }
+}
+
+void FloorMapLayer::confirm_open_impl(const npc_t& npc)
+{
+    auto color = get_tile_prop(npc.gid, "color").asInt();
+    PlayerDelegate::add_key(1 == color ? -1 : 0, 2 == color ? -1 : 0, 3 == color ? -1 : 0);
+
+    auto end_pos = Vec2((npc.x + 0.5f) * 75.0f - 50.0f, (npc.y + 0.5f) * 75.0f - 50.0f);
+    _warrior->move_to(end_pos, CC_CALLBACK_0(FloorMapLayer::step, this));
+    _paths.erase(_paths.begin());
+}
+
 void FloorMapLayer::confirm_attack(OKCancelDialog::RETURN_TYPE type, const npc_t& npc)
 {
     if (type == OKCancelDialog::CANCEL)
     {
-        _road_node->removeAllChildren();
-        _warrior->stand_auto();
-        _arrow_node->setVisible(false);
-        _paths.clear();
+        stop_and_clear();
     }
     else
     {
@@ -445,10 +504,7 @@ void FloorMapLayer::confirm_attack_impl(const npc_t& npc)
         auto dict = FileUtils::getInstance()->getValueMapFromFile("chinese.xml");
         auto text = dict["txt7_2"].asString();
         PromptDialog::show(text);
-        _road_node->removeAllChildren();
-        _warrior->stand_auto();
-        _arrow_node->setVisible(false);
-        _paths.clear();
+        stop_and_clear();
         return;
     }
 
@@ -461,9 +517,15 @@ void FloorMapLayer::confirm_attack_impl(const npc_t& npc)
         PlayerDelegate::add_gold_hun(gold, hun);
     });
 
-    auto current_pos = _warrior->getPosition();
-    auto end_pt = _paths[1];
-    auto end_pos = Vec2((end_pt.x + 0.5f) * 75.0f - 50.0f, (end_pt.y + 0.5f) * 75.0f - 50.0f);
+    auto end_pos = Vec2((npc.x + 0.5f) * 75.0f - 50.0f, (npc.y + 0.5f) * 75.0f - 50.0f);
     _warrior->move_to(end_pos, CC_CALLBACK_0(FloorMapLayer::step, this));
     _paths.erase(_paths.begin());
+}
+
+void FloorMapLayer::stop_and_clear()
+{
+    _road_node->removeAllChildren();
+    _warrior->stand_auto();
+    _arrow_node->setVisible(false);
+    _paths.clear();
 }
