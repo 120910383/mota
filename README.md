@@ -34,7 +34,7 @@
 3. 在确保机器上已安装Visual Studio 2015后双击mota.sln即可调试运行项目。
 
 ##参与项目
-1. 可以加入QQ群490412185（cocos2d-x开源项目交流群）讨论相关技术或者共同贡献代码
+1. 可以加入QQ群490412185（cocos2d-x开源项目交流群）讨论相关技术或者共同贡献代码<a target="_blank" href="http://shang.qq.com/wpa/qunwpa?idkey=32be4fcda35f3cbdab4ae005b235714c17abfdcc1c456da42911298d11db4630"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="cocos2d-x开源项目交流" title="cocos2d-x开源项目交流"></a>
 2. 在github上直接提交Issue，pull request
 3. 可以关注我自己的开发issue跟踪工具 http://develop.hooyio.com/projects/mota
 
