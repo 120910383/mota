@@ -3,17 +3,17 @@
  <tileset firstgid="1" source="area.tsx"/>
  <layer name="floor" width="10" height="12">
   <data encoding="base64" compression="zlib">
-   eJxjZGBgYCQRMxOhhokMfcSYS677sLmHGMxEBTNIxSx43IJLDhcGAIPsAIw=
+   eJxjZGBgYCQRMxOhhokMfcSYiw+z4DEHm3vwmYFNH7Fm0AqTYz8AiCQAjA==
   </data>
  </layer>
  <layer name="wall" width="10" height="12">
   <data encoding="base64" compression="zlib">
-   eJyNkQ0KQCEIgz2Jvn7uf8YKHA0xeYMPUoa5GiKiztgY1WBumlx9kqsHH6v57Mz3OsOnXmNHpZ497s32qHzz57xezIsZo88IiHvV+8Uc+KuKk2kBv0UIWw==
+   eJyVkAsKwCAMQ3MSndqD7uhOSCEUfwsEK8RHagOQ6EynYPtccFZlzjkms1tz+m7HcxnPyNTcuD/Ae8NTee/ZHtq9/eCtcpE722Onyh4rjv5/B8l4CTA=
   </data>
  </layer>
  <layer name="npc" width="10" height="12">
   <data encoding="base64" compression="zlib">
-   eJxjYCAe6EBpIQaGBhCtDuVro6nThNLCQHW8eMzTQmLrAjFMLTY9gkSI6eGxCxnootmvRqQ6ZIBNDAY4kdQYQ8OKHKABpTkoMAMAT8sFLw==
+   eJxjYCAe6EIxCGhBMbo4KcAYic0HpdWgNC8OPYIk2qGGR06dRLPw2a2JxOZDYnMwMDSQaA0YaBGgiQUAREEDUw==
   </data>
  </layer>
 </map>

@@ -9,19 +9,27 @@
 #include "ArrowNode.h"
 
 USING_NS_CC;
-static const float MOVE_SPEED = 200.0f;
 
-
-Scene* FloorMapLayer::scene()
+Scene* FloorMapLayer::scene(int floor)
 {
-    auto ret_scene = Scene::create();
-    FloorMapLayer* floor_layer = FloorMapLayer::create();
-    ret_scene->addChild(floor_layer);
-    return ret_scene;
+    FloorMapLayer* floor_layer = new (std::nothrow) FloorMapLayer();
+    if (floor_layer && floor_layer->init(floor))
+    {
+        floor_layer->autorelease();
+        auto ret_scene = Scene::create();
+        ret_scene->addChild(floor_layer);
+        return ret_scene;
+    }
+    else
+    {
+        CC_SAFE_DELETE(floor_layer);
+        return nullptr;
+    }
 }
 
-bool FloorMapLayer::init()
+bool FloorMapLayer::init(int floor)
 {
+    _floor = floor;
     // 由于直接继承自node，需要做一些处理，现在layer的功能全被废弃了，无意义
     setContentSize(Director::getInstance()->getWinSize());
 
@@ -32,7 +40,8 @@ bool FloorMapLayer::init()
     _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
 
     // 加载地图编辑器文件
-    _tiled_map = cocos2d::experimental::TMXTiledMap::create("TileMaps/floor001.tmx");
+    auto res = "TileMaps/floor00" + String::createWithFormat("%d", floor)->_string + ".tmx";
+    _tiled_map = cocos2d::experimental::TMXTiledMap::create(res);
     if (nullptr != _tiled_map)
     {
         _tiled_map->setPosition(Vec2(-50.0f, -50.0f));
@@ -153,6 +162,7 @@ void FloorMapLayer::onTouchEnded(Touch *touch, Event *e)
     }
     
     // npc列表
+    npc_t stair_up, stair_down;
     auto npc_layer = _tiled_map->getLayer("npc");
     auto npc_layer_size = npc_layer->getLayerSize();
     auto npc_tiles = npc_layer->getTiles();
@@ -165,6 +175,13 @@ void FloorMapLayer::onTouchEnded(Touch *touch, Event *e)
             if (gid != 0)
             {
                 _npcs.push_back(npc_t(j, npc_layer_size.height - 1 - i, gid));
+                if (get_tile_prop(gid, "style").asInt() == 6)
+                {
+                    if (get_tile_prop(gid, "type").asInt() == 1)
+                        stair_up = _npcs.back();
+                    else
+                        stair_down = _npcs.back();
+                }
             }
         }
     }
@@ -174,6 +191,14 @@ void FloorMapLayer::onTouchEnded(Touch *touch, Event *e)
     astar.set_start_and_end(start_pt, end_pt);
     astar.set_blocks(blocks);
     _paths = astar.get_path();
+    auto iter = std::find_if(_paths.begin(), _paths.end(), [&](node_t node) {
+        // 找到除了首节点的第一个楼梯节点
+        return (node.x != start_pt.x || node.y != start_pt.y) &&
+            (node.x == stair_up.x && node.y == stair_up.y || node.x == stair_down.x && node.y == stair_down.y);
+    });
+
+    if (iter != _paths.end())
+        _paths.erase(++iter, _paths.end());
 
     // 箭头
     _arrow_node->setVisible(true);
@@ -184,6 +209,8 @@ void FloorMapLayer::onTouchEnded(Touch *touch, Event *e)
     _road_node->removeAllChildren();
     for (auto node : _paths)
     {
+        if (index == _paths.size() - 1)
+            break;
         auto pos = Vec2((node.x + 0.5f) * 75.0f - 50.0f, (node.y + 0.5f) * 75.0f - 50.0f);
         auto res = "Images/diban" + String::createWithFormat("%d", index % 22)->_string + ".png";
         auto sprite = Sprite::create(res);
@@ -343,7 +370,7 @@ void FloorMapLayer::step()
 
         // 淡出脚下的路径标识
         auto road_children = _road_node->getChildren();
-        auto child = dynamic_cast<Node*>(road_children.at(road_children.size() - _paths.size()));
+        auto child = dynamic_cast<Node*>(road_children.at(road_children.size() + 1 - _paths.size()));
         if (nullptr != child)
         {
             child->runAction(FadeOut::create(0.2f));
@@ -426,6 +453,14 @@ bool FloorMapLayer::interact_item(const npc_t& npc)
             ModalDialogManager::GetInstance()->pushDialog(dialog);
         }
         break;
+    case 6: // 楼梯
+    {
+        walk_pause = false; // 无需停下来，直接切换楼层，切换场景的持续时间的一半让勇士正好走入下一个楼梯格子
+        auto next_scene = PromptLayer::scene(_floor == 1 ? 2 : 1);
+        auto transition = TransitionFade::create(0.5f, next_scene);
+        Director::getInstance()->replaceScene(transition);
+    }
+    break;
     default:
         break;
     }
@@ -445,7 +480,7 @@ void FloorMapLayer::confirm_open(OKCancelDialog::RETURN_TYPE type, const npc_t& 
         auto npc_layer = _tiled_map->getLayer("npc");
         auto door = npc_layer->getTileAt(Vec2(npc.x, 11 - npc.y));
         npc_layer->setupTileSprite(door, Vec2(npc.x, 11 - npc.y), npc.gid);
-        door->runAction(CCSequence::create(FadeOut::create(1.0f), RemoveSelf::create(),
+        door->runAction(CCSequence::create(FadeOut::create(0.5f), RemoveSelf::create(),
             CCCallFunc::create(std::bind(&FloorMapLayer::confirm_open_impl, this, npc)), nullptr));
 
         // 如果是竖门需要将其上方的附加节点一并去除
@@ -458,7 +493,7 @@ void FloorMapLayer::confirm_open(OKCancelDialog::RETURN_TYPE type, const npc_t& 
                 const auto& npc_up = *npc_iter;
                 auto door_up = npc_layer->getTileAt(Vec2(npc_up.x, 11 - npc_up.y));
                 npc_layer->setupTileSprite(door_up, Vec2(npc_up.x, 11 - npc_up.y), npc_up.gid);
-                door_up->runAction(CCSequence::create(FadeOut::create(1.0f), RemoveSelf::create(), nullptr));
+                door_up->runAction(CCSequence::create(FadeOut::create(0.5f), RemoveSelf::create(), nullptr));
             }
         }
     }
@@ -528,4 +563,41 @@ void FloorMapLayer::stop_and_clear()
     _warrior->stand_auto();
     _arrow_node->setVisible(false);
     _paths.clear();
+}
+
+//////////////////////////////////////////////////////////////////////////
+cocos2d::Scene * PromptLayer::scene(int floor)
+{
+    PromptLayer* prompt_layer = new (std::nothrow) PromptLayer();
+    if (prompt_layer && prompt_layer->init(floor))
+    {
+        prompt_layer->autorelease();
+        auto ret_scene = Scene::create();
+        ret_scene->addChild(prompt_layer);
+        return ret_scene;
+    }
+    else
+    {
+        CC_SAFE_DELETE(prompt_layer);
+        return nullptr;
+    }
+}
+
+bool PromptLayer::init(int floor)
+{
+    _floor = floor;
+    auto size = Director::getInstance()->getWinSize();
+    auto label = Label::createWithSystemFont("Floor" + String::createWithFormat("%d", floor)->_string, "", 52);
+    label->setPosition(Vec2(size.width / 2, size.height / 2));
+    addChild(label);
+    return true;
+}
+
+void PromptLayer::onEnterTransitionDidFinish()
+{
+    runAction(Sequence::createWithTwoActions(DelayTime::create(0.5f), CCCallFunc::create([&]() {
+        auto next_scene = FloorMapLayer::scene(_floor);
+        auto transition = TransitionFade::create(0.5f, next_scene);
+        Director::getInstance()->replaceScene(transition);
+    })));
 }

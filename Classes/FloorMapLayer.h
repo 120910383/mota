@@ -12,16 +12,14 @@ class WarriorInfoPanel;
 class FloorMapLayer : public cocos2d::Node
 {
 public:
-    static cocos2d::Scene* scene();
-    virtual bool init() override;
-
-    CREATE_FUNC(FloorMapLayer);
+    static cocos2d::Scene* scene(int floor);
+    bool init(int floor);
 
 public:
     bool onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *e);
     void onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *e);
 
-private:
+protected:
     struct npc_t;
     void confirm_attack(OKCancelDialog::RETURN_TYPE type, const npc_t& npc);
     void confirm_attack_impl(const npc_t& npc);
@@ -34,7 +32,8 @@ private:
     bool interact_item(const npc_t& npc);   // 与npc交互，返回值为是否停下来交互，如开门，打斗，对话框提示等
     void stop_and_clear();
 
-private:
+protected:
+    int _floor;
     cocos2d::experimental::TMXTiledMap* _tiled_map;
     WarriorNode* _warrior;
     WarriorInfoPanel* _info_panel;
@@ -47,6 +46,7 @@ private:
         int32_t y;
         int32_t gid;
 
+        npc_t() {}
         npc_t(int32_t _x, int32_t _y, int32_t _gid)
             : x(_x), y(_y), gid(_gid)
         {}
@@ -54,4 +54,17 @@ private:
         bool operator == (const npc_t& npc) const { return x == npc.x && y == npc.y; }
     };
     vector<npc_t> _npcs;
+};
+
+//////////////////////////////////////////////////////////////////////////
+class PromptLayer : public cocos2d::Node
+{
+public:
+    static cocos2d::Scene* scene(int floor);
+    bool init(int floor);
+
+    virtual void onEnterTransitionDidFinish() override;
+
+protected:
+    int _floor;
 };
