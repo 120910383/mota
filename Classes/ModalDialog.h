@@ -1,6 +1,5 @@
 ﻿#pragma once
 
-#include "cocos2d.h"
 #include "Singleton.h"
 
 class ModalDialogManager : public Singleton<ModalDialogManager>

@@ -1,4 +1,6 @@
-﻿#include "WarriorInfoPanel.h"
+﻿#include "pre_header.h"
+
+#include "WarriorInfoPanel.h"
 
 USING_NS_CC;
 

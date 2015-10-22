@@ -1,12 +1,13 @@
-﻿#include "FloorMapLayer.h"
-#include "spine/spine-cocos2dx.h"
-#include "cocostudio/CCArmature.h"
-#include "AStar.h"
+﻿#include "pre_header.h"
+
+#include "FloorMapLayer.h"
 #include "Player.h"
 #include "ModalDialog.h"
 #include "Warrior.h"
 #include "WarriorInfoPanel.h"
 #include "ArrowNode.h"
+
+#include "cocostudio/CCArmature.h"
 
 USING_NS_CC;
 
@@ -224,7 +225,7 @@ void FloorMapLayer::onTouchEnded(Touch *touch, Event *e)
     step();
 }
 
-Value FloorMapLayer::get_tile_prop(int32_t gid, const string& key)
+Value FloorMapLayer::get_tile_prop(int32_t gid, const std::string& key)
 {
     Value properties = _tiled_map->getPropertiesForGID(gid & kTMXFlippedMask);
     if (!properties.isNull())
@@ -487,7 +488,7 @@ void FloorMapLayer::confirm_open(OKCancelDialog::RETURN_TYPE type, const npc_t& 
         auto uplink = get_tile_prop(npc.gid, "uplink").asInt();
         if (1 == uplink)
         {
-            auto npc_iter = find(_npcs.begin(), _npcs.end(), npc_t(npc.x, npc.y + 1, 0));
+            auto npc_iter = std::find(_npcs.begin(), _npcs.end(), npc_t(npc.x, npc.y + 1, 0));
             if (npc_iter != _npcs.end())
             {
                 const auto& npc_up = *npc_iter;

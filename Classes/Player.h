@@ -1,8 +1,6 @@
 ﻿#pragma once
 
 #include "Singleton.h"
-#include <set>
-typedef int int32_t;
 
 class PlayerDelegate;
 class Player : public Singleton<Player>

@@ -1,4 +1,6 @@
-﻿#include "Warrior.h"
+﻿#include "pre_header.h"
+
+#include "Warrior.h"
 
 USING_NS_CC;
 static const float MOVE_SPEED = 200.0f;

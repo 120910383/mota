@@ -1,10 +1,11 @@
-﻿#include "AppDelegate.h"
+﻿#include "pre_header.h"
+
+#include "AppDelegate.h"
 #include "FloorMapLayer.h"
 #include "Player.h"
 #include "ModalDialog.h"
 
 USING_NS_CC;
-using namespace std;
 
 AppDelegate::AppDelegate()
 {

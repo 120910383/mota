@@ -1,4 +1,6 @@
-﻿#include "main.h"
+﻿#include "pre_header.h"
+
+#include "main.h"
 #include "../Classes/AppDelegate.h"
 
 USING_NS_CC;

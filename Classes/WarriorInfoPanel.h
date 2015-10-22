@@ -1,6 +1,5 @@
 ﻿#pragma once
 
-#include "cocos2d.h"
 #include "Player.h"
 
 namespace cocos2d { class LabelAtlas; }

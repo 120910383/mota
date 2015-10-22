@@ -1,5 +1,6 @@
-﻿#include "AStar.h"
-#include <algorithm>
+﻿#include "pre_header.h"
+
+#include "AStar.h"
 
 #define ARRAY_SIZE(a) (sizeof(a) / sizeof((a)[0]))
 
@@ -18,12 +19,10 @@ AStar::AStar(int32_t column, int row)
 	, m_row(row)
 	, m_is_find(false)
 {
-
 }
 
 AStar::~AStar()
 {
-
 }
 
 void AStar::init(int32_t column, int32_t row)
@@ -46,16 +45,16 @@ void AStar::set_start_and_end(const node_t& start_node, const node_t& end_node)
 	m_end_node = end_node;
 }
 
-void AStar::set_blocks(const vector<node_t>& vec_block)
+void AStar::set_blocks(const std::vector<node_t>& vec_block)
 {
 	m_barrier.clear();
 	m_barrier.insert(m_barrier.begin(), vec_block.begin(), vec_block.end());
 }
 
-void AStar::translate_path_to_turns(const vector<node_t>& path, vector<node_t>& turns)
+void AStar::translate_path_to_turns(const std::vector<node_t>& path, std::vector<node_t>& turns)
 {
 	turns.clear();
-	for (vector<node_t>::const_iterator iter = path.begin(); iter != path.end(); ++iter)
+	for (std::vector<node_t>::const_iterator iter = path.begin(); iter != path.end(); ++iter)
 	{
 		const node_t& node = *iter;
 		if (iter == path.begin() || iter + 1 == path.end())
@@ -73,7 +72,7 @@ void AStar::translate_path_to_turns(const vector<node_t>& path, vector<node_t>& 
 	}
 }
 
-const vector<node_t>& AStar::get_path()
+const std::vector<node_t>& AStar::get_path()
 {
 	m_path.clear();
 	m_open.clear();
@@ -81,7 +80,7 @@ const vector<node_t>& AStar::get_path()
 	m_open.push_back(calculate_fgh(m_start_node));
 
 	m_is_find = false;
-	vector<node_t> min_vec;
+    std::vector<node_t> min_vec;
 	while (!m_is_find)
 	{
 		min_vec.clear();
@@ -90,10 +89,9 @@ const vector<node_t>& AStar::get_path()
 			break;
 
 		m_close.insert(m_close.end(), min_vec.begin(), min_vec.end());
-		for (vector<node_t>::const_iterator iter = min_vec.begin(); iter != min_vec.end(); ++iter)
-		{
-			do_neighbors(*iter);
-		}
+
+        for (const auto& node : min_vec)
+            do_neighbors(node);
 
 		if (m_is_find)
 		{
@@ -107,7 +105,7 @@ const vector<node_t>& AStar::get_path()
 
 node_t AStar::get_next_turn()
 {
-	vector<node_t> turns;
+    std::vector<node_t> turns;
 	translate_path_to_turns(get_path(), turns);
 	if (turns.size() > 1)
 		return turns[1];
@@ -133,7 +131,7 @@ int32_t AStar::get_distance(const node_t& rhs_node, const node_t& lhs_node)
 	return (delta_x + delta_y) * MOVE_COST_PER_UNIT;
 }
 
-void AStar::get_min_from_open(vector<node_t>& min_vec)
+void AStar::get_min_from_open(std::vector<node_t>& min_vec)
 {
 	min_vec.clear();
 	if (m_open.empty())
@@ -141,13 +139,11 @@ void AStar::get_min_from_open(vector<node_t>& min_vec)
 
 	// 查找open列表中最小f
 	int32_t f_min = m_open.begin()->f;
-	for (vector<node_t>::iterator iter = m_open.begin(); iter != m_open.end(); ++iter)
-	{
-		f_min = std::min<int32_t>(f_min, iter->f);
-	}
+    for (const auto& node : m_open)
+        f_min = std::min<int32_t>(f_min, node.f);
 
 	// 将open列表中最小f的节点返回，并从open列表中移除
-	for (vector<node_t>::iterator iter = m_open.begin(); iter != m_open.end();)
+	for (std::vector<node_t>::iterator iter = m_open.begin(); iter != m_open.end();)
 	{
 		if (iter->f == f_min)
 		{
@@ -216,13 +212,13 @@ bool AStar::find_node_barrier(int32_t x, int32_t y)
 	return find_node(m_barrier, x, y);
 }
 
-bool AStar::find_node(const vector<node_t>& vec_node, int32_t x, int32_t y)
+bool AStar::find_node(const std::vector<node_t>& vec_node, int32_t x, int32_t y)
 {
-	for (vector<node_t>::const_iterator iter = vec_node.begin(); iter != vec_node.end(); ++iter)
-	{
-		if (x == iter->x && y == iter->y)
-			return true;
-	}
+    for (const auto& node : vec_node)
+    {
+        if (x == node.x && y == node.y)
+            return true;
+    }
 
 	return false;
 }
@@ -240,23 +236,22 @@ void AStar::calculate_final_shortest_path()
 	{
 		direction_t direct = path_node.parent;
 		node_t parent_node(path_node.x - direct.x, path_node.y - direct.y);
-		for (vector<node_t>::const_iterator iter = m_close.begin(); iter != m_close.end(); ++iter)
-		{
-			const node_t& close_node = *iter;
-			if (close_node.x == parent_node.x && close_node.y == parent_node.y)
-			{
-				path_node = close_node;
-				if (path_node.x == m_start_node.x && path_node.y == m_start_node.y)
-					is_done = true;
-				m_path.push_back(path_node);
-				break;
-			}
-		}
+        for (const auto& close_node : m_close)
+        {
+            if (close_node.x == parent_node.x && close_node.y == parent_node.y)
+            {
+                path_node = close_node;
+                if (path_node.x == m_start_node.x && path_node.y == m_start_node.y)
+                    is_done = true;
+                m_path.push_back(path_node);
+                break;
+            }
+        }
 	}
 
 	// 反转顺序
-	vector<node_t> temp_nodes;
+    std::vector<node_t> temp_nodes;
 	temp_nodes.swap(m_path);
-	for (vector<node_t>::const_reverse_iterator iter = temp_nodes.rbegin(); iter != temp_nodes.rend(); ++iter)
+	for (std::vector<node_t>::const_reverse_iterator iter = temp_nodes.rbegin(); iter != temp_nodes.rend(); ++iter)
 		m_path.push_back(*iter);
 }

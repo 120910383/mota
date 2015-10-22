@@ -1,7 +1,6 @@
-﻿#include "Player.h"
-#include <functional>
-#include <algorithm>
-using namespace std;
+﻿#include "pre_header.h"
+
+#include "Player.h"
 
 Player::Player()
 {

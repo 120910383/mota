@@ -1,4 +1,6 @@
-﻿#include "ModalDialog.h"
+﻿#include "pre_header.h"
+
+#include "ModalDialog.h"
 #include "ui/UIScale9Sprite.h"
 
 USING_NS_CC;

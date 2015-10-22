@@ -1,12 +1,8 @@
 ﻿#pragma once
 
-#include "cocos2d.h"
 #include "AStar.h"
-
 #include "ModalDialog.h"
 
-enum OKCancelDialog::RETURN_TYPE;
-namespace cocos2d { class LabelAtlas; }
 class WarriorNode;
 class WarriorInfoPanel;
 class FloorMapLayer : public cocos2d::Node
@@ -25,7 +21,7 @@ protected:
     void confirm_attack_impl(const npc_t& npc);
     void confirm_open(OKCancelDialog::RETURN_TYPE type, const npc_t& npc);
     void confirm_open_impl(const npc_t& npc);
-    cocos2d::Value get_tile_prop(int32_t gid, const string& key);
+    cocos2d::Value get_tile_prop(int32_t gid, const std::string& key);
     void step();
     void pick_up_item_impl(const npc_t& npc, const cocos2d::Vec2& target_pos, const std::function<void()>& callback);
     void pick_up_item(const npc_t& npc);
@@ -39,7 +35,7 @@ protected:
     WarriorInfoPanel* _info_panel;
     Node* _arrow_node;
     Node* _road_node;
-    vector<node_t> _paths;
+    std::vector<node_t> _paths;
     struct npc_t
     {
         int32_t x;
@@ -53,7 +49,7 @@ protected:
 
         bool operator == (const npc_t& npc) const { return x == npc.x && y == npc.y; }
     };
-    vector<npc_t> _npcs;
+    std::vector<npc_t> _npcs;
 };
 
 //////////////////////////////////////////////////////////////////////////

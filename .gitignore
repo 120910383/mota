@@ -4,3 +4,4 @@
 /proj.win32/*.user
 Debug.win32
 /.vs
+/ipch

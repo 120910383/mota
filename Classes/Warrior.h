@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include "cocostudio/CocoStudio.h"
-#include <string>
 
 class WarriorNode : public cocostudio::Armature
 {
