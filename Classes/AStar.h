@@ -1,31 +1,32 @@
 ﻿#pragma once
 
-struct direction_t
-{
-	int32_t x;
-	int32_t y;
-};
-
-struct node_t
-{
-	int32_t x;
-	int32_t y;
-	direction_t parent;
-	int32_t f;
-	int32_t g;
-	int32_t h;
-
-	node_t() {}
-	node_t(int32_t _x, int32_t _y)
-		: x(_x)
-		, y(_y)
-	{}
-
-    bool operator == (const node_t& node) const { return x == node.x && y == node.y; }
-};
-
 class AStar
 {
+public:
+    struct direction_t
+    {
+        int32_t x;
+        int32_t y;
+    };
+
+    struct node_t
+    {
+        int32_t x;
+        int32_t y;
+        direction_t parent;
+        int32_t f;
+        int32_t g;
+        int32_t h;
+
+        node_t() {}
+        node_t(int32_t _x, int32_t _y)
+            : x(_x)
+            , y(_y)
+        {}
+
+        bool operator == (const node_t& node) const { return x == node.x && y == node.y; }
+    };
+
 public:
 	AStar() {}
 	AStar(int32_t column, int32_t row);

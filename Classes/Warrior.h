@@ -14,6 +14,8 @@ public:
     void stand_auto();
     void fight_auto(int times, const std::function<void()>& callback);
     bool is_fighting();
+    void set_lock(bool lock) { _lock = lock; }
+    bool is_lock() { return _lock; }
 
 protected:
     enum direction { left, right, up, down };
@@ -23,4 +25,5 @@ protected:
 protected:
     direction _current_direction;
     state _current_state;
+    bool _lock; // 自定义标记，外部设置和判断用，当前是否正忙
 };

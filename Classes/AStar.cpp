@@ -5,7 +5,7 @@
 #define ARRAY_SIZE(a) (sizeof(a) / sizeof((a)[0]))
 
 const int32_t MOVE_COST_PER_UNIT = 1;
-const direction_t g_direct[] =
+const AStar::direction_t g_direct[] =
 {
 	{0, +1}, // up
 	{0, -1}, // down
@@ -72,7 +72,7 @@ void AStar::translate_path_to_turns(const std::vector<node_t>& path, std::vector
 	}
 }
 
-const std::vector<node_t>& AStar::get_path()
+const std::vector<AStar::node_t>& AStar::get_path()
 {
 	m_path.clear();
 	m_open.clear();
@@ -103,7 +103,7 @@ const std::vector<node_t>& AStar::get_path()
 	return m_path;
 }
 
-node_t AStar::get_next_turn()
+AStar::node_t AStar::get_next_turn()
 {
     std::vector<node_t> turns;
 	translate_path_to_turns(get_path(), turns);
@@ -113,7 +113,7 @@ node_t AStar::get_next_turn()
 		return node_t();
 }
 
-node_t AStar::calculate_fgh(const node_t& node)
+AStar::node_t AStar::calculate_fgh(const node_t& node)
 {
 	node_t calculate_node(node.x, node.y);
 

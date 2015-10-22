@@ -90,6 +90,7 @@ xcopy "$(OutDir)..\*.dll" "$(OutDir)" /D /Y</Command>
     <ClInclude Include="..\Classes\AppDelegate.h" />
     <ClInclude Include="..\Classes\ArrowNode.h" />
     <ClInclude Include="..\Classes\AStar.h" />
+    <ClInclude Include="..\Classes\Floor.h" />
     <ClInclude Include="..\Classes\FloorMapLayer.h" />
     <ClInclude Include="..\Classes\ModalDialog.h" />
     <ClInclude Include="..\Classes\Player.h" />
@@ -103,6 +104,7 @@ xcopy "$(OutDir)..\*.dll" "$(OutDir)" /D /Y</Command>
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
     <ClCompile Include="..\Classes\ArrowNode.cpp" />
     <ClCompile Include="..\Classes\AStar.cpp" />
+    <ClCompile Include="..\Classes\Floor.cpp" />
     <ClCompile Include="..\Classes\FloorMapLayer.cpp" />
     <ClCompile Include="..\Classes\ModalDialog.cpp" />
     <ClCompile Include="..\Classes\Player.cpp" />

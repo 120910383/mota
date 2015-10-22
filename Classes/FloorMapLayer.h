@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "AStar.h"
+#include "Floor.h"
 #include "ModalDialog.h"
 
 class WarriorNode;
@@ -17,15 +18,15 @@ public:
 
 protected:
     struct npc_t;
-    void confirm_attack(OKCancelDialog::RETURN_TYPE type, const npc_t& npc);
-    void confirm_attack_impl(const npc_t& npc);
-    void confirm_open(OKCancelDialog::RETURN_TYPE type, const npc_t& npc);
-    void confirm_open_impl(const npc_t& npc);
+    void confirm_attack(OKCancelDialog::RETURN_TYPE type, const Floor::npc_t& npc);
+    void confirm_attack_impl(const Floor::npc_t& npc);
+    void confirm_open(OKCancelDialog::RETURN_TYPE type, const Floor::npc_t& npc);
+    void confirm_open_impl(const Floor::npc_t& npc);
     cocos2d::Value get_tile_prop(int32_t gid, const std::string& key);
     void step();
-    void pick_up_item_impl(const npc_t& npc, const cocos2d::Vec2& target_pos, const std::function<void()>& callback);
-    void pick_up_item(const npc_t& npc);
-    bool interact_item(const npc_t& npc);   // 与npc交互，返回值为是否停下来交互，如开门，打斗，对话框提示等
+    void pick_up_item_impl(const Floor::npc_t& npc, const cocos2d::Vec2& target_pos, const std::function<void()>& callback);
+    void pick_up_item(const Floor::npc_t& npc);
+    bool interact_item(const Floor::npc_t& npc);   // 与npc交互，返回值为是否停下来交互，如开门，打斗，对话框提示等
     void stop_and_clear();
 
 protected:
@@ -35,21 +36,8 @@ protected:
     WarriorInfoPanel* _info_panel;
     Node* _arrow_node;
     Node* _road_node;
-    std::vector<node_t> _paths;
-    struct npc_t
-    {
-        int32_t x;
-        int32_t y;
-        int32_t gid;
-
-        npc_t() {}
-        npc_t(int32_t _x, int32_t _y, int32_t _gid)
-            : x(_x), y(_y), gid(_gid)
-        {}
-
-        bool operator == (const npc_t& npc) const { return x == npc.x && y == npc.y; }
-    };
-    std::vector<npc_t> _npcs;
+    std::vector<Floor::position_t> _paths;
+    std::vector<Floor::npc_t> _npcs;
 };
 
 //////////////////////////////////////////////////////////////////////////
