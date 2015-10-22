@@ -11,10 +11,10 @@
 
 USING_NS_CC;
 
-Scene* FloorMapLayer::scene(int floor)
+Scene* FloorMapLayer::scene(int floor, bool up)
 {
     FloorMapLayer* floor_layer = new (std::nothrow) FloorMapLayer();
-    if (floor_layer && floor_layer->init(floor))
+    if (floor_layer && floor_layer->init(floor, up))
     {
         floor_layer->autorelease();
         auto ret_scene = Scene::create();
@@ -28,7 +28,7 @@ Scene* FloorMapLayer::scene(int floor)
     }
 }
 
-bool FloorMapLayer::init(int floor)
+bool FloorMapLayer::init(int floor, bool up)
 {
     _floor = floor;
     // 由于直接继承自node，需要做一些处理，现在layer的功能全被废弃了，无意义
@@ -73,7 +73,7 @@ bool FloorMapLayer::init(int floor)
                 npcs.push_back(npc);
                 if (get_tile_prop(gid, "style").asInt() == 6)
                 {
-                    if (get_tile_prop(gid, "type").asInt() == 1)
+                    if (get_tile_prop(gid, "type").asInt() == 2)
                         _stair_up = npcs.back();
                     else
                         _stair_down = npcs.back();
@@ -102,7 +102,8 @@ bool FloorMapLayer::init(int floor)
     index = bone2->getDisplayManager()->getCurrentDisplayIndex();
     bone2->removeDisplay(1);
     bone2->changeDisplayByIndex(-1, true);*/
-    _warrior->setPosition(Vec2(62.5f, 62.5f));
+    Floor::position_t pos = up ? _stair_down.pos : _stair_up.pos;
+    _warrior->setPosition(Vec2((pos.x + 0.5f) * 75.0f - 50.0f, (pos.y + 0.5f) * 75.0f - 50.0f));
     this->addChild(_warrior);
 
     // 上方背景
@@ -173,7 +174,6 @@ void FloorMapLayer::onTouchEnded(Touch *touch, Event *e)
     {
         return;
     }
-
 
     // 获取阻碍点
     auto wall_layer = _tiled_map->getLayer("wall");
@@ -471,7 +471,8 @@ bool FloorMapLayer::interact_item(const Floor::npc_t& npc)
     case 6: // 楼梯
     {
         walk_pause = false; // 无需停下来，直接切换楼层，切换场景的持续时间的一半让勇士正好走入下一个楼梯格子
-        auto next_scene = PromptLayer::scene(_floor == 1 ? 2 : 1);
+        auto up = get_tile_prop(npc.gid, "type").asInt() == 2;
+        auto next_scene = PromptLayer::scene(_floor == 1 ? 2 : 1, up);
         auto transition = TransitionFade::create(0.5f, next_scene);
         Director::getInstance()->replaceScene(transition);
     }
@@ -585,10 +586,10 @@ void FloorMapLayer::stop_and_clear()
 }
 
 //////////////////////////////////////////////////////////////////////////
-cocos2d::Scene * PromptLayer::scene(int floor)
+cocos2d::Scene * PromptLayer::scene(int floor, bool up)
 {
     PromptLayer* prompt_layer = new (std::nothrow) PromptLayer();
-    if (prompt_layer && prompt_layer->init(floor))
+    if (prompt_layer && prompt_layer->init(floor, up))
     {
         prompt_layer->autorelease();
         auto ret_scene = Scene::create();
@@ -602,9 +603,10 @@ cocos2d::Scene * PromptLayer::scene(int floor)
     }
 }
 
-bool PromptLayer::init(int floor)
+bool PromptLayer::init(int floor, bool up)
 {
     _floor = floor;
+    _up = up;
     auto size = Director::getInstance()->getWinSize();
     auto label = Label::createWithSystemFont("Floor" + String::createWithFormat("%d", floor)->_string, "", 52);
     label->setPosition(Vec2(size.width / 2, size.height / 2));
@@ -615,7 +617,7 @@ bool PromptLayer::init(int floor)
 void PromptLayer::onEnterTransitionDidFinish()
 {
     runAction(Sequence::createWithTwoActions(DelayTime::create(0.5f), CCCallFunc::create([&]() {
-        auto next_scene = FloorMapLayer::scene(_floor);
+        auto next_scene = FloorMapLayer::scene(_floor, _up);
         auto transition = TransitionFade::create(0.5f, next_scene);
         Director::getInstance()->replaceScene(transition);
     })));

@@ -9,8 +9,8 @@ class WarriorInfoPanel;
 class FloorMapLayer : public cocos2d::Node
 {
 public:
-    static cocos2d::Scene* scene(int floor);
-    bool init(int floor);
+    static cocos2d::Scene* scene(int floor, bool up);
+    bool init(int floor, bool up);
 
 public:
     bool onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *e);
@@ -45,11 +45,12 @@ protected:
 class PromptLayer : public cocos2d::Node
 {
 public:
-    static cocos2d::Scene* scene(int floor);
-    bool init(int floor);
+    static cocos2d::Scene* scene(int floor, bool up);
+    bool init(int floor, bool up);
 
     virtual void onEnterTransitionDidFinish() override;
 
 protected:
     int _floor;
+    bool _up;
 };

@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "Singleton.h"
+#include "Npc.h"
 
 class Floor : public Singleton<Floor>
 {
@@ -32,8 +33,11 @@ public:
 
     struct npc_t
     {
-        position_t pos;
+        int32_t id;
         int32_t gid;
+        int32_t floor;
+        position_t pos;
+        bool gone;
 
         npc_t() {}
         npc_t(int32_t _x, int32_t _y, int32_t _gid)

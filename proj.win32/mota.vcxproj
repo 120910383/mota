@@ -93,6 +93,7 @@ xcopy "$(OutDir)..\*.dll" "$(OutDir)" /D /Y</Command>
     <ClInclude Include="..\Classes\Floor.h" />
     <ClInclude Include="..\Classes\FloorMapLayer.h" />
     <ClInclude Include="..\Classes\ModalDialog.h" />
+    <ClInclude Include="..\Classes\Npc.h" />
     <ClInclude Include="..\Classes\Player.h" />
     <ClInclude Include="..\Classes\pre_header.h" />
     <ClInclude Include="..\Classes\Singleton.h" />
@@ -107,6 +108,7 @@ xcopy "$(OutDir)..\*.dll" "$(OutDir)" /D /Y</Command>
     <ClCompile Include="..\Classes\Floor.cpp" />
     <ClCompile Include="..\Classes\FloorMapLayer.cpp" />
     <ClCompile Include="..\Classes\ModalDialog.cpp" />
+    <ClCompile Include="..\Classes\Npc.cpp" />
     <ClCompile Include="..\Classes\Player.cpp" />
     <ClCompile Include="..\Classes\pre_header.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
