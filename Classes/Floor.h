@@ -39,10 +39,28 @@ public:
         npc_t(int32_t _x, int32_t _y, int32_t _gid)
             : pos(_x, _y), gid(_gid)
         {}
+
+        bool operator == (const npc_t& npc) const
+        {
+            return pos == npc.pos && gid == npc.gid;
+        }
     };
 
     struct floor_t
     {
+        int32_t level;
+        std::vector<npc_t> npcs;
 
+        floor_t() : level(-1) {}
+        bool is_valid() const { return level > 0; }
+        const npc_t* find_npc_by_pos(const position_t& pos) const;
     };
+
+public:
+    const floor_t& get_floor_info(int32_t level) const;
+    void auto_init_floor(int32_t level, const std::vector<npc_t>& npcs);
+    void remove_npc(int32_t level, const npc_t& npc);
+
+protected:
+    std::map<int32_t, floor_t> _floors;
 };

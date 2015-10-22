@@ -4,6 +4,7 @@
 #include "FloorMapLayer.h"
 #include "Player.h"
 #include "ModalDialog.h"
+#include "Floor.h"
 
 USING_NS_CC;
 
@@ -26,6 +27,7 @@ bool AppDelegate::applicationDidFinishLaunching()
     // 初始化游戏单例
     Player::NewInstance();
     ModalDialogManager::NewInstance();
+    Floor::NewInstance();
 
     // 初始化Director
     auto director = Director::getInstance();

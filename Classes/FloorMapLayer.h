@@ -37,7 +37,8 @@ protected:
     Node* _arrow_node;
     Node* _road_node;
     std::vector<Floor::position_t> _paths;
-    std::vector<Floor::npc_t> _npcs;
+    Floor::npc_t _stair_up;
+    Floor::npc_t _stair_down;
 };
 
 //////////////////////////////////////////////////////////////////////////

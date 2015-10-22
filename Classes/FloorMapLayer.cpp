@@ -49,6 +49,41 @@ bool FloorMapLayer::init(int floor)
         this->addChild(_tiled_map);
     }
 
+    auto npc_layer = _tiled_map->getLayer("npc");
+    auto npc_layer_size = npc_layer->getLayerSize();
+    auto npc_tiles = npc_layer->getTiles();
+    std::vector<Floor::npc_t> npcs;
+    for (uint32_t i = 0; i < (uint32_t)(npc_layer_size.height); ++i)
+    {
+        for (uint32_t j = 0; j < (uint32_t)(npc_layer_size.width); ++j)
+        {
+            int32_t gid = (int32_t)(npc_tiles[i * (uint32_t)(npc_layer_size.width) + j]);
+            if (gid != 0)
+            {
+                const Floor::floor_t& floor = Floor::GetInstance()->get_floor_info(_floor);
+                Floor::npc_t npc(j, npc_layer_size.height - 1 - i, gid);
+                if (floor.is_valid())
+                {
+                    auto iter = std::find(floor.npcs.begin(), floor.npcs.end(), npc);
+                    if (iter == floor.npcs.end())
+                    {
+                        npc_layer->setTileGID(999, Vec2(j, i));
+                    }
+                }
+                npcs.push_back(npc);
+                if (get_tile_prop(gid, "style").asInt() == 6)
+                {
+                    if (get_tile_prop(gid, "type").asInt() == 1)
+                        _stair_up = npcs.back();
+                    else
+                        _stair_down = npcs.back();
+                }
+            }
+        }
+    }
+
+    Floor::GetInstance()->auto_init_floor(_floor, npcs);
+
     // 路径节点
     _road_node = Node::create();
     if (nullptr != _road_node)
@@ -161,41 +196,16 @@ void FloorMapLayer::onTouchEnded(Touch *touch, Event *e)
     {
         return;
     }
-    
-    // npc列表
-    Floor::npc_t stair_up, stair_down;
-    auto npc_layer = _tiled_map->getLayer("npc");
-    auto npc_layer_size = npc_layer->getLayerSize();
-    auto npc_tiles = npc_layer->getTiles();
-    _npcs.clear();
-    for (uint32_t i = 0; i < (uint32_t)(npc_layer_size.height); ++i)
-    {
-        for (uint32_t j = 0; j < (uint32_t)(npc_layer_size.width); ++j)
-        {
-            int32_t gid = (int32_t)(npc_tiles[i * (uint32_t)(npc_layer_size.width) + j]);
-            if (gid != 0)
-            {
-                _npcs.push_back(Floor::npc_t(j, npc_layer_size.height - 1 - i, gid));
-                if (get_tile_prop(gid, "style").asInt() == 6)
-                {
-                    if (get_tile_prop(gid, "type").asInt() == 1)
-                        stair_up = _npcs.back();
-                    else
-                        stair_down = _npcs.back();
-                }
-            }
-        }
-    }
 
     // A星路径
     AStar astar(10, 12);
     astar.set_start_and_end(AStar::node_t(start_pt.x, start_pt.y), AStar::node_t(end_pt.x, end_pt.y));
     astar.set_blocks(blocks);
     std::vector<AStar::node_t> paths = astar.get_path();
-    auto stair_iter = std::find_if(paths.begin(), paths.end(), [start_pt, stair_up, stair_down](AStar::node_t node) {
+    auto stair_iter = std::find_if(paths.begin(), paths.end(), [&](AStar::node_t node) {
         // 找到除了首节点的第一个楼梯节点
         Floor::position_t pos(node.x, node.y);
-        return pos != start_pt && (pos == stair_up.pos || pos == stair_down.pos);
+        return pos != start_pt && (pos == _stair_up.pos || pos == _stair_down.pos);
     });
 
     if (stair_iter != paths.end())
@@ -261,7 +271,7 @@ void FloorMapLayer::pick_up_item_impl(const Floor::npc_t& npc, const cocos2d::Ve
     // TODO.. cocos2d-x tiled bug. 如果一个Layer只剩下一个tile，getTileAt内部设置gid为0不起作用，目前找不到解决办法
     npc_layer->setTileGID(999, Vec2(npc.pos.x, 11 - npc.pos.y));
 
-    auto duration = item->getPosition().distance(target_pos) / 1000.0f;
+    auto duration = item->getPosition().distance(target_pos) / 2000.0f;
     item->runAction(Sequence::create(
         Spawn::createWithTwoActions(MoveTo::create(duration, target_pos), ScaleTo::create(duration, 0.6f)),
         CallFunc::create([item, callback]() {
@@ -336,7 +346,11 @@ void FloorMapLayer::pick_up_item(const Floor::npc_t& npc)
     {
         auto target_pos = this->convertToNodeSpace(_info_panel->get_node_position_in_world(type));
         target_pos -= Vec2(26.0f, 0);
-        pick_up_item_impl(npc, target_pos, callback);
+        pick_up_item_impl(npc, target_pos, [&, callback]() {
+            if (callback)
+                callback();
+            Floor::GetInstance()->remove_npc(_floor, npc);
+        });
     }
 }
 
@@ -354,14 +368,9 @@ void FloorMapLayer::step()
     // 勇士位置在开始位置正中心时触发拾取操作，如果还没到，代表未到触发时机，如果已走过，代表触发前取消当前操作并改变路径
     if (current_pos.equals(start_pos))
     {
-        auto npc_iter = std::find_if(_npcs.begin(), _npcs.end(), [start_pt](const Floor::npc_t& elem) {
-            return elem.pos == start_pt;
-        });
-        if (npc_iter != _npcs.end())
-        {
-            const auto& npc = *npc_iter;
-            pick_up_item(npc);
-        }
+        auto npc = Floor::GetInstance()->get_floor_info(_floor).find_npc_by_pos(start_pt);
+        if (nullptr != npc)
+            pick_up_item(*npc);
     }
     
     // 未走到路径末尾，继续处理下一步行走
@@ -386,14 +395,9 @@ void FloorMapLayer::step()
         }
 
         bool walk_pause = false;
-        auto npc_iter = std::find_if(_npcs.begin(), _npcs.end(), [end_pt](const Floor::npc_t& elem) {
-            return elem.pos == end_pt;
-        });
-        if (npc_iter != _npcs.end())
-        {
-            const auto& npc = *npc_iter;
-            walk_pause = interact_item(npc);
-        }
+        auto npc = Floor::GetInstance()->get_floor_info(_floor).find_npc_by_pos(end_pt);
+        if (nullptr != npc)
+            walk_pause = interact_item(*npc);
         
         if (!walk_pause)
         {
@@ -500,14 +504,11 @@ void FloorMapLayer::confirm_open(OKCancelDialog::RETURN_TYPE type, const Floor::
         auto uplink = get_tile_prop(npc.gid, "uplink").asInt();
         if (1 == uplink)
         {
-            auto npc_iter = std::find_if(_npcs.begin(), _npcs.end(), [npc](const Floor::npc_t& elem) {
-                return elem.pos.x == npc.pos.x && elem.pos.y == npc.pos.y + 1;
-            });
-            if (npc_iter != _npcs.end())
+            auto npc_up = Floor::GetInstance()->get_floor_info(_floor).find_npc_by_pos(Floor::position_t(npc.pos.x, npc.pos.y + 1));
+            if (nullptr != npc_up)
             {
-                const auto& npc_up = *npc_iter;
-                auto door_up = npc_layer->getTileAt(Vec2(npc_up.pos.x, 11 - npc_up.pos.y));
-                npc_layer->setupTileSprite(door_up, Vec2(npc_up.pos.x, 11 - npc_up.pos.y), npc_up.gid);
+                auto door_up = npc_layer->getTileAt(Vec2(npc_up->pos.x, 11 - npc_up->pos.y));
+                npc_layer->setupTileSprite(door_up, Vec2(npc_up->pos.x, 11 - npc_up->pos.y), npc_up->gid);
                 door_up->runAction(CCSequence::create(FadeOut::create(OPEN_DURATION), RemoveSelf::create(), nullptr));
             }
         }
@@ -518,6 +519,7 @@ void FloorMapLayer::confirm_open_impl(const Floor::npc_t& npc)
 {
     auto color = get_tile_prop(npc.gid, "color").asInt();
     PlayerDelegate::add_key(1 == color ? -1 : 0, 2 == color ? -1 : 0, 3 == color ? -1 : 0);
+    Floor::GetInstance()->remove_npc(_floor, npc);
 
     _warrior->set_lock(false);
     auto end_pos = Vec2((npc.pos.x + 0.5f) * 75.0f - 50.0f, (npc.pos.y + 0.5f) * 75.0f - 50.0f);
@@ -563,9 +565,10 @@ void FloorMapLayer::confirm_attack_impl(const Floor::npc_t& npc)
 
     auto target_pos = this->convertToNodeSpace(_info_panel->get_node_position_in_world(WarriorInfoPanel::hun));
     target_pos -= Vec2(26.0f, 0);
-    pick_up_item_impl(npc, target_pos, [blood, gold, hun]() {
+    pick_up_item_impl(npc, target_pos, [&, blood, gold, hun]() {
         PlayerDelegate::add_hp(-blood);
         PlayerDelegate::add_gold_hun(gold, hun);
+        Floor::GetInstance()->remove_npc(_floor, npc);
     });
 
     auto end_pos = Vec2((npc.pos.x + 0.5f) * 75.0f - 50.0f, (npc.pos.y + 0.5f) * 75.0f - 50.0f);

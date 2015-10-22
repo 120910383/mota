@@ -178,6 +178,8 @@ bool WarriorInfoPanel::init()
             this->addChild(daoju_bg);
         }
     }
+    // 手动更新一下数据
+    on_player_attr_changed();
     return true;
 }
 
