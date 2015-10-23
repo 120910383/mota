@@ -95,7 +95,7 @@
                 <key>sourceSize</key>
                 <string>{75,75}</string>
             </dict>
-            <key>rw0.png</key>
+            <key>lv_bg.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{541,2},{75,75}}</string>
@@ -108,20 +108,7 @@
                 <key>sourceSize</key>
                 <string>{75,75}</string>
             </dict>
-            <key>rw1.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{618,2},{75,75}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{75,75}}</string>
-                <key>sourceSize</key>
-                <string>{75,75}</string>
-            </dict>
-            <key>rw2_01.png</key>
+            <key>npc_bg.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{2,79},{75,75}}</string>
@@ -134,7 +121,7 @@
                 <key>sourceSize</key>
                 <string>{75,75}</string>
             </dict>
-            <key>rw2_02.png</key>
+            <key>rw0.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{79,79},{75,75}}</string>
@@ -147,7 +134,7 @@
                 <key>sourceSize</key>
                 <string>{75,75}</string>
             </dict>
-            <key>rw3.png</key>
+            <key>rw1.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{156,79},{75,75}}</string>
@@ -160,7 +147,7 @@
                 <key>sourceSize</key>
                 <string>{75,75}</string>
             </dict>
-            <key>rw34.png</key>
+            <key>rw100.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{233,79},{75,75}}</string>
@@ -173,7 +160,7 @@
                 <key>sourceSize</key>
                 <string>{75,75}</string>
             </dict>
-            <key>rw35.png</key>
+            <key>rw102.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{310,79},{75,75}}</string>
@@ -186,7 +173,7 @@
                 <key>sourceSize</key>
                 <string>{75,75}</string>
             </dict>
-            <key>rw4_01.png</key>
+            <key>rw121.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{387,79},{75,75}}</string>
@@ -199,7 +186,7 @@
                 <key>sourceSize</key>
                 <string>{75,75}</string>
             </dict>
-            <key>rw4_02.png</key>
+            <key>rw126.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{464,79},{75,75}}</string>
@@ -212,7 +199,7 @@
                 <key>sourceSize</key>
                 <string>{75,75}</string>
             </dict>
-            <key>rw5.png</key>
+            <key>rw127.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{541,79},{75,75}}</string>
@@ -225,20 +212,7 @@
                 <key>sourceSize</key>
                 <string>{75,75}</string>
             </dict>
-            <key>rw6_01.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{618,79},{75,75}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{75,75}}</string>
-                <key>sourceSize</key>
-                <string>{75,75}</string>
-            </dict>
-            <key>rw6_02.png</key>
+            <key>rw25.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{2,156},{75,75}}</string>
@@ -251,7 +225,7 @@
                 <key>sourceSize</key>
                 <string>{75,75}</string>
             </dict>
-            <key>zaw0.png</key>
+            <key>rw26.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{79,156},{75,75}}</string>
@@ -264,7 +238,7 @@
                 <key>sourceSize</key>
                 <string>{75,75}</string>
             </dict>
-            <key>zaw1.png</key>
+            <key>rw2_01.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{156,156},{75,75}}</string>
@@ -277,7 +251,7 @@
                 <key>sourceSize</key>
                 <string>{75,75}</string>
             </dict>
-            <key>zaw10.png</key>
+            <key>rw2_02.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{233,156},{75,75}}</string>
@@ -290,7 +264,7 @@
                 <key>sourceSize</key>
                 <string>{75,75}</string>
             </dict>
-            <key>zaw11.png</key>
+            <key>rw3.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{310,156},{75,75}}</string>
@@ -303,7 +277,7 @@
                 <key>sourceSize</key>
                 <string>{75,75}</string>
             </dict>
-            <key>zaw12.png</key>
+            <key>rw31.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{387,156},{75,75}}</string>
@@ -316,7 +290,7 @@
                 <key>sourceSize</key>
                 <string>{75,75}</string>
             </dict>
-            <key>zaw13.png</key>
+            <key>rw33.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{464,156},{75,75}}</string>
@@ -329,7 +303,7 @@
                 <key>sourceSize</key>
                 <string>{75,75}</string>
             </dict>
-            <key>zaw14.png</key>
+            <key>rw34.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{541,156},{75,75}}</string>
@@ -342,20 +316,7 @@
                 <key>sourceSize</key>
                 <string>{75,75}</string>
             </dict>
-            <key>zaw15.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{618,156},{75,75}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{75,75}}</string>
-                <key>sourceSize</key>
-                <string>{75,75}</string>
-            </dict>
-            <key>zaw16.png</key>
+            <key>rw35.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{2,233},{75,75}}</string>
@@ -368,7 +329,7 @@
                 <key>sourceSize</key>
                 <string>{75,75}</string>
             </dict>
-            <key>zaw17.png</key>
+            <key>rw36.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{79,233},{75,75}}</string>
@@ -381,7 +342,7 @@
                 <key>sourceSize</key>
                 <string>{75,75}</string>
             </dict>
-            <key>zaw2.png</key>
+            <key>rw38.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{156,233},{75,75}}</string>
@@ -394,7 +355,7 @@
                 <key>sourceSize</key>
                 <string>{75,75}</string>
             </dict>
-            <key>zaw3.png</key>
+            <key>rw39.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{233,233},{75,75}}</string>
@@ -407,7 +368,7 @@
                 <key>sourceSize</key>
                 <string>{75,75}</string>
             </dict>
-            <key>zaw4.png</key>
+            <key>rw44.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{310,233},{75,75}}</string>
@@ -420,7 +381,7 @@
                 <key>sourceSize</key>
                 <string>{75,75}</string>
             </dict>
-            <key>zaw5.png</key>
+            <key>rw45.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{387,233},{75,75}}</string>
@@ -433,7 +394,7 @@
                 <key>sourceSize</key>
                 <string>{75,75}</string>
             </dict>
-            <key>zaw6.png</key>
+            <key>rw4_01.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{464,233},{75,75}}</string>
@@ -446,7 +407,7 @@
                 <key>sourceSize</key>
                 <string>{75,75}</string>
             </dict>
-            <key>zaw7.png</key>
+            <key>rw4_02.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{541,233},{75,75}}</string>
@@ -459,20 +420,7 @@
                 <key>sourceSize</key>
                 <string>{75,75}</string>
             </dict>
-            <key>zaw8.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{618,233},{75,75}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{75,75}}</string>
-                <key>sourceSize</key>
-                <string>{75,75}</string>
-            </dict>
-            <key>zaw9.png</key>
+            <key>rw5.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{2,310},{75,75}}</string>
@@ -485,7 +433,7 @@
                 <key>sourceSize</key>
                 <string>{75,75}</string>
             </dict>
-            <key>zrw103.png</key>
+            <key>rw53.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{79,310},{75,75}}</string>
@@ -498,7 +446,7 @@
                 <key>sourceSize</key>
                 <string>{75,75}</string>
             </dict>
-            <key>zrw104.png</key>
+            <key>rw55.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{156,310},{75,75}}</string>
@@ -511,7 +459,7 @@
                 <key>sourceSize</key>
                 <string>{75,75}</string>
             </dict>
-            <key>zrw13.png</key>
+            <key>rw6_01.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{233,310},{75,75}}</string>
@@ -524,7 +472,7 @@
                 <key>sourceSize</key>
                 <string>{75,75}</string>
             </dict>
-            <key>zrw14.png</key>
+            <key>rw6_02.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{310,310},{75,75}}</string>
@@ -537,7 +485,7 @@
                 <key>sourceSize</key>
                 <string>{75,75}</string>
             </dict>
-            <key>zrw15.png</key>
+            <key>rw8.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{387,310},{75,75}}</string>
@@ -550,7 +498,7 @@
                 <key>sourceSize</key>
                 <string>{75,75}</string>
             </dict>
-            <key>zrw16.png</key>
+            <key>rw92.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{464,310},{75,75}}</string>
@@ -563,7 +511,7 @@
                 <key>sourceSize</key>
                 <string>{75,75}</string>
             </dict>
-            <key>zrw17.png</key>
+            <key>zaw0.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{541,310},{75,75}}</string>
@@ -576,20 +524,7 @@
                 <key>sourceSize</key>
                 <string>{75,75}</string>
             </dict>
-            <key>zrw18.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{618,310},{75,75}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{75,75}}</string>
-                <key>sourceSize</key>
-                <string>{75,75}</string>
-            </dict>
-            <key>zrw19.png</key>
+            <key>zaw1.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{2,387},{75,75}}</string>
@@ -602,7 +537,7 @@
                 <key>sourceSize</key>
                 <string>{75,75}</string>
             </dict>
-            <key>zrw205.png</key>
+            <key>zaw10.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{79,387},{75,75}}</string>
@@ -615,7 +550,7 @@
                 <key>sourceSize</key>
                 <string>{75,75}</string>
             </dict>
-            <key>zrw205_2.png</key>
+            <key>zaw11.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{156,387},{75,75}}</string>
@@ -628,7 +563,7 @@
                 <key>sourceSize</key>
                 <string>{75,75}</string>
             </dict>
-            <key>zrw206.png</key>
+            <key>zaw12.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{233,387},{75,75}}</string>
@@ -641,7 +576,7 @@
                 <key>sourceSize</key>
                 <string>{75,75}</string>
             </dict>
-            <key>zrw206_2.png</key>
+            <key>zaw13.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{310,387},{75,75}}</string>
@@ -654,7 +589,7 @@
                 <key>sourceSize</key>
                 <string>{75,75}</string>
             </dict>
-            <key>zrw210.png</key>
+            <key>zaw14.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{387,387},{75,75}}</string>
@@ -667,10 +602,335 @@
                 <key>sourceSize</key>
                 <string>{75,75}</string>
             </dict>
-            <key>zrw24.png</key>
+            <key>zaw15.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{464,387},{75,75}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{75,75}}</string>
+                <key>sourceSize</key>
+                <string>{75,75}</string>
+            </dict>
+            <key>zaw16.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{541,387},{75,75}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{75,75}}</string>
+                <key>sourceSize</key>
+                <string>{75,75}</string>
+            </dict>
+            <key>zaw17.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{2,464},{75,75}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{75,75}}</string>
+                <key>sourceSize</key>
+                <string>{75,75}</string>
+            </dict>
+            <key>zaw2.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{79,464},{75,75}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{75,75}}</string>
+                <key>sourceSize</key>
+                <string>{75,75}</string>
+            </dict>
+            <key>zaw3.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{156,464},{75,75}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{75,75}}</string>
+                <key>sourceSize</key>
+                <string>{75,75}</string>
+            </dict>
+            <key>zaw4.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{233,464},{75,75}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{75,75}}</string>
+                <key>sourceSize</key>
+                <string>{75,75}</string>
+            </dict>
+            <key>zaw5.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{310,464},{75,75}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{75,75}}</string>
+                <key>sourceSize</key>
+                <string>{75,75}</string>
+            </dict>
+            <key>zaw6.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{387,464},{75,75}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{75,75}}</string>
+                <key>sourceSize</key>
+                <string>{75,75}</string>
+            </dict>
+            <key>zaw7.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{464,464},{75,75}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{75,75}}</string>
+                <key>sourceSize</key>
+                <string>{75,75}</string>
+            </dict>
+            <key>zaw8.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{541,464},{75,75}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{75,75}}</string>
+                <key>sourceSize</key>
+                <string>{75,75}</string>
+            </dict>
+            <key>zaw9.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{2,541},{75,75}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{75,75}}</string>
+                <key>sourceSize</key>
+                <string>{75,75}</string>
+            </dict>
+            <key>zrw103.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{79,541},{75,75}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{75,75}}</string>
+                <key>sourceSize</key>
+                <string>{75,75}</string>
+            </dict>
+            <key>zrw104.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{156,541},{75,75}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{75,75}}</string>
+                <key>sourceSize</key>
+                <string>{75,75}</string>
+            </dict>
+            <key>zrw13.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{233,541},{75,75}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{75,75}}</string>
+                <key>sourceSize</key>
+                <string>{75,75}</string>
+            </dict>
+            <key>zrw14.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{310,541},{75,75}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{75,75}}</string>
+                <key>sourceSize</key>
+                <string>{75,75}</string>
+            </dict>
+            <key>zrw15.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{387,541},{75,75}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{75,75}}</string>
+                <key>sourceSize</key>
+                <string>{75,75}</string>
+            </dict>
+            <key>zrw16.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{464,541},{75,75}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{75,75}}</string>
+                <key>sourceSize</key>
+                <string>{75,75}</string>
+            </dict>
+            <key>zrw17.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{541,541},{75,75}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{75,75}}</string>
+                <key>sourceSize</key>
+                <string>{75,75}</string>
+            </dict>
+            <key>zrw18.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{2,618},{75,75}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{75,75}}</string>
+                <key>sourceSize</key>
+                <string>{75,75}</string>
+            </dict>
+            <key>zrw19.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{79,618},{75,75}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{75,75}}</string>
+                <key>sourceSize</key>
+                <string>{75,75}</string>
+            </dict>
+            <key>zrw205.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{156,618},{75,75}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{75,75}}</string>
+                <key>sourceSize</key>
+                <string>{75,75}</string>
+            </dict>
+            <key>zrw205_2.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{233,618},{75,75}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{75,75}}</string>
+                <key>sourceSize</key>
+                <string>{75,75}</string>
+            </dict>
+            <key>zrw206.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{310,618},{75,75}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{75,75}}</string>
+                <key>sourceSize</key>
+                <string>{75,75}</string>
+            </dict>
+            <key>zrw206_2.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{387,618},{75,75}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{75,75}}</string>
+                <key>sourceSize</key>
+                <string>{75,75}</string>
+            </dict>
+            <key>zrw210.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{464,618},{75,75}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{75,75}}</string>
+                <key>sourceSize</key>
+                <string>{75,75}</string>
+            </dict>
+            <key>zrw24.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{541,618},{75,75}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -688,9 +948,9 @@
             <key>realTextureFileName</key>
             <string>area.png</string>
             <key>size</key>
-            <string>{695,464}</string>
+            <string>{618,695}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:77fdfc243a3f54de48df9ce60f103d60:cc5329e3251e71acb327e1a5f6be182f:af793e7d932717c76170809a6c619a61$</string>
+            <string>$TexturePacker:SmartUpdate:0c63c653dcbb0623fc9a5feb4b7e27bb:442639831656c2f6b30fa049c9c45163:af793e7d932717c76170809a6c619a61$</string>
             <key>textureFileName</key>
             <string>area.png</string>
         </dict>

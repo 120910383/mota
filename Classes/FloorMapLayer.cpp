@@ -472,9 +472,12 @@ bool FloorMapLayer::interact_item(const Floor::npc_t& npc)
     {
         walk_pause = false; // 无需停下来，直接切换楼层，切换场景的持续时间的一半让勇士正好走入下一个楼梯格子
         auto up = get_tile_prop(npc.gid, "type").asInt() == 2;
-        auto next_scene = PromptLayer::scene(_floor == 1 ? 2 : 1, up);
-        auto transition = TransitionFade::create(0.5f, next_scene);
-        Director::getInstance()->replaceScene(transition);
+        if (up && _floor < 8 || !up && _floor > 1)
+        {
+            auto next_scene = PromptLayer::scene(up ? (_floor + 1) : (_floor - 1), up);
+            auto transition = TransitionFade::create(0.5f, next_scene);
+            Director::getInstance()->replaceScene(transition);
+        }
     }
     break;
     default:

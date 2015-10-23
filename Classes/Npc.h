@@ -82,6 +82,7 @@ public:
     // 楼梯
     struct stair_t : public npc_info_t
     {
+        bool slate; // 楼梯还是楼梯前的石板，寻路用，上下楼梯必须从石板上经过
         Direction direct;
     };
 

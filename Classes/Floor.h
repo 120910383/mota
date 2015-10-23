@@ -38,6 +38,7 @@ public:
         int32_t floor;
         position_t pos;
         bool gone;
+        Npc::npc_info_t info;
 
         npc_t() {}
         npc_t(int32_t _x, int32_t _y, int32_t _gid)
