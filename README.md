@@ -1,5 +1,5 @@
-<img src="https://github.com/120910383/mota/tree/master/Resources/Screenshots/main.jpg" width=200>
-<img src="https://github.com/120910383/mota/tree/master/Resources/Screenshots/tiledmap.jpg" width=400>
+<img src="https://github.com/120910383/mota/tree/master/Resources/Screenshots/main.jpg?raw=true" width=200>
+<img src="https://github.com/120910383/mota/tree/master/Resources/Screenshots/tiledmap.jpg?raw=true" width=400>
 
 ฤงหþด๓รฐฯีฟชิดฐๆ
 =========
