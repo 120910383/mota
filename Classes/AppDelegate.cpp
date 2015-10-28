@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "ModalDialog.h"
 #include "Floor.h"
+#include "CustomTimer.h"
 
 USING_NS_CC;
 
@@ -25,6 +26,7 @@ void AppDelegate::initGLContextAttrs()
 bool AppDelegate::applicationDidFinishLaunching()
 {
     // 初始化游戏单例
+    CustomTimer::NewInstance();
     Player::NewInstance();
     ModalDialogManager::NewInstance();
     Floor::NewInstance();

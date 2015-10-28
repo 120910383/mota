@@ -24,7 +24,7 @@ protected:
     void confirm_open_impl(const Floor::npc_t& npc);
     cocos2d::Value get_tile_prop(int32_t gid, const std::string& key);
     void step();
-    void pick_up_item_impl(const Floor::npc_t& npc, const cocos2d::Vec2& target_pos, const std::function<void()>& callback);
+    void pick_up_item_impl(const Floor::npc_t& npc, const cocos2d::Vec2& target_pos, const std::function<void(int32_t)>& callback);
     void pick_up_item(const Floor::npc_t& npc);
     bool interact_item(const Floor::npc_t& npc);   // 与npc交互，返回值为是否停下来交互，如开门，打斗，对话框提示等
     void stop_and_clear();

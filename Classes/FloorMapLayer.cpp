@@ -256,7 +256,7 @@ Value FloorMapLayer::get_tile_prop(int32_t gid, const std::string& key)
     return Value();
 }
 
-void FloorMapLayer::pick_up_item_impl(const Floor::npc_t& npc, const cocos2d::Vec2& target_pos, const std::function<void()>& callback)
+void FloorMapLayer::pick_up_item_impl(const Floor::npc_t& npc, const cocos2d::Vec2& target_pos, const std::function<void(int32_t)>& callback)
 {
     auto npc_layer = _tiled_map->getLayer("npc");
     auto item = npc_layer->getTileAt(Vec2(npc.pos.x, 11 - npc.pos.y));
@@ -271,18 +271,17 @@ void FloorMapLayer::pick_up_item_impl(const Floor::npc_t& npc, const cocos2d::Ve
     // TODO.. cocos2d-x tiled bug. 如果一个Layer只剩下一个tile，getTileAt内部设置gid为0不起作用，目前找不到解决办法
     npc_layer->setTileGID(999, Vec2(npc.pos.x, 11 - npc.pos.y));
 
-    auto duration = item->getPosition().distance(target_pos) / 2000.0f;
+    auto duration = item->getPosition().distance(target_pos) / 1000.0f;
+    // 此处不再延迟生效，而是数据立即更新，界面延迟更新，否则会出现交互后再次判断交互目标，出现未被改变的bug
+    callback((int32_t)(duration * 1000));
     item->runAction(Sequence::create(
         Spawn::createWithTwoActions(MoveTo::create(duration, target_pos), ScaleTo::create(duration, 0.6f)),
-        CallFunc::create([item, callback]() {
-        item->removeFromParentAndCleanup(true);
-        callback();
-    }), nullptr));
+        CCRemoveSelf::create(), nullptr));
 }
 
 void FloorMapLayer::pick_up_item(const Floor::npc_t& npc)
 {
-    std::function<void()> callback;
+    std::function<void(int32_t)> callback;
     WarriorInfoPanel::node_type type;
 
     bool need_pick = true;
@@ -295,22 +294,22 @@ void FloorMapLayer::pick_up_item(const Floor::npc_t& npc)
             if (0 == color) // 钥匙串
             {
                 type = WarriorInfoPanel::key_blue;
-                callback = std::bind(&PlayerDelegate::add_key, 1, 1, 1);
+                callback = std::bind(&PlayerDelegate::add_key, 1, 1, 1, std::placeholders::_1);
             }
             else if (1 == color) // 红钥匙
             {
                 type = WarriorInfoPanel::key_red;
-                callback = std::bind(&PlayerDelegate::add_key, 1, 0, 0);
+                callback = std::bind(&PlayerDelegate::add_key, 1, 0, 0, std::placeholders::_1);
             }
             else if (2 == color) // 蓝钥匙
             {
                 type = WarriorInfoPanel::key_blue;
-                callback = std::bind(&PlayerDelegate::add_key, 0, 1, 0);
+                callback = std::bind(&PlayerDelegate::add_key, 0, 1, 0, std::placeholders::_1);
             }
             else if (3 == color) // 黄钥匙
             {
                 type = WarriorInfoPanel::key_yellow;
-                callback = std::bind(&PlayerDelegate::add_key, 0, 0, 1);
+                callback = std::bind(&PlayerDelegate::add_key, 0, 0, 1, std::placeholders::_1);
             }
         }
         break;
@@ -321,12 +320,12 @@ void FloorMapLayer::pick_up_item(const Floor::npc_t& npc)
             if (1 == color) // 红宝石，攻击
             {
                 type = WarriorInfoPanel::attack;
-                callback = std::bind(&PlayerDelegate::add_attack, value);
+                callback = std::bind(&PlayerDelegate::add_attack, value, std::placeholders::_1);
             }
             else if (2 == color) // 蓝宝石，防御
             {
                 type = WarriorInfoPanel::defend;
-                callback = std::bind(&PlayerDelegate::add_defence, value);
+                callback = std::bind(&PlayerDelegate::add_defence, value, std::placeholders::_1);
             }
         }
         break;
@@ -334,7 +333,7 @@ void FloorMapLayer::pick_up_item(const Floor::npc_t& npc)
         {
             auto value = get_tile_prop(npc.gid, "value").asInt();
             type = WarriorInfoPanel::hp;
-            callback = std::bind(&PlayerDelegate::add_hp, value);
+            callback = std::bind(&PlayerDelegate::add_hp, value, std::placeholders::_1);
         }
         break;
     default:
@@ -346,9 +345,9 @@ void FloorMapLayer::pick_up_item(const Floor::npc_t& npc)
     {
         auto target_pos = this->convertToNodeSpace(_info_panel->get_node_position_in_world(type));
         target_pos -= Vec2(26.0f, 0);
-        pick_up_item_impl(npc, target_pos, [&, callback]() {
+        pick_up_item_impl(npc, target_pos, [&, callback](int32_t delay) {
             if (callback)
-                callback();
+                callback(delay);
             Floor::GetInstance()->remove_npc(_floor, npc);
         });
     }
@@ -569,9 +568,9 @@ void FloorMapLayer::confirm_attack_impl(const Floor::npc_t& npc)
 
     auto target_pos = this->convertToNodeSpace(_info_panel->get_node_position_in_world(WarriorInfoPanel::hun));
     target_pos -= Vec2(26.0f, 0);
-    pick_up_item_impl(npc, target_pos, [&, blood, gold, hun]() {
-        PlayerDelegate::add_hp(-blood);
-        PlayerDelegate::add_gold_hun(gold, hun);
+    pick_up_item_impl(npc, target_pos, [&, blood, gold, hun](int32_t delay) {
+        PlayerDelegate::add_hp(-blood, delay);
+        PlayerDelegate::add_gold_hun(gold, hun, delay);
         Floor::GetInstance()->remove_npc(_floor, npc);
     });
 

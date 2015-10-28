@@ -97,6 +97,7 @@ xcopy "$(OutDir)..\*.dll" "$(OutDir)" /D /Y</Command>
     <ClInclude Include="..\Classes\Player.h" />
     <ClInclude Include="..\Classes\pre_header.h" />
     <ClInclude Include="..\Classes\Singleton.h" />
+    <ClInclude Include="..\Classes\CustomTimer.h" />
     <ClInclude Include="..\Classes\Warrior.h" />
     <ClInclude Include="..\Classes\WarriorInfoPanel.h" />
     <ClInclude Include="main.h" />
@@ -113,6 +114,7 @@ xcopy "$(OutDir)..\*.dll" "$(OutDir)" /D /Y</Command>
     <ClCompile Include="..\Classes\pre_header.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\Classes\CustomTimer.cpp" />
     <ClCompile Include="..\Classes\Warrior.cpp" />
     <ClCompile Include="..\Classes\WarriorInfoPanel.cpp" />
     <ClCompile Include="main.cpp" />

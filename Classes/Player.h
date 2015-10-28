@@ -42,12 +42,15 @@ public:
     ~PlayerDelegate();
 
 public:
-    static void add_attack(int32_t addition);
-    static void add_defence(int32_t addition);
-    static void add_gold_hun(int32_t gold_addition, int32_t hun_addition);
-    static void add_hp(int32_t addition);
-    static void add_key(int32_t key_red_addition, int32_t key_blue_addition, int32_t key_yellow_addition);
+    static void add_attack(int32_t addition, int32_t delay = 0);
+    static void add_defence(int32_t addition, int32_t delay = 0);
+    static void add_gold_hun(int32_t gold_addition, int32_t hun_addition, int32_t delay = 0);
+    static void add_hp(int32_t addition, int32_t delay = 0);
+    static void add_key(int32_t key_red_addition, int32_t key_blue_addition, int32_t key_yellow_addition, int32_t delay = 0);
 
 public:
     virtual void on_player_attr_changed() {}
+
+protected:
+    static void notify();
 };

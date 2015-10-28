@@ -48,7 +48,8 @@ public:
     {
         int32_t id;
         Category type;
-        std::string name;       // 多语言key
+        std::string name;       // 名称key
+        std::string description;    // 描述key
     };
 
     // 怪物
@@ -94,8 +95,8 @@ public:
     };
 
 public:
-    const std::map<Category, npc_info_t>& get_npc_infos() const { return _npc_infos; }
+    const std::map<int32_t, npc_info_t>& get_npc_infos() const { return _npc_infos; }
 
 protected:
-    std::map<Category, npc_info_t> _npc_infos;
+    std::map<int32_t, npc_info_t> _npc_infos;   // id => info
 };
