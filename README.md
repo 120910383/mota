@@ -41,6 +41,7 @@
 1. 可以加入QQ群490412185（cocos2d-x开源项目交流群）讨论相关技术或者共同贡献代码<a target="_blank" href="http://shang.qq.com/wpa/qunwpa?idkey=32be4fcda35f3cbdab4ae005b235714c17abfdcc1c456da42911298d11db4630"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="cocos2d-x开源项目交流" title="cocos2d-x开源项目交流"></a>
 2. 在github上直接提交Issue，pull request
 3. 可以关注我自己的开发过程[issue][5]
+4. 目前需要程序若干（和我一起写代码，一个人太累而且没动力），数值策划若干（其实就是整理原游戏中怪物数值信息，以后看能不能自己来设计剧情）
 
 
 [1]: http://baike.baidu.com/item/%E9%AD%94%E5%A1%94
