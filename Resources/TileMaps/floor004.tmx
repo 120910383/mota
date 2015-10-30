@@ -3,7 +3,7 @@
  <tileset firstgid="1" source="area.tsx"/>
  <layer name="floor" width="10" height="12">
   <data encoding="base64" compression="zlib">
-   eJxjZGBgYKQh5iRSHTMeOSYS1LLg0UepO6iph5AZyHxy/AHDAI4cAJM=
+   eJxjZGBgYCQBc5ConpNIdcx45JhIUMuCRx+l7qCmHkJmIPPJ8QcMAwCZ7ACa
   </data>
  </layer>
  <layer name="wall" width="10" height="12">
@@ -13,7 +13,7 @@
  </layer>
  <layer name="npc" width="10" height="12">
   <data encoding="base64" compression="zlib">
-   eJxjYCAecAExBxLfDkqDxNwZGBqw6eElYKY1kWKkADsktgQWeSs8esWwiAkhmYlNHtleCSLUgYAiGo0M8LmP1LABANw5A9I=
+   eJxjYCAecKHx7ZDY7gwMDdj08BIw05pIMVIAsrsksMhb4dErhkVMCMlMbPLI9koQoQ4EFNFoZIDPfaSGDQDB2QPC
   </data>
  </layer>
 </map>

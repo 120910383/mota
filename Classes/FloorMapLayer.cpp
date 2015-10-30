@@ -84,6 +84,23 @@ bool FloorMapLayer::init(int floor, bool up)
 
     Floor::GetInstance()->auto_init_floor(_floor, npcs);
 
+    // 楼层数字
+    
+    TMXTileFlags flags = (TMXTileFlags)0;
+    Vec2 tilePos(_stair_down.pos.x, npc_layer_size.height - 1 - _stair_down.pos.y);
+    npc_layer->getTileGIDAt(tilePos, &flags);
+    tilePos.x += flags == kTMXTileHorizontalFlag ? -1 : 1;
+    auto floor_layer = _tiled_map->getLayer("floor");
+    Vec2 floor_pos = floor_layer->getPositionAt(tilePos);
+    auto num_label = LabelAtlas::create(String::createWithFormat("%d", floor)->_string, "Images/lv_num.png", 24, 38, '0');
+    if (nullptr != num_label)
+    {
+        Size tile_size = floor_layer->getMapTileSize();
+        num_label->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+        num_label->setPosition(floor_pos + Vec2(tile_size.width / 2, tile_size.height / 2));
+        floor_layer->addChild(num_label);
+    }
+
     // 路径节点
     _road_node = Node::create();
     if (nullptr != _road_node)
@@ -102,8 +119,15 @@ bool FloorMapLayer::init(int floor, bool up)
     index = bone2->getDisplayManager()->getCurrentDisplayIndex();
     bone2->removeDisplay(1);
     bone2->changeDisplayByIndex(-1, true);*/
-    Floor::position_t pos = up ? _stair_down.pos : _stair_up.pos;
-    _warrior->setPosition(Vec2((pos.x + 0.5f) * 75.0f - 50.0f, (pos.y + 0.5f) * 75.0f - 50.0f));
+    Vec2 stair_pos = up ? Vec2(_stair_down.pos.x, _stair_down.pos.y) :
+        Vec2(_stair_up.pos.x, _stair_up.pos.y);
+    flags = (TMXTileFlags)0;
+    npc_layer->getTileGIDAt(Vec2(stair_pos.x, npc_layer_size.height - 1 - stair_pos.y), &flags);
+    stair_pos.x += flags == kTMXTileHorizontalFlag ? -1 : 1;
+    _warrior->setPosition(Vec2((stair_pos.x + 0.5f) * 75.0f - 50.0f, (stair_pos.y + 0.5f) * 75.0f - 50.0f));
+    Vec2 target_pos = stair_pos;
+    target_pos.x += flags == kTMXTileHorizontalFlag ? -1 : 1;
+    _warrior->turn_to(Vec2((target_pos.x + 0.5f) * 75.0f - 50.0f, (target_pos.y + 0.5f) * 75.0f - 50.0f));
     this->addChild(_warrior);
 
     // 上方背景

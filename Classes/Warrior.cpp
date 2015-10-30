@@ -7,7 +7,7 @@ static const float MOVE_SPEED = 200.0f;
 
 WarriorNode * WarriorNode::create(const std::string & name)
 {
-    cocostudio::ArmatureDataManager::getInstance()->addArmatureFileInfo("spine/" + name + ".ExportJson");
+    cocostudio::ArmatureDataManager::getInstance()->addArmatureFileInfo("Spine/" + name + ".ExportJson");
     WarriorNode* warrior_node = new (std::nothrow) WarriorNode();
     if (warrior_node && warrior_node->init(name))
     {
