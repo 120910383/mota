@@ -232,8 +232,31 @@ void FloorMapLayer::onTouchEnded(Touch *touch, Event *e)
         return pos != start_pt && (pos == _stair_up.pos || pos == _stair_down.pos);
     });
 
-    if (stair_iter != paths.end())
-        paths.erase(++stair_iter, paths.end());
+    if (stair_iter != paths.end())  // 如果路径经过楼梯，则特殊处理
+    {
+        paths.erase(stair_iter + 1, paths.end());     // 首先楼梯之后的路径节点无效删除
+
+        auto npc_layer = _tiled_map->getLayer("npc");
+        Vec2 stay_pos = Vec2(stair_iter->x, stair_iter->y);
+        TMXTileFlags flags = (TMXTileFlags)0;
+        npc_layer->getTileGIDAt(Vec2(stay_pos.x, npc_layer->getLayerSize().height - 1 - stay_pos.y), &flags);
+        stay_pos.x += flags == kTMXTileHorizontalFlag ? -1 : 1;
+
+        auto floor_iter = std::find_if(paths.begin(), paths.end(), [&](AStar::node_t node) {
+            // 找到该楼梯前停留处地板
+            return node.x == stay_pos.x && node.y == stay_pos.y;
+        });
+        if (floor_iter == paths.end())  // 如果经过楼梯的路径没有经过楼梯前的停留地板，重新寻路到地板节点
+        {
+            AStar astar(10, 12);
+            astar.set_start_and_end(AStar::node_t(start_pt.x, start_pt.y), AStar::node_t(stay_pos.x, stay_pos.y));
+            blocks.push_back(AStar::node_t(stair_iter->x, stair_iter->y));  // 楼梯不能经过，添加到阻碍点列表中
+            astar.set_blocks(blocks);
+            AStar::node_t stair_node(stair_iter->x, stair_iter->y); // 先保存一下，因为下一句会导致iter无效
+            paths = astar.get_path();
+            paths.push_back(stair_node);   // 寻路后添加要到达的楼梯节点
+        }
+    }
 
     _paths.clear();
     for (const auto& node : paths)
@@ -495,12 +518,11 @@ bool FloorMapLayer::interact_item(const Floor::npc_t& npc)
     {
         walk_pause = false; // 无需停下来，直接切换楼层，切换场景的持续时间的一半让勇士正好走入下一个楼梯格子
         auto up = get_tile_prop(npc.gid, "type").asInt() == 2;
-        if (up && _floor < 8 || !up && _floor > 1)
-        {
-            auto next_scene = PromptLayer::scene(up ? (_floor + 1) : (_floor - 1), up);
-            auto transition = TransitionFade::create(0.5f, next_scene);
-            Director::getInstance()->replaceScene(transition);
-        }
+        int32_t next_floor = _floor + (up ? 1 : -1);
+        next_floor = next_floor == 0 ? 8 : (next_floor == 9 ? 1 : next_floor);
+        auto next_scene = PromptLayer::scene(next_floor, up);
+        auto transition = TransitionFade::create(0.5f, next_scene);
+        Director::getInstance()->replaceScene(transition);
     }
     break;
     default:
