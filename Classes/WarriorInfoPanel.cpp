@@ -1,6 +1,7 @@
 ﻿#include "pre_header.h"
 
 #include "WarriorInfoPanel.h"
+#include "ActionTweenCallback.h"
 
 USING_NS_CC;
 
@@ -99,35 +100,36 @@ bool WarriorInfoPanel::init()
         }
     }
 
-    const auto LENGHT = 280.0f;
-    auto progress_bg = Node::create();
+    auto progress_bg = Sprite::create("Images/ui_hp_bg.png");
     if (nullptr != progress_bg)
     {
+        Size bg_size = progress_bg->getContentSize();
+        progress_bg->setAnchorPoint(Vec2::ZERO);
         progress_bg->setPosition(Vec2(160.0f, 34.0f));
         this->addChild(progress_bg);
 
-        auto head = Sprite::create("Images/ui_hp_bg_a.png");
-        auto tail = Sprite::create("Images/ui_hp_bg_a.png");
-        auto body = Sprite::create("Images/ui_hp_bg_b.png");
-        head->setAnchorPoint(Vec2::ZERO);
-        head->setPosition(Vec2::ZERO);
-        progress_bg->addChild(head);
-        auto scale = (LENGHT - 2 * head->getContentSize().width) / body->getContentSize().width;
-        body->setScaleX(scale);
-        body->setAnchorPoint(Vec2::ZERO);
-        body->setPosition(Vec2(head->getContentSize().width, 0));
-        progress_bg->addChild(body);
-        tail->setFlippedX(true);
-        tail->setAnchorPoint(Vec2::ZERO);
-        tail->setPosition(Vec2(head->getContentSize().width + body->getBoundingBox().size.width, 0));
-        progress_bg->addChild(tail);
+        // 切换场景时，当前生命值超过500则百分比自动为100%，小于500的话，按最大值500来计算血条百分比
+        int32_t hp = Player::GetInstance()->get_player_info().hp;
+        _max_hp = std::max(500, hp);
+        _progress = ProgressTimer::create(Sprite::create("Images/ui_hp.png"));
+        if (nullptr != _progress)
+        {
+            _progress->setPosition(Vec2(bg_size.width / 2, bg_size.height / 2));
+            _progress->setType(ProgressTimer::Type::BAR);
+            _progress->setMidpoint(Vec2::ANCHOR_MIDDLE_LEFT);
+            _progress->setBarChangeRate(Vec2(1, 0));
+            _progress->setPercentage((float)hp / _max_hp * 100);
+            _progress->setTag(hp);
+            progress_bg->addChild(_progress);
+        }
 
-        _hp_num = LabelAtlas::create("500", "Images/ps_num_shared.png", 21, 29, '0');
+        std::string hp_str = String::createWithFormat("%d", hp)->_string + "/" + String::createWithFormat("%d", _max_hp)->_string;
+        _hp_num = LabelAtlas::create(hp_str, "Images/ps_num_shared.png", 21, 29, '0');
         if (nullptr != _hp_num)
         {
             _hp_num->setScaleX(0.8f);
-            _hp_num->setAnchorPoint(Vec2(0.5f, 0.5f));
-            _hp_num->setPosition(Vec2(LENGHT / 2, body->getContentSize().height / 2));
+            _hp_num->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+            _hp_num->setPosition(Vec2(bg_size.width / 2, bg_size.height / 2));
             progress_bg->addChild(_hp_num);
         }
     }
@@ -179,21 +181,13 @@ bool WarriorInfoPanel::init()
         }
     }
     // 手动更新一下数据
-    on_player_attr_changed();
+    update_data(false);
     return true;
 }
 
 void WarriorInfoPanel::on_player_attr_changed()
 {
-    const auto& player_info = Player::GetInstance()->get_player_info();
-    _attack_num->setString(String::createWithFormat("%d", player_info.attack)->_string);
-    _defend_num->setString(String::createWithFormat("%d", player_info.defence)->_string);
-    _jb_num->setString(String::createWithFormat("%d", player_info.gold)->_string);
-    _hun_num->setString(String::createWithFormat("%d", player_info.hun)->_string);
-    _hp_num->setString(String::createWithFormat("%d", player_info.hp)->_string);
-    _key_red_num->setString(String::createWithFormat("%d", player_info.key_red)->_string);
-    _key_blue_num->setString(String::createWithFormat("%d", player_info.key_blue)->_string);
-    _key_yellow_num->setString(String::createWithFormat("%d", player_info.key_yellow)->_string);
+    update_data(true);
 }
 
 cocos2d::Vec2 WarriorInfoPanel::get_node_position_in_world(node_type type)
@@ -229,4 +223,37 @@ cocos2d::Vec2 WarriorInfoPanel::get_node_position_in_world(node_type type)
         break;
     }
     return position;
+}
+
+void WarriorInfoPanel::update_data(bool anim)
+{
+    const auto& player_info = Player::GetInstance()->get_player_info();
+    _attack_num->setString(String::createWithFormat("%d", player_info.attack)->_string);
+    _defend_num->setString(String::createWithFormat("%d", player_info.defence)->_string);
+    _jb_num->setString(String::createWithFormat("%d", player_info.gold)->_string);
+    _hun_num->setString(String::createWithFormat("%d", player_info.hun)->_string);
+    _key_red_num->setString(String::createWithFormat("%d", player_info.key_red)->_string);
+    _key_blue_num->setString(String::createWithFormat("%d", player_info.key_blue)->_string);
+    _key_yellow_num->setString(String::createWithFormat("%d", player_info.key_yellow)->_string);
+
+    int32_t old_hp = _progress->getTag();
+    if (old_hp != player_info.hp)
+    {
+        _progress->setTag(player_info.hp);
+        _max_hp = std::max(_max_hp, player_info.hp);
+        if (anim)
+        {
+            std::string max_str = String::createWithFormat("%d", (int32_t)_max_hp)->_string;
+            _hp_num->runAction(ActionTweenCallback::create(1.0f, old_hp, player_info.hp, [&, max_str](float value) {
+                _hp_num->setString(String::createWithFormat("%d", (int32_t)value)->_string + "/" + max_str);
+            }));
+            _progress->setPercentage((float)old_hp / _max_hp * 100);
+            _progress->runAction(ProgressTo::create(1.0f, (float)player_info.hp / _max_hp * 100));
+        }
+        else
+        {
+            _hp_num->setString(String::createWithFormat("%d", player_info.hp)->_string);
+            _progress->setPercentage((float)old_hp / _max_hp * 100);
+        }
+    }
 }

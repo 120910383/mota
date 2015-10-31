@@ -13,6 +13,7 @@ public:
 
     enum node_type { attack, defend, jb, hun, hp, key_red, key_blue, key_yellow };
     cocos2d::Vec2 get_node_position_in_world(node_type type);
+    void update_data(bool anim);
 
 private:
     cocos2d::LabelAtlas* _attack_num;
@@ -23,4 +24,6 @@ private:
     cocos2d::LabelAtlas* _key_red_num;
     cocos2d::LabelAtlas* _key_blue_num;
     cocos2d::LabelAtlas* _key_yellow_num;
+    cocos2d::ProgressTimer* _progress;
+    int32_t _max_hp;
 };
