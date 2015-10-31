@@ -558,7 +558,8 @@ void FloorMapLayer::confirm_open(OKCancelDialog::RETURN_TYPE type, const Floor::
             {
                 auto door_up = npc_layer->getTileAt(Vec2(npc_up->pos.x, 11 - npc_up->pos.y));
                 npc_layer->setupTileSprite(door_up, Vec2(npc_up->pos.x, 11 - npc_up->pos.y), npc_up->gid);
-                door_up->runAction(CCSequence::create(FadeOut::create(OPEN_DURATION), RemoveSelf::create(), nullptr));
+                door_up->runAction(CCSequence::create(FadeOut::create(OPEN_DURATION),
+                    CallFunc::create(std::bind(&Floor::remove_npc, Floor::GetInstance(), _floor, *npc_up)), RemoveSelf::create(), nullptr));
             }
         }
     }
