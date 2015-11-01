@@ -123,7 +123,7 @@ bool WarriorInfoPanel::init()
             progress_bg->addChild(_progress);
         }
 
-        std::string hp_str = String::createWithFormat("%d", hp)->_string + "/" + String::createWithFormat("%d", _max_hp)->_string;
+        std::string hp_str = String::createWithFormat("%d", hp)->_string;
         _hp_num = LabelAtlas::create(hp_str, "Images/ps_num_shared.png", 21, 29, '0');
         if (nullptr != _hp_num)
         {
@@ -245,7 +245,7 @@ void WarriorInfoPanel::update_data(bool anim)
         {
             std::string max_str = String::createWithFormat("%d", (int32_t)_max_hp)->_string;
             _hp_num->runAction(ActionTweenCallback::create(1.0f, old_hp, player_info.hp, [&, max_str](float value) {
-                _hp_num->setString(String::createWithFormat("%d", (int32_t)value)->_string + "/" + max_str);
+                _hp_num->setString(String::createWithFormat("%d", (int32_t)value)->_string);
             }));
             _progress->setPercentage((float)old_hp / _max_hp * 100);
             _progress->runAction(ProgressTo::create(1.0f, (float)player_info.hp / _max_hp * 100));
