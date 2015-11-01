@@ -40,7 +40,7 @@ bool AppDelegate::applicationDidFinishLaunching()
 
     director->setOpenGLView(glview);
 
-    glview->setFrameSize(1080, 1920);
+    glview->setFrameSize(1080, 1920);   // 在windows下根据自己分辨率设置窗口分辨率，作者4K因此设置比较大
     glview->setDesignResolutionSize(650, 900, ResolutionPolicy::FIXED_WIDTH);
     
 

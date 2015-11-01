@@ -35,6 +35,7 @@
     &ensp;&ensp;+Classes    
     &ensp;&ensp;...    
     &ensp;&ensp;mota.sln    
+4. 修改AppDelegate.cpp中函数applicationDidFinishLaunching()内的glview->setFrameSize(1080, 1920)，windows下分辨率根据自己屏幕来设置以正常显示。
 3. 在确保机器上已安装Visual Studio 2015后双击mota.sln即可调试运行项目。
 
 ##参与项目
