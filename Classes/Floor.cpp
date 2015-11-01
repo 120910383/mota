@@ -9,6 +9,7 @@ Floor::Floor()
 
 Floor::~Floor()
 {
+    save();
 }
 
 const Floor::floor_t & Floor::get_floor_info(int32_t level) const
@@ -24,7 +25,6 @@ void Floor::auto_init_floor(int32_t level, const std::vector<npc_t>& npcs)
     {
         _floors[level].level = level;
         _floors[level].npcs = npcs;
-        save();
     }
     else
     {
@@ -43,7 +43,6 @@ void Floor::remove_npc(int32_t level, const npc_t& npc)
             npcs.erase(iter);
         }
     }
-    save();
 }
 
 void Floor::save()

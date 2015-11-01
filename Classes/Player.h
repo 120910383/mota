@@ -26,9 +26,16 @@ public:
     
 public:
     inline const player_t& get_player_info() { return _player; }
+    inline void set_current_floor(int32_t floor) { _last_floor = floor; }
+    inline int32_t get_current_floor() { return _last_floor; }
+    void save();
+
+protected:
+    void load();
 
 private:
     player_t _player;
+    int32_t _last_floor;
     std::set<PlayerDelegate*> _delegates;
 
 private:

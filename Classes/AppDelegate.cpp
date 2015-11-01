@@ -11,10 +11,20 @@ USING_NS_CC;
 
 AppDelegate::AppDelegate()
 {
+    // 初始化游戏单例
+    CustomTimer::NewInstance();
+    Player::NewInstance();
+    ModalDialogManager::NewInstance();
+    Floor::NewInstance();
 }
 
 AppDelegate::~AppDelegate()
 {
+    // 释放游戏单例
+    CustomTimer::DeleteInstance();
+    Player::DeleteInstance();
+    ModalDialogManager::DeleteInstance();
+    Floor::DeleteInstance();
 }
 
 void AppDelegate::initGLContextAttrs()
@@ -25,12 +35,6 @@ void AppDelegate::initGLContextAttrs()
 
 bool AppDelegate::applicationDidFinishLaunching()
 {
-    // 初始化游戏单例
-    CustomTimer::NewInstance();
-    Player::NewInstance();
-    ModalDialogManager::NewInstance();
-    Floor::NewInstance();
-
     // 初始化Director
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
@@ -47,7 +51,8 @@ bool AppDelegate::applicationDidFinishLaunching()
     director->setDisplayStats(true);
     director->setAnimationInterval(1.0f / 60);
 
-    director->runWithScene(FloorMapLayer::scene(1, true));
+    int32_t last_floor = Player::GetInstance()->get_current_floor();
+    director->runWithScene(FloorMapLayer::scene(last_floor, true));
     return true;
 }
 

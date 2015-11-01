@@ -31,6 +31,7 @@ Scene* FloorMapLayer::scene(int floor, bool up)
 bool FloorMapLayer::init(int floor, bool up)
 {
     _floor = floor;
+    Player::GetInstance()->set_current_floor(floor);
     // 由于直接继承自node，需要做一些处理，现在layer的功能全被废弃了，无意义
     setContentSize(Director::getInstance()->getWinSize());
 
