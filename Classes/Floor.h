@@ -65,6 +65,10 @@ public:
     const floor_t& get_floor_info(int32_t level) const;
     void auto_init_floor(int32_t level, const std::vector<npc_t>& npcs);
     void remove_npc(int32_t level, const npc_t& npc);
+    void save();
+
+protected:
+    void load();
 
 protected:
     std::map<int32_t, floor_t> _floors;
