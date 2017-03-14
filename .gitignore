@@ -1,4 +1,4 @@
-/*.suo
-/*.opensdf
-/*.sdf
-/proj.win32/*.user
+Debug.win32
+/proj.win32/mota.VC.VC.opendb
+/proj.win32/mota.VC.db
+/proj.win32/.vs
