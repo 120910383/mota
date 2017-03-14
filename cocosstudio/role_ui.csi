@@ -1,0 +1,34 @@
+<PlistInfoProjectFile>
+  <PropertyGroup Name="role_ui" Type="Plist" ID="95a17ff0-9eae-4640-94d5-80096e5c931e" Version="3.10.0.0" />
+  <Content ExportType="Png" SortAlgorithm="MaxRects" PicturePadding="0" AllowRotation="True" AllowAnySize="True" AllowTrim="True" ctype="PlistInfoData">
+    <ImageFiles>
+      <FilePathData Path="gameui/ui_attack.png" />
+      <FilePathData Path="gameui/ui_bg.png" />
+      <FilePathData Path="gameui/ui_btn.png" />
+      <FilePathData Path="gameui/ui_btn2.png" />
+      <FilePathData Path="gameui/ui_defend.png" />
+      <FilePathData Path="gameui/ui_hp_a.png" />
+      <FilePathData Path="gameui/ui_hp_b.png" />
+      <FilePathData Path="gameui/ui_hp_bg_a.png" />
+      <FilePathData Path="gameui/ui_hp_bg_b.png" />
+      <FilePathData Path="gameui/ui_hp_t_a.png" />
+      <FilePathData Path="gameui/ui_hp_t_b.png" />
+      <FilePathData Path="gameui/ui_hun.png" />
+      <FilePathData Path="gameui/ui_jb.png" />
+      <FilePathData Path="gameui/rw13.png" />
+      <FilePathData Path="gameui/rw14.png" />
+      <FilePathData Path="gameui/rw15.png" />
+      <FilePathData Path="gameui/rw10.png" />
+      <FilePathData Path="gameui/rw12.png" />
+      <FilePathData Path="gameui/tou_base.png" />
+      <FilePathData Path="gameui/tou_eye1.png" />
+      <FilePathData Path="gameui/tou_eye2.png" />
+      <FilePathData Path="gameui/bg_top.png" />
+      <FilePathData Path="gameui/bg_top_holder.png" />
+      <FilePathData Path="gameui/a11.png" />
+      <FilePathData Path="gameui/a5.png" />
+      <FilePathData Path="gameui/goal_jian.png" />
+    </ImageFiles>
+    <MaxSize Width="1024" Height="1024" />
+  </Content>
+</PlistInfoProjectFile>

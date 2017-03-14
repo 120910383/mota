@@ -1,18 +1,22 @@
 <UserData Version="3.10.0.0">
   <Properties>
-    <Item Key="TabsParamsKey">
-      <Value ctype="TabsInfo">
-        <OpenedDocuments>
-          <FilePathData Path="MainScene.csd" />
-        </OpenedDocuments>
-        <ActiveDocument Path="MainScene.csd" />
-      </Value>
-    </Item>
     <Item Key="CocosRecentOperation">
       <Value ctype="CocosRecentOperation">
         <LastPublishType Value="Resource" />
         <IsLastPublish Value="True" />
         <LastRunType Value="Windows" />
+      </Value>
+    </Item>
+    <Item Key="TabsParamsKey">
+      <Value ctype="TabsInfo">
+        <OpenedDocuments>
+          <FilePathData Path="arrow_node.csd" />
+          <FilePathData Path="game_layer.csd" />
+          <FilePathData Path="role_head_node.csd" />
+          <FilePathData Path="role_info_panel.csd" />
+          <FilePathData Path="role_ui.csi" />
+        </OpenedDocuments>
+        <ActiveDocument Path="game_layer.csd" />
       </Value>
     </Item>
   </Properties>

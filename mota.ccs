@@ -3,8 +3,51 @@
   <SolutionFolder>
     <Group ctype="ResourceGroup">
       <RootFolder Name=".">
-        <Image Name="HelloWorld.png" />
-        <Project Name="MainScene.csd" Type="Scene" />
+        <Folder Name="fonts">
+          <TTF Name="arial.ttf" />
+          <TTF Name="fzcy.ttf" />
+          <Image Name="fzlp_cutHP.png" />
+          <Image Name="fzlp_num.png" />
+          <TTF Name="Marker Felt.ttf" />
+          <Image Name="ps_num_exp.png" />
+          <Image Name="ps_num_HP.png" />
+          <Image Name="ps_num_jb.png" />
+          <Image Name="ps_num_key.png" />
+          <Image Name="ps_num_shared.png" />
+        </Folder>
+        <Folder Name="gameui">
+          <Image Name="a11.png" />
+          <Image Name="a5.png" />
+          <Image Name="bg_top.png" />
+          <Image Name="bg_top_holder.png" />
+          <Image Name="goal_jian.png" />
+          <Image Name="rw10.png" />
+          <Image Name="rw12.png" />
+          <Image Name="rw13.png" />
+          <Image Name="rw14.png" />
+          <Image Name="rw15.png" />
+          <Image Name="tou_base.png" />
+          <Image Name="tou_eye1.png" />
+          <Image Name="tou_eye2.png" />
+          <Image Name="ui_attack.png" />
+          <Image Name="ui_bg.png" />
+          <Image Name="ui_btn.png" />
+          <Image Name="ui_btn2.png" />
+          <Image Name="ui_defend.png" />
+          <Image Name="ui_hp_a.png" />
+          <Image Name="ui_hp_b.png" />
+          <Image Name="ui_hp_bg_a.png" />
+          <Image Name="ui_hp_bg_b.png" />
+          <Image Name="ui_hp_t_a.png" />
+          <Image Name="ui_hp_t_b.png" />
+          <Image Name="ui_hun.png" />
+          <Image Name="ui_jb.png" />
+        </Folder>
+        <Project Name="arrow_node.csd" Type="Node" />
+        <Project Name="game_layer.csd" Type="Layer" />
+        <Project Name="role_head_node.csd" Type="Node" />
+        <Project Name="role_info_panel.csd" Type="Node" />
+        <PlistInfo Name="role_ui.csi" Type="Plist" />
       </RootFolder>
     </Group>
   </SolutionFolder>
