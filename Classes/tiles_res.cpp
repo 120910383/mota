@@ -53,6 +53,9 @@ using namespace std;
 
 #define POS_X(i) ((i) / 2 % 10)
 #define POS_Y(i) (11 - (i) / 2 / 10)
+#define FLOOR_TILE_START_ID 1000
+#define BLOCK_TILE_START_ID 2000
+#define NPC_TILE_START_ID 3000
 
 tiles_res::tiles_res()
 {
@@ -98,11 +101,20 @@ bool tiles_res::load()
     return true;
 }
 
+const tiles_res::floor_t* tiles_res::get_floor_info(int32_t index)
+{
+    if (_floors.find(index) != _floors.end())
+        return &_floors[index];
+    else
+        return nullptr;
+}
+
 void tiles_res::parse_block(int32_t index, const std::string& config)
 {
     auto& floor = _floors[index];
     floor.blocks.clear();
     const char* cstr = config.c_str();
+    int32_t id = BLOCK_TILE_START_ID;
     for (int32_t i = 0; i < 240; i += 2)
     {
         if (cstr[i] == '1' || cstr[i] == ';')
@@ -111,8 +123,9 @@ void tiles_res::parse_block(int32_t index, const std::string& config)
             auto pos_x = static_cast<uint8_t>(POS_X(i));
             auto pos_y = static_cast<uint8_t>(POS_Y(i));
             bool flip = cstr[i] == ';';
-            tile_t tile = { pos_x, pos_y, res, flip };
+            tile_t tile = { id, pos_x, pos_y, res, flip };
             floor.blocks.push_back(tile);
+            ++id;
         }
     }
 }
@@ -122,6 +135,7 @@ void tiles_res::parse_floor(int32_t index, const std::string& config)
     auto& floor = _floors[index];
     floor.floors.clear();
     const char* cstr = config.c_str();
+    int32_t id = FLOOR_TILE_START_ID;
     for (int32_t i = 0; i < 240; i += 2)
     {
         if (cstr[i] == '1')
@@ -129,8 +143,9 @@ void tiles_res::parse_floor(int32_t index, const std::string& config)
             auto res = "floor/bg" + to_string(cstr[i + 1] - 66) + ".png";
             auto pos_x = static_cast<uint8_t>(POS_X(i));
             auto pos_y = static_cast<uint8_t>(POS_Y(i));
-            tile_t tile = { pos_x, pos_y, res, false };
+            tile_t tile = { id, pos_x, pos_y, res, false };
             floor.floors.push_back(move(tile));
+            ++id;
         }
     }
 }
@@ -140,6 +155,7 @@ void tiles_res::parse_npc(int32_t index, const std::string& config)
     auto& floor = _floors[index];
     floor.npcs.clear();
     const char* cstr = config.c_str();
+    int32_t id = NPC_TILE_START_ID;
     for (int32_t i = 0; i < 220; i += 2)
     {
         if (cstr[i] == '1' || cstr[i] == ';')
@@ -148,7 +164,7 @@ void tiles_res::parse_npc(int32_t index, const std::string& config)
             auto pos_x = static_cast<uint8_t>(POS_X(i));
             auto pos_y = static_cast<uint8_t>(POS_Y(i));
             bool flip = cstr[i] == ';';
-            tile_t tile = { pos_x, pos_y, res, flip };
+            tile_t tile = { id, pos_x, pos_y, res, flip };
 
             if (cstr[i + 1] == 'B')
                 floor.stair_down = move(tile);
@@ -156,6 +172,7 @@ void tiles_res::parse_npc(int32_t index, const std::string& config)
                 floor.stair_up = move(tile);
             else
                 floor.npcs.push_back(move(tile));
+            ++id;
         }
         else if (cstr[i] == '2' || cstr[i] == '<' || cstr[i] == 'F')
         {
@@ -163,8 +180,9 @@ void tiles_res::parse_npc(int32_t index, const std::string& config)
             auto pos_x = static_cast<uint8_t>(POS_X(i));
             auto pos_y = static_cast<uint8_t>(POS_Y(i));
             bool flip = cstr[i] == '<';
-            tile_t tile = { pos_x, pos_y, res, flip };
+            tile_t tile = { id, pos_x, pos_y, res, flip };
             floor.npcs.push_back(move(tile));
+            ++id;
         }
         else if (cstr[i] == '5' || cstr[i] == '?')
         {
@@ -172,8 +190,9 @@ void tiles_res::parse_npc(int32_t index, const std::string& config)
             auto pos_x = static_cast<uint8_t>(POS_X(i));
             auto pos_y = static_cast<uint8_t>(POS_Y(i));
             bool flip = cstr[i] == '?';
-            tile_t tile = { pos_x, pos_y, res, flip };
+            tile_t tile = { id, pos_x, pos_y, res, flip };
             floor.npcs.push_back(move(tile));
+            ++id;
         }
     }
 }

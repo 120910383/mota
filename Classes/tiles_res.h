@@ -20,6 +20,7 @@ public:
 public:
     struct tile_t
     {
+        int32_t id;
         uint8_t x;
         uint8_t y;
         std::string res;
@@ -42,6 +43,7 @@ public:
 
 public:
     bool load();
+    const floor_t* get_floor_info(int32_t index);
 
 protected:
     void parse_block(int32_t index, const std::string& config);

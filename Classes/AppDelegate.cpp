@@ -16,6 +16,7 @@ AppDelegate::AppDelegate() {
 
 AppDelegate::~AppDelegate() 
 {
+    tiles_res::DeleteInstance();
 }
 
 //if you want a different context,just modify the value of glContextAttrs
@@ -55,9 +56,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
     auto result = tiles_res::GetInstance()->load();
     if (!result)
     {
-        return -1;  // load config file error.
+        return false;  // load config file error.
     }
-    tiles_res::DeleteInstance();
 
     // create a scene. it's an autorelease object
     auto scene = MainScene::createScene();
