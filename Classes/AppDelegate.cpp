@@ -6,6 +6,8 @@ GitHub: https://github.com/120910383/mota
 #include "AppDelegate.h"
 #include "MainScene.h"
 
+#include "tiles_res.h"
+
 USING_NS_CC;
 
 AppDelegate::AppDelegate() {
@@ -45,6 +47,17 @@ bool AppDelegate::applicationDidFinishLaunching() {
     director->setAnimationInterval(1.0f / 60);
 
     FileUtils::getInstance()->addSearchPath("res");
+    FileUtils::getInstance()->addSearchPath("data");
+    FileUtils::getInstance()->addSearchPath("tiles");
+
+    tiles_res::NewInstance();
+
+    auto result = tiles_res::GetInstance()->load();
+    if (!result)
+    {
+        return -1;  // load config file error.
+    }
+    tiles_res::DeleteInstance();
 
     // create a scene. it's an autorelease object
     auto scene = MainScene::createScene();

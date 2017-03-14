@@ -22,7 +22,13 @@ public:
     {
         uint8_t x;
         uint8_t y;
-        const char* res;
+        std::string res;
+        bool flip;
+
+        inline bool operator == (const tile_t& tile) const
+        {
+            return tile.x == x && tile.y == y;
+        }
     };
 
     struct floor_t
@@ -43,5 +49,5 @@ protected:
     void parse_npc(int32_t index, const std::string& config);
 
 protected:
-    std::map<uint32_t, floor_t> _floors;
+    std::map<int32_t, floor_t> _floors;
 };
