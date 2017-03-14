@@ -1,3 +1,8 @@
+/*********************************************
+Author: Zhang Hao
+GitHub: https://github.com/120910383/mota
+*********************************************/
+
 #include "MainScene.h"
 #include "cocostudio/CocoStudio.h"
 #include "ui/CocosGUI.h"

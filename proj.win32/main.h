@@ -1,3 +1,8 @@
+/*********************************************
+Author: Zhang Hao
+GitHub: https://github.com/120910383/mota
+*********************************************/
+
 #ifndef __MAIN_H__
 #define __MAIN_H__
 

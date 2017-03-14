@@ -1,3 +1,8 @@
+/*********************************************
+Author: Zhang Hao
+GitHub: https://github.com/120910383/mota
+*********************************************/
+
 #ifndef __HELLOWORLD_SCENE_H__
 #define __HELLOWORLD_SCENE_H__
 
@@ -14,6 +19,12 @@ public:
 
     // implement the "static create()" method manually
     CREATE_FUNC(MainScene);
+
+protected:
+    void update_floor();
+
+protected:
+    cocos2d::Node* _map_node;
 };
 
 #endif // __HELLOWORLD_SCENE_H__
