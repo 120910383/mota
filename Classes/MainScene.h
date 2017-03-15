@@ -12,6 +12,8 @@ GitHub: https://github.com/120910383/mota
 struct tile_t;
 struct floor_t;
 
+namespace cocostudio { class Armature; }
+
 class MainScene : public cocos2d::Layer
 {
 public:
@@ -35,6 +37,7 @@ protected:
     const floor_t* _floor;
     cocos2d::Node* _map_node;
     cocos2d::Node* _arrow_node;
+    cocostudio::Armature* _warrior_node;
 };
 
 #endif // __HELLOWORLD_SCENE_H__

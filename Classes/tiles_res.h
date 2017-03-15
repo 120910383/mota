@@ -22,6 +22,7 @@ struct pos_t
     pos_t(float _x, float _y);
     pos_t(const cocos2d::Vec2& pos) : pos_t(pos.x, pos.y) {}
     inline bool operator == (const pos_t& pos) const { return pos.x == x && pos.y == y; }
+    pos_t offset(int32_t _x, int32_t _y) const;
     cocos2d::Vec2 center_pos() const;
     cocos2d::Vec2 origin_pos() const;
 };

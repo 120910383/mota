@@ -206,6 +206,11 @@ pos_t::pos_t(float _x, float _y)
     y = (int32_t)(_y / TILE_SIZE);
 }
 
+pos_t pos_t::offset(int32_t _x, int32_t _y) const
+{
+    return pos_t(x + _x, y + _y);
+}
+
 cocos2d::Vec2 pos_t::center_pos() const
 {
     return (Point(x, y) + Point(0.5f, 0.5f)) * TILE_SIZE;
