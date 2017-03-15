@@ -10,36 +10,51 @@ GitHub: https://github.com/120910383/mota
 #include <vector>
 #include <map>
 
-// tile
+#include "math/Vec2.h"
+
+struct pos_t
+{
+    int32_t x;
+    int32_t y;
+
+    pos_t() {}
+    pos_t(int32_t _x, int32_t _y) : x(_x), y(_y) {}
+    pos_t(float _x, float _y);
+    pos_t(const cocos2d::Vec2& pos) : pos_t(pos.x, pos.y) {}
+    inline bool operator == (const pos_t& pos) const { return pos.x == x && pos.y == y; }
+    cocos2d::Vec2 center_pos() const;
+    cocos2d::Vec2 origin_pos() const;
+};
+
+struct tile_t
+{
+    int32_t id;
+    pos_t pos;
+    std::string res;
+    bool flip;
+
+    tile_t() {}
+    tile_t(int32_t _id, int32_t _x, int32_t _y, const std::string& _res, bool _flip)
+        : id(_id), pos(_x, _y), res(_res), flip(_flip) {}
+};
+
+struct floor_t
+{
+    std::vector<tile_t> blocks;
+    std::vector<tile_t> floors;
+    std::vector<tile_t> npcs;
+    tile_t stair_down;
+    tile_t stair_up;
+
+    floor_t() {}
+    bool is_block(const pos_t& pos) const;
+};
+
 class tiles_res : public Singleton<tiles_res>
 {
 public:
     tiles_res();
     virtual ~tiles_res();
-
-public:
-    struct tile_t
-    {
-        int32_t id;
-        uint8_t x;
-        uint8_t y;
-        std::string res;
-        bool flip;
-
-        inline bool operator == (const tile_t& tile) const
-        {
-            return tile.x == x && tile.y == y;
-        }
-    };
-
-    struct floor_t
-    {
-        std::vector<tile_t> blocks;
-        std::vector<tile_t> floors;
-        std::vector<tile_t> npcs;
-        tile_t stair_down;
-        tile_t stair_up;
-    };
 
 public:
     bool load();

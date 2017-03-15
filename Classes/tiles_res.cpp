@@ -48,6 +48,8 @@ map<string, string> npc_infos = {
 
 #include "deprecated/CCDictionary.h"
 
+#include <algorithm>
+
 USING_NS_CC;
 using namespace std;
 
@@ -56,6 +58,7 @@ using namespace std;
 #define FLOOR_TILE_START_ID 1000
 #define BLOCK_TILE_START_ID 2000
 #define NPC_TILE_START_ID 3000
+#define TILE_SIZE 75.0f
 
 tiles_res::tiles_res()
 {
@@ -101,7 +104,7 @@ bool tiles_res::load()
     return true;
 }
 
-const tiles_res::floor_t* tiles_res::get_floor_info(int32_t index)
+const floor_t* tiles_res::get_floor_info(int32_t index)
 {
     if (_floors.find(index) != _floors.end())
         return &_floors[index];
@@ -195,4 +198,28 @@ void tiles_res::parse_npc(int32_t index, const std::string& config)
             ++id;
         }
     }
+}
+
+pos_t::pos_t(float _x, float _y)
+{
+    x = (int32_t)(_x / TILE_SIZE);
+    y = (int32_t)(_y / TILE_SIZE);
+}
+
+cocos2d::Vec2 pos_t::center_pos() const
+{
+    return (Point(x, y) + Point(0.5f, 0.5f)) * TILE_SIZE;
+}
+
+cocos2d::Vec2 pos_t::origin_pos() const
+{
+    return Point(x, y) * TILE_SIZE;
+}
+
+bool floor_t::is_block(const pos_t & pos) const
+{
+    auto it = find_if(blocks.begin(), blocks.end(),
+        [&pos](const tile_t& tile){ return tile.pos == pos; });
+    
+    return it != blocks.end();
 }

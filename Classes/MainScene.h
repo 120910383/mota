@@ -8,6 +8,10 @@ GitHub: https://github.com/120910383/mota
 
 #include "cocos2d.h"
 
+//class tiles_res;
+struct tile_t;
+struct floor_t;
+
 class MainScene : public cocos2d::Layer
 {
 public:
@@ -20,11 +24,17 @@ public:
     // implement the "static create()" method manually
     CREATE_FUNC(MainScene);
 
-protected:
-    void update_floor();
+    bool onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *e);
+    void onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *e);
 
 protected:
+    void update_floor();
+    void add_tile_sprite(const tile_t& tile);
+
+protected:
+    const floor_t* _floor;
     cocos2d::Node* _map_node;
+    cocos2d::Node* _arrow_node;
 };
 
 #endif // __HELLOWORLD_SCENE_H__
