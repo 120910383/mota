@@ -145,16 +145,22 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
+    <ClCompile Include="..\Classes\a_star.cpp" />
     <ClCompile Include="..\Classes\MainScene.cpp" />
-    <ClCompile Include="..\Classes\tiles_res.cpp" />
+    <ClCompile Include="..\Classes\maps.cpp" />
+    <ClCompile Include="..\Classes\player.cpp" />
+    <ClCompile Include="..\Classes\timer_queue.cpp" />
     <ClCompile Include="..\Classes\utils.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h" />
+    <ClInclude Include="..\Classes\a_star.h" />
     <ClInclude Include="..\Classes\MainScene.h" />
+    <ClInclude Include="..\Classes\player.h" />
     <ClInclude Include="..\Classes\Singleton.h" />
-    <ClInclude Include="..\Classes\tiles_res.h" />
+    <ClInclude Include="..\Classes\maps.h" />
+    <ClInclude Include="..\Classes\timer_queue.h" />
     <ClInclude Include="..\Classes\utils.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>

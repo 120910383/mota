@@ -6,7 +6,9 @@ GitHub: https://github.com/120910383/mota
 #include "AppDelegate.h"
 #include "MainScene.h"
 
-#include "tiles_res.h"
+#include "maps.h"
+#include "player.h"
+#include "timer_queue.h"
 
 USING_NS_CC;
 
@@ -16,7 +18,9 @@ AppDelegate::AppDelegate() {
 
 AppDelegate::~AppDelegate() 
 {
-    tiles_res::DeleteInstance();
+    player_t::DeleteInstance();
+    map_t::DeleteInstance();
+    timer_queue::DeleteInstance();
 }
 
 //if you want a different context,just modify the value of glContextAttrs
@@ -51,13 +55,17 @@ bool AppDelegate::applicationDidFinishLaunching() {
     FileUtils::getInstance()->addSearchPath("data");
     FileUtils::getInstance()->addSearchPath("tiles");
 
-    tiles_res::NewInstance();
-
-    auto result = tiles_res::GetInstance()->load();
+    timer_queue::NewInstance();
+    map_t::NewInstance();
+    player_t::NewInstance();
+    
+    auto result = map_t::GetInstance()->load();
     if (!result)
     {
         return false;  // load config file error.
     }
+
+    player_t::GetInstance()->init();
 
     // create a scene. it's an autorelease object
     auto scene = MainScene::createScene();

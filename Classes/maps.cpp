@@ -43,8 +43,9 @@ map<string, string> npc_infos = {
 
 *********************************************/
 
-#include "tiles_res.h"
+#include "maps.h"
 #include "utils.h"
+#include "a_star.h"
 
 #include "deprecated/CCDictionary.h"
 
@@ -59,16 +60,18 @@ using namespace std;
 #define BLOCK_TILE_START_ID 2000
 #define NPC_TILE_START_ID 3000
 #define TILE_SIZE 75.0f
+#define WIDTH 10
+#define HEIGHT 12
 
-tiles_res::tiles_res()
+map_t::map_t()
 {
 }
 
-tiles_res::~tiles_res()
+map_t::~map_t()
 {
 }
 
-bool tiles_res::load()
+bool map_t::load()
 {
     auto plist = __Dictionary::createWithContentsOfFile("data0.xml");
 
@@ -100,11 +103,10 @@ bool tiles_res::load()
         parse_npc(floor, npc_info);
     }
 
-    auto tt = _floors[10].floors.front().res;
     return true;
 }
 
-const floor_t* tiles_res::get_floor_info(int32_t index)
+const floor_t* map_t::get_floor_info(int32_t index)
 {
     if (_floors.find(index) != _floors.end())
         return &_floors[index];
@@ -112,9 +114,10 @@ const floor_t* tiles_res::get_floor_info(int32_t index)
         return nullptr;
 }
 
-void tiles_res::parse_block(int32_t index, const std::string& config)
+void map_t::parse_block(int32_t index, const std::string& config)
 {
     auto& floor = _floors[index];
+    floor.number = index;
     floor.blocks.clear();
     const char* cstr = config.c_str();
     int32_t id = BLOCK_TILE_START_ID;
@@ -133,9 +136,10 @@ void tiles_res::parse_block(int32_t index, const std::string& config)
     }
 }
 
-void tiles_res::parse_floor(int32_t index, const std::string& config)
+void map_t::parse_floor(int32_t index, const std::string& config)
 {
     auto& floor = _floors[index];
+    floor.number = index;
     floor.floors.clear();
     const char* cstr = config.c_str();
     int32_t id = FLOOR_TILE_START_ID;
@@ -153,9 +157,10 @@ void tiles_res::parse_floor(int32_t index, const std::string& config)
     }
 }
 
-void tiles_res::parse_npc(int32_t index, const std::string& config)
+void map_t::parse_npc(int32_t index, const std::string& config)
 {
     auto& floor = _floors[index];
+    floor.number = index;
     floor.npcs.clear();
     const char* cstr = config.c_str();
     int32_t id = NPC_TILE_START_ID;
@@ -227,4 +232,19 @@ bool floor_t::is_block(const pos_t & pos) const
         [&pos](const tile_t& tile){ return tile.pos == pos; });
     
     return it != blocks.end();
+}
+
+pos_t floor_t::get_init_pos(bool up) const
+{
+    auto pos = up ? stair_down.pos : stair_up.pos;
+    return pos.offset(stair_down.flip ? -1 : 1, 0);
+}
+
+vector<pos_t> floor_t::get_path(const pos_t & start, const pos_t & end) const
+{
+    vector<pos_t> blks;
+    for (auto elem : blocks)
+        blks.push_back(elem.pos);
+    a_star as(WIDTH, HEIGHT, start, end, blks);
+    return as.get_path();
 }

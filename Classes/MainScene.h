@@ -11,6 +11,7 @@ GitHub: https://github.com/120910383/mota
 //class tiles_res;
 struct tile_t;
 struct floor_t;
+struct pos_t;
 
 namespace cocostudio { class Armature; }
 
@@ -26,12 +27,14 @@ public:
     // implement the "static create()" method manually
     CREATE_FUNC(MainScene);
 
+    virtual void update(float delta) override;
+
     bool onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *e);
     void onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *e);
 
 protected:
-    void update_floor();
     void add_tile_sprite(const tile_t& tile);
+    void on_move(const pos_t& start, const pos_t& end, float time);
 
 protected:
     const floor_t* _floor;

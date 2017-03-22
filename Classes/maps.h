@@ -22,6 +22,7 @@ struct pos_t
     pos_t(float _x, float _y);
     pos_t(const cocos2d::Vec2& pos) : pos_t(pos.x, pos.y) {}
     inline bool operator == (const pos_t& pos) const { return pos.x == x && pos.y == y; }
+    inline bool slant(const pos_t& pos) const { return pos.x != x && pos.y != y; }
     pos_t offset(int32_t _x, int32_t _y) const;
     cocos2d::Vec2 center_pos() const;
     cocos2d::Vec2 origin_pos() const;
@@ -41,6 +42,7 @@ struct tile_t
 
 struct floor_t
 {
+    int32_t number;
     std::vector<tile_t> blocks;
     std::vector<tile_t> floors;
     std::vector<tile_t> npcs;
@@ -49,13 +51,15 @@ struct floor_t
 
     floor_t() {}
     bool is_block(const pos_t& pos) const;
+    pos_t get_init_pos(bool up) const;
+    std::vector<pos_t> get_path(const pos_t& start, const pos_t& end) const;
 };
 
-class tiles_res : public Singleton<tiles_res>
+class map_t : public Singleton<map_t>
 {
 public:
-    tiles_res();
-    virtual ~tiles_res();
+    map_t();
+    virtual ~map_t();
 
 public:
     bool load();

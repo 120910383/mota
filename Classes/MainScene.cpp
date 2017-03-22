@@ -7,10 +7,13 @@ GitHub: https://github.com/120910383/mota
 #include "cocostudio/CocoStudio.h"
 #include "ui/CocosGUI.h"
 
-#include "tiles_res.h"
+#include "maps.h"
+#include "player.h"
+#include "timer_queue.h"
 
 USING_NS_CC;
 using namespace std;
+using namespace std::placeholders;
 using namespace cocostudio::timeline;
 
 #define WARRIOR_OFFSET(pos) ((pos) - Point(42.0f, 70.0f))
@@ -30,6 +33,11 @@ Scene* MainScene::createScene()
     return scene;
 }
 
+void MainScene::update(float delta)
+{
+    timer_queue::GetInstance()->timer_handle((uint32_t)(delta * 1000000));
+}
+
 bool MainScene::onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *e)
 {
     return true;
@@ -46,17 +54,19 @@ void MainScene::onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *e)
     _arrow_node->setVisible(true);
     _arrow_node->setPosition(end_point.center_pos());
 
-    const float speed = 150.0f;
-    auto distance = _warrior_node->getPosition().distance(WARRIOR_OFFSET(end_point.center_pos()));
-    _warrior_node->stopAllActions();
-    _warrior_node->getAnimation()->play("Frun");
-    _warrior_node->runAction(Sequence::createWithTwoActions(
-        MoveTo::create(distance / speed, WARRIOR_OFFSET(end_point.center_pos())),
-        CallFunc::create([this]() {
-                _warrior_node->getAnimation()->play("Sstand");
-                _arrow_node->setVisible(false);
-            })
-        ));
+    player_t::GetInstance()->walk_to(end_point, bind(&MainScene::on_move, this, _1, _2, _3));
+
+    //const float speed = 150.0f;
+    //auto distance = _warrior_node->getPosition().distance(WARRIOR_OFFSET(end_point.center_pos()));
+    //_warrior_node->stopAllActions();
+    //_warrior_node->getAnimation()->play("Frun");
+    //_warrior_node->runAction(Sequence::createWithTwoActions(
+    //    MoveTo::create(distance / speed, WARRIOR_OFFSET(end_point.center_pos())),
+    //    CallFunc::create([this]() {
+    //            _warrior_node->getAnimation()->play("Sstand");
+    //            _arrow_node->setVisible(false);
+    //        })
+    //    ));
 }
 
 // on "init" you need to initialize your instance
@@ -78,8 +88,7 @@ bool MainScene::init()
     _map_node->setPosition(Point(-45, -60));
     addChild(_map_node);
 
-    int32_t current_floor = 12;
-    _floor = tiles_res::GetInstance()->get_floor_info(current_floor);
+    _floor = player_t::GetInstance()->get_current_floor();
     for_each(_floor->floors.begin(), _floor->floors.end(), bind(&MainScene::add_tile_sprite, this, placeholders::_1));
     for_each(_floor->blocks.begin(), _floor->blocks.end(), bind(&MainScene::add_tile_sprite, this, placeholders::_1));
     for_each(_floor->npcs.begin(), _floor->npcs.end(), bind(&MainScene::add_tile_sprite, this, placeholders::_1));
@@ -99,13 +108,14 @@ bool MainScene::init()
     _warrior_node = cocostudio::Armature::create("hero");
     _warrior_node->getAnimation()->play("Sstand");
     _warrior_node->setScaleX(_floor->stair_down.flip ? 1.0f : -1.0f);
-    auto warrior_pos = _floor->stair_down.pos.offset(_floor->stair_down.flip ? -1 : 1, 0).center_pos();
+    auto warrior_pos = _floor->get_init_pos(true).center_pos();
     _warrior_node->setPosition(WARRIOR_OFFSET(warrior_pos));
     addChild(_warrior_node);
 
     auto ui_node = CSLoader::createNode("game_layer.csb");
     addChild(ui_node);
 
+    scheduleUpdate();
     return true;
 }
 
@@ -116,4 +126,19 @@ void MainScene::add_tile_sprite(const tile_t& elem)
     sprite->setPosition(elem.pos.origin_pos());
     sprite->setFlippedX(elem.flip);
     _map_node->addChild(sprite, 0, elem.id);
+}
+
+void MainScene::on_move(const pos_t& start, const pos_t& end, float time)
+{
+    _arrow_node->setVisible(true);
+    _warrior_node->setPosition(WARRIOR_OFFSET(start.center_pos()));
+    _warrior_node->stopAllActions();
+    _warrior_node->getAnimation()->play("Frun");
+    _warrior_node->runAction(Sequence::createWithTwoActions(
+        MoveTo::create(time, WARRIOR_OFFSET(end.center_pos())),
+        CallFunc::create([this]() {
+        _warrior_node->getAnimation()->play("Sstand");
+        _arrow_node->setVisible(false);
+    })
+    ));
 }
