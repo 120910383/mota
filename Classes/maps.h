@@ -51,7 +51,6 @@ struct floor_t
 
     floor_t() {}
     bool is_block(const pos_t& pos) const;
-    pos_t get_init_pos(bool up) const;
     std::vector<pos_t> get_path(const pos_t& start, const pos_t& end) const;
 };
 

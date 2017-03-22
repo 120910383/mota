@@ -234,12 +234,6 @@ bool floor_t::is_block(const pos_t & pos) const
     return it != blocks.end();
 }
 
-pos_t floor_t::get_init_pos(bool up) const
-{
-    auto pos = up ? stair_down.pos : stair_up.pos;
-    return pos.offset(stair_down.flip ? -1 : 1, 0);
-}
-
 vector<pos_t> floor_t::get_path(const pos_t & start, const pos_t & end) const
 {
     vector<pos_t> blks;

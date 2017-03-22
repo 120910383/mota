@@ -18,6 +18,28 @@ using namespace cocostudio::timeline;
 
 #define WARRIOR_OFFSET(pos) ((pos) - Point(42.0f, 70.0f))
 
+namespace
+{
+    string get_direction_str(player_t::direction dir)
+    {
+        string result = "F";
+        switch (dir)
+        {
+        case player_t::left:
+        case player_t::right:
+            result = "S";
+            break;
+        case player_t::up:
+            result = "B";
+            break;
+        case player_t::down:
+            result = "F";
+            break;
+        }
+        return result;
+    }
+}
+
 Scene* MainScene::createScene()
 {
     // 'scene' is an autorelease object
@@ -54,7 +76,7 @@ void MainScene::onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *e)
     _arrow_node->setVisible(true);
     _arrow_node->setPosition(end_point.center_pos());
 
-    player_t::GetInstance()->walk_to(end_point, bind(&MainScene::on_move, this, _1, _2, _3));
+    player_t::GetInstance()->walk_to(end_point, bind(&MainScene::on_move, this, _1), bind(&MainScene::on_end, this));
 
     //const float speed = 150.0f;
     //auto distance = _warrior_node->getPosition().distance(WARRIOR_OFFSET(end_point.center_pos()));
@@ -88,7 +110,7 @@ bool MainScene::init()
     _map_node->setPosition(Point(-45, -60));
     addChild(_map_node);
 
-    _floor = player_t::GetInstance()->get_current_floor();
+    _floor = player_t::GetInstance()->get_floor();
     for_each(_floor->floors.begin(), _floor->floors.end(), bind(&MainScene::add_tile_sprite, this, placeholders::_1));
     for_each(_floor->blocks.begin(), _floor->blocks.end(), bind(&MainScene::add_tile_sprite, this, placeholders::_1));
     for_each(_floor->npcs.begin(), _floor->npcs.end(), bind(&MainScene::add_tile_sprite, this, placeholders::_1));
@@ -107,8 +129,8 @@ bool MainScene::init()
     cocostudio::ArmatureDataManager::getInstance()->addArmatureFileInfo("spine/hero.ExportJson");
     _warrior_node = cocostudio::Armature::create("hero");
     _warrior_node->getAnimation()->play("Sstand");
-    _warrior_node->setScaleX(_floor->stair_down.flip ? 1.0f : -1.0f);
-    auto warrior_pos = _floor->get_init_pos(true).center_pos();
+    _warrior_node->setScaleX(player_t::GetInstance()->get_direction() == player_t::left ? 1.0f : -1.0f);
+    auto warrior_pos = player_t::GetInstance()->get_pos().center_pos();
     _warrior_node->setPosition(WARRIOR_OFFSET(warrior_pos));
     addChild(_warrior_node);
 
@@ -116,6 +138,7 @@ bool MainScene::init()
     addChild(ui_node);
 
     scheduleUpdate();
+    player_t::GetInstance()->set_stair_change_call(bind(&MainScene::on_stair_change, this));
     return true;
 }
 
@@ -128,17 +151,36 @@ void MainScene::add_tile_sprite(const tile_t& elem)
     _map_node->addChild(sprite, 0, elem.id);
 }
 
-void MainScene::on_move(const pos_t& start, const pos_t& end, float time)
+void MainScene::on_move(const pos_t& end)
 {
-    _arrow_node->setVisible(true);
+    auto start = player_t::GetInstance()->get_pos();
+    auto distance = abs(start.x - end.x) + abs(start.y - end.y);
+    auto duration = distance / player_t::GetInstance()->get_speed();
+    const string direction = end.y == start.y ? "S" : (end.y > start.y ? "B" : "F");
+    const bool flip = end.x > start.x;
     _warrior_node->setPosition(WARRIOR_OFFSET(start.center_pos()));
     _warrior_node->stopAllActions();
-    _warrior_node->getAnimation()->play("Frun");
+    _warrior_node->getAnimation()->play(direction + "run");
+    _warrior_node->setScaleX(flip ? -1.0f : 1.0f);
     _warrior_node->runAction(Sequence::createWithTwoActions(
-        MoveTo::create(time, WARRIOR_OFFSET(end.center_pos())),
-        CallFunc::create([this]() {
-        _warrior_node->getAnimation()->play("Sstand");
-        _arrow_node->setVisible(false);
+        MoveTo::create(duration, WARRIOR_OFFSET(end.center_pos())),
+        CallFunc::create([this, direction]() {
+        _warrior_node->getAnimation()->play(direction + "stand");
     })
     ));
+}
+
+void MainScene::on_end()
+{
+    auto player = player_t::GetInstance();
+    _arrow_node->setVisible(false);
+    _warrior_node->setPosition(WARRIOR_OFFSET(player->get_pos().center_pos()));
+    _warrior_node->stopAllActions();
+    _warrior_node->getAnimation()->play(get_direction_str(player->get_direction()) + "stand");
+    _warrior_node->setScaleX(player->get_direction() == player_t::right ? -1.0f : 1.0f);
+}
+
+void MainScene::on_stair_change()
+{
+    Director::getInstance()->replaceScene(MainScene::createScene());
 }

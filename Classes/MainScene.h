@@ -34,7 +34,9 @@ public:
 
 protected:
     void add_tile_sprite(const tile_t& tile);
-    void on_move(const pos_t& start, const pos_t& end, float time);
+    void on_move(const pos_t& end);
+    void on_end();
+    void on_stair_change();
 
 protected:
     const floor_t* _floor;
