@@ -67,9 +67,12 @@ void player_t::move_step()
     // pick up handle
     if (_current_pos == floor->stair_down.pos)
     {
-        move_end();
-        stair_down();
-        return;
+        if (_current_floor != 1) // todo... prevent crash temporarily when go to init floor
+        {
+            move_end();
+            stair_down();
+            return;
+        }
     }
     else if (_current_pos == floor->stair_up.pos)
     {
