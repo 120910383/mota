@@ -1,3 +1,8 @@
+/*********************************************
+Author: Zhang Hao
+GitHub: https://github.com/120910383/mota
+*********************************************/
+
 #pragma once
 
 #include "Singleton.h"

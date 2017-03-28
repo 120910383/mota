@@ -38,11 +38,9 @@ const floor_t* player_t::get_floor() const
     return map_t::GetInstance()->get_floor_info(_current_floor);
 }
 
-void player_t::walk_to(const pos_t & pos, turn_call turn, function<void()> end)
+void player_t::walk_to(const pos_t & pos)
 {
     auto floor = get_floor();
-    _turn_call = turn;
-    _end_call = end;
     _path = floor->get_path(_current_pos, pos);
     reverse(_path.begin(), _path.end());
 
@@ -102,10 +100,7 @@ void player_t::move_step()
         else
             _current_direction = down;
 
-        if (_turn_call)
-        {
-            _turn_call(next_pos);
-        }
+        std::for_each(_delegates.begin(), _delegates.end(), std::bind(&player_delegate::on_walk_turn, _1, std::cref(next_pos)));
     }
 
     auto next_pos = _path.back();
@@ -124,10 +119,7 @@ void player_t::move_end()
 {
     timer_queue::GetInstance()->timer_cancel(_timer_id);
     _current_state = stand;
-    if (_end_call)
-    {
-        _end_call();
-    }
+    std::for_each(_delegates.begin(), _delegates.end(), std::bind(&player_delegate::on_walk_stop, _1));
 }
 
 void player_t::stair_up()
@@ -136,10 +128,7 @@ void player_t::stair_up()
     auto floor = get_floor();
     _current_pos = floor->stair_down.pos.offset(floor->stair_down.flip ? -1 : 1, 0);
     _current_direction = floor->stair_down.flip ? left : right;
-    if (_stair_call)
-    {
-        _stair_call();
-    }
+    std::for_each(_delegates.begin(), _delegates.end(), std::bind(&player_delegate::on_stair_change, _1));
 }
 
 void player_t::stair_down()
@@ -148,8 +137,25 @@ void player_t::stair_down()
     auto floor = get_floor();
     _current_pos = floor->stair_up.pos.offset(floor->stair_up.flip ? -1 : 1, 0);
     _current_direction = floor->stair_up.flip ? left : right;
-    if (_stair_call)
-    {
-        _stair_call();
-    }
+    std::for_each(_delegates.begin(), _delegates.end(), std::bind(&player_delegate::on_stair_change, _1));
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+player_delegate::player_delegate()
+{
+    player_t::GetInstance()->_delegates.insert(this);
+}
+
+player_delegate::~player_delegate()
+{
+    player_t::GetInstance()->_delegates.erase(this);
+}
+
+void player_delegate::pause()
+{
+}
+
+void player_delegate::resume()
+{
 }

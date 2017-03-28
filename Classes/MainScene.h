@@ -7,6 +7,7 @@ GitHub: https://github.com/120910383/mota
 #define __HELLOWORLD_SCENE_H__
 
 #include "cocos2d.h"
+#include "player.h"
 
 //class tiles_res;
 struct tile_t;
@@ -15,7 +16,7 @@ struct pos_t;
 
 namespace cocostudio { class Armature; }
 
-class MainScene : public cocos2d::Layer
+class MainScene : public cocos2d::Layer, public player_delegate
 {
 public:
     // there's no 'id' in cpp, so we recommend returning the class instance pointer
@@ -34,9 +35,11 @@ public:
 
 protected:
     void add_tile_sprite(const tile_t& tile);
-    void on_move(const pos_t& end);
-    void on_end();
-    void on_stair_change();
+    virtual void on_walk_turn(const pos_t& next) override;
+    virtual void on_walk_stop() override;
+    virtual void on_stair_change() override;
+    virtual void on_pick_up_item() override;
+    virtual void on_battle() override;
 
 protected:
     const floor_t* _floor;

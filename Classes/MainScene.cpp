@@ -76,7 +76,7 @@ void MainScene::onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *e)
     _arrow_node->setVisible(true);
     _arrow_node->setPosition(end_point.center_pos());
 
-    player_t::GetInstance()->walk_to(end_point, bind(&MainScene::on_move, this, _1), bind(&MainScene::on_end, this));
+    player_t::GetInstance()->walk_to(end_point);
 
     //const float speed = 150.0f;
     //auto distance = _warrior_node->getPosition().distance(WARRIOR_OFFSET(end_point.center_pos()));
@@ -138,7 +138,6 @@ bool MainScene::init()
     addChild(ui_node);
 
     scheduleUpdate();
-    player_t::GetInstance()->set_stair_change_call(bind(&MainScene::on_stair_change, this));
     return true;
 }
 
@@ -151,7 +150,7 @@ void MainScene::add_tile_sprite(const tile_t& elem)
     _map_node->addChild(sprite, 0, elem.id);
 }
 
-void MainScene::on_move(const pos_t& end)
+void MainScene::on_walk_turn(const pos_t& end)
 {
     auto start = player_t::GetInstance()->get_pos();
     auto distance = abs(start.x - end.x) + abs(start.y - end.y);
@@ -170,7 +169,7 @@ void MainScene::on_move(const pos_t& end)
     ));
 }
 
-void MainScene::on_end()
+void MainScene::on_walk_stop()
 {
     auto player = player_t::GetInstance();
     _arrow_node->setVisible(false);
@@ -183,4 +182,14 @@ void MainScene::on_end()
 void MainScene::on_stair_change()
 {
     Director::getInstance()->replaceScene(MainScene::createScene());
+}
+
+void MainScene::on_pick_up_item()
+{
+
+}
+
+void MainScene::on_battle()
+{
+
 }

@@ -1,3 +1,8 @@
+/*********************************************
+Author: Zhang Hao
+GitHub: https://github.com/120910383/mota
+*********************************************/
+
 #include "timer_queue.h"
 
 #include <algorithm>
